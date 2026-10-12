@@ -27,6 +27,15 @@
       },
       "versions": [
         {
+          "version": "1.12.10",
+          "date": "2026-10-12T12:11:00Z",
+          "localizedDescription": "uTube by kharrison, based on Opaline by verback2308.\n\n- Added two experimental playback options after the existing four: Web · native HLS and Embedded web · byte ranges. Enable them in Settings → Debug → Playback sources. Both are off by default; your existing choices and solver stay configured as before.\n- Native web HLS can use the YouTube website account you already connected, with automatic quality in the standard player. No separate Google registration or web player window is needed. Availability depends on the video and session.\n- Embedded playback tries anonymous compatible streams for videos that allow embedding, using the existing signature solver and native HLS delivery with quality selection.\n- Added time limits for experimental loading and guards against late, duplicate or cancelled source responses replacing the current video.\n\nThese are experimental alternatives, not guaranteed fixes for YouTube restrictions. Live playback and sustained AirPlay on the new methods still need device testing. The current four playback methods remain the defaults. See EXPERIMENTAL_PLAYBACK.md in the repository for details and the test guide.",
+          "downloadURL": "https://github.com/kharrisongit/utube/releases/download/1.12.10/uTube_1.12.10.ipa",
+          "size": 11080602,
+          "minOSVersion": "12.0",
+          "buildVersion": "637"
+        },
+        {
           "version": "1.12.9",
           "date": "2026-10-12T11:39:54Z",
           "localizedDescription": "uTube by kharrison, based on Opaline by verback2308.\n\n- Replies now filters comment notifications from the working YouTube inbox, with support for wrapped comment links and older inbox pages.\n- Tap a comment notification to read its parent and replies inside the notification panel. The linked comment is highlighted; you can load more replies and send a reply without opening or changing the playing video.\n- Replying to someone inside a thread addresses that person. Drafts are kept separately for each recipient while replies stay in the correct thread.\n- Removed the old app-release news setting and stopped release-news polling. Credits remain in Settings; exported debug logs now use the uTube name.\n- The casting button stays red whether connected or disconnected.\n- Carousel cards fill more of the available height. Swipe left or right between cards, or pull down to refresh; upward vertical scrolling is disabled.\n\nThis update keeps uTube's separate app identity and the existing playback and solver configuration. Carousel previews still yield to a playing or minimized video and to AirPlay.",
@@ -45,11 +54,11 @@
           "buildVersion": "630"
         }
       ],
-      "version": "1.12.9",
-      "versionDate": "2026-10-12T11:39:54Z",
-      "versionDescription": "uTube by kharrison, based on Opaline by verback2308.\n\n- Replies now filters comment notifications from the working YouTube inbox, with support for wrapped comment links and older inbox pages.\n- Tap a comment notification to read its parent and replies inside the notification panel. The linked comment is highlighted; you can load more replies and send a reply without opening or changing the playing video.\n- Replying to someone inside a thread addresses that person. Drafts are kept separately for each recipient while replies stay in the correct thread.\n- Removed the old app-release news setting and stopped release-news polling. Credits remain in Settings; exported debug logs now use the uTube name.\n- The casting button stays red whether connected or disconnected.\n- Carousel cards fill more of the available height. Swipe left or right between cards, or pull down to refresh; upward vertical scrolling is disabled.\n\nThis update keeps uTube's separate app identity and the existing playback and solver configuration. Carousel previews still yield to a playing or minimized video and to AirPlay.",
-      "downloadURL": "https://github.com/kharrisongit/utube/releases/download/1.12.9/uTube_1.12.9.ipa",
-      "size": 11040588
+      "version": "1.12.10",
+      "versionDate": "2026-10-12T12:11:00Z",
+      "versionDescription": "uTube by kharrison, based on Opaline by verback2308.\n\n- Added two experimental playback options after the existing four: Web · native HLS and Embedded web · byte ranges. Enable them in Settings → Debug → Playback sources. Both are off by default; your existing choices and solver stay configured as before.\n- Native web HLS can use the YouTube website account you already connected, with automatic quality in the standard player. No separate Google registration or web player window is needed. Availability depends on the video and session.\n- Embedded playback tries anonymous compatible streams for videos that allow embedding, using the existing signature solver and native HLS delivery with quality selection.\n- Added time limits for experimental loading and guards against late, duplicate or cancelled source responses replacing the current video.\n\nThese are experimental alternatives, not guaranteed fixes for YouTube restrictions. Live playback and sustained AirPlay on the new methods still need device testing. The current four playback methods remain the defaults. See EXPERIMENTAL_PLAYBACK.md in the repository for details and the test guide.",
+      "downloadURL": "https://github.com/kharrisongit/utube/releases/download/1.12.10/uTube_1.12.10.ipa",
+      "size": 11080602
     },
     {
       "name": "The Last Dragonrider",
@@ -100,6 +109,15 @@
     }
   ],
   "news": [
+    {
+      "title": "uTube 1.12.10 — kharrison",
+      "identifier": "com.kharrison.utube.release-1.12.10",
+      "caption": "Added two experimental playback options after the existing four: Web · native HLS and Embedded web · byte ranges. Ena…",
+      "date": "2026-10-12T12:11:00Z",
+      "tintColor": "FF0000",
+      "appID": "com.kharrison.utube",
+      "url": "https://github.com/kharrisongit/utube/releases/tag/1.12.10"
+    },
     {
       "title": "uTube 1.12.9 — kharrison",
       "identifier": "com.kharrison.utube.release-1.12.9",
