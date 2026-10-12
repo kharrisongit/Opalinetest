@@ -1,0 +1,73 @@
+name: Build Verse IPA
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'source/verse/**'
+      - '.github/workflows/verse.yml'
+permissions:
+  contents: write
+concurrency:
+  group: opaline-release
+  cancel-in-progress: false
+jobs:
+  build:
+    runs-on: macos-15
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+      - name: Choose release version
+        id: release
+        run: |
+          PATCH=0
+          while git rev-parse -q --verify "refs/tags/verse-1.0.$PATCH" >/dev/null; do PATCH=$((PATCH+1)); done
+          echo "version=1.0.$PATCH" >> "$GITHUB_OUTPUT"
+      - name: Check revision safety, rhymes, and source publisher
+        run: |
+          swiftc source/verse/Sources/Models.swift source/verse/Tests/CoreChecks.swift -o "$RUNNER_TEMP/verse-checks"
+          "$RUNNER_TEMP/verse-checks"
+          python3 -m unittest discover -s scripts -p 'test_update_source.py'
+      - name: Build IPA
+        env:
+          VERSE_VERSION: ${{ steps.release.outputs.version }}
+          VERSE_BUILD: ${{ github.run_number }}
+        run: bash source/verse/build.sh
+      - name: Launch app in simulator
+        env:
+          VERSE_VERSION: ${{ steps.release.outputs.version }}
+          VERSE_BUILD: ${{ github.run_number }}
+        run: bash source/verse/smoke.sh
+      - name: Publish Verse and update AltStore
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          VERSION: ${{ steps.release.outputs.version }}
+        run: |
+          TAG="verse-$VERSION"
+          IPA=source/verse/build/Verse.ipa
+          gh release create "$TAG" "$IPA" source/verse/build/verse-icon.png source/verse/build/verse-screenshot.png \
+            --draft --title "Verse $VERSION" --notes-file source/verse/RELEASE.md --target "$GITHUB_SHA"
+          gh release edit "$TAG" --draft=false --latest=false
+          URL="https://github.com/${GITHUB_REPOSITORY}/releases/download/${TAG}/Verse.ipa"
+          curl --fail --location --head --retry 5 --retry-all-errors --retry-delay 3 "$URL"
+          SIZE=$(stat -f%z "$IPA")
+          DATE=$(gh release view "$TAG" --json publishedAt --jq .publishedAt)
+          git pull --rebase origin main
+          python3 scripts/update_source.py --file source/apps.json --app-template source/verse/app.json \
+            --version "$VERSION" --download-url "$URL" --size "$SIZE" --date "$DATE" --ipa "$IPA" \
+            --notes-file source/verse/RELEASE.md --release-title "Verse $VERSION"
+          python3 - "$TAG" <<'PY'
+          import json,pathlib,sys,os
+          p=pathlib.Path('source/apps.json');data=json.loads(p.read_text())
+          app=next(a for a in data['apps'] if a['bundleIdentifier']=='com.kharrison.verse')
+          base=f"https://github.com/{os.environ['GITHUB_REPOSITORY']}/releases/download/{sys.argv[1]}"
+          app['iconURL']=base+'/verse-icon.png'
+          p.write_text(json.dumps(data,indent=2,ensure_ascii=False)+'\n')
+          PY
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add source/apps.json
+          git commit -m "Add Verse $VERSION to kharrison Apps [skip ci]"
+          git push origin HEAD:main

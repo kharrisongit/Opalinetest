@@ -1,0 +1,12 @@
+{
+  "name": "Verse",
+  "bundleIdentifier": "com.kharrison.verse",
+  "developerName": "kharrison",
+  "subtitle": "Your next song starts here",
+  "localizedDescription": "An offline lyric notebook for iPhone and iPad. Organize songs into notebooks, search titles and lyrics, add tags and favorites, and write with native spell check. Find perfect and near rhymes from a bundled English pronunciation dictionary with syllable filters. Connect a folder in iCloud Drive through Files on each device for cloud sync while Verse is open. Parallel edits remain separate drafts. Includes text sharing, complete backups, and recoverable deleted lyrics. iOS 16 or newer. For AltStore Classic.",
+  "iconURL": "https://github.com/kharrisongit/utube/releases/download/verse-1.0.0/verse-icon.png",
+  "tintColor": "197A66",
+  "category": "productivity",
+  "minOSVersion": "16.0",
+  "appPermissions": { "entitlements": ["application-identifier", "com.apple.developer.team-identifier", "get-task-allow"], "privacy": {} }
+}
