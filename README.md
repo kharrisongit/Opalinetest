@@ -2,7 +2,7 @@
 >
 > Add this source in **AltStore → Sources → +**:
 >
-> `https://raw.githubusercontent.com/kharrisongit/Opalinetest/main/source/apps.json`
+> `https://raw.githubusercontent.com/kharrisongit/utube/main/source/apps.json`
 >
 > Install **uTube** and **The Last Dragonrider** from **kharrison Apps**, the shared source for kharrison’s personal projects. If this source is already installed, refresh Sources and update the app in AltStore. Successful builds publish the release and update the source automatically. AltStore signs the app during installation; AltServer may need to be running for your setup.
 >
@@ -19,8 +19,8 @@
 
 **A lightweight, native YouTube client for iOS 12+. No ads, no tracking, no dependencies.**
 
-[![Latest release](https://img.shields.io/github/v/release/kharrisongit/Opalinetest?label=release&color=blue)](https://github.com/kharrisongit/Opalinetest/releases/latest)
-[![Downloads](https://img.shields.io/github/downloads/kharrisongit/Opalinetest/total?color=brightgreen)](https://github.com/kharrisongit/Opalinetest/releases)
+[![Latest release](https://img.shields.io/github/v/release/kharrisongit/Opalinetest?label=release&color=blue)](https://github.com/kharrisongit/utube/releases/latest)
+[![Downloads](https://img.shields.io/github/downloads/kharrisongit/utube/total?color=brightgreen)](https://github.com/kharrisongit/utube/releases)
 ![iOS 12+](https://img.shields.io/badge/iOS-12%2B-lightgrey?logo=apple)
 [![License: GPL v3](https://img.shields.io/badge/license-GPLv3-blue)](LICENSE)
 
@@ -132,11 +132,11 @@ For older hardware — armv7 devices on iOS 9.3, such as the iPad 2, iPad 3, iPa
 
 Add the uTube source to your sideloading app to receive automatic updates:
 
-<a href="https://stikstore.app/altdirect/?url=https://raw.githubusercontent.com/kharrisongit/Opalinetest/main/source/apps.json"><img src="https://github.com/StikStore/altdirect/raw/main/assets/png/AltSource_Blue.png" height="55" alt="Add Source"></a>
+<a href="https://stikstore.app/altdirect/?url=https://raw.githubusercontent.com/kharrisongit/utube/main/source/apps.json"><img src="https://github.com/StikStore/altdirect/raw/main/assets/png/AltSource_Blue.png" height="55" alt="Add Source"></a>
 
 **Option 2 — Manual install**
 
-[Download the latest IPA](https://github.com/kharrisongit/Opalinetest/releases/latest) and install via **SideStore**, **AltStore**, or **LiveContainer**.
+[Download the latest IPA](https://github.com/kharrisongit/utube/releases/latest) and install via **SideStore**, **AltStore**, or **LiveContainer**.
 
 **Option 3 — Build from source**
 
