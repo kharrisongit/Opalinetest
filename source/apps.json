@@ -34,6 +34,15 @@
       },
       "versions": [
         {
+          "version": "1.12.1",
+          "date": "2026-10-12T07:30:02Z",
+          "localizedDescription": "uTube by kharrison, based on Opaline by verback2308.\n\n- Native comment editor and replies in videos and Shorts. Tap **Write a comment** or **Reply**, choose your connected YouTube channel, then **Post**.\n- Commenting account setup in Settings. Posting uses Google's YouTube API and requires your own iOS OAuth client ID; see NATIVE_COMMENTING.md in this repository. Playback sign-in is separate. No Google client is bundled.\n- Keep drafts after failed requests and only show a new comment after YouTube confirms it. Ambiguous network failures are never retried automatically.\n- New **uTube** app name, custom red icon, and **kharrison** attribution.\n- AirPlay background fixes: keep an active route playing when leaving the app, prevent automatic PiP from interrupting AirPlay, and avoid pausing AirPlay when PiP closes.\n\nUpdate through the same AltStore source. The bundle identifier is unchanged to preserve the existing installation. AirPlay still needs a check on your receiver; no live Google comment was posted during automated validation.",
+          "downloadURL": "https://github.com/kharrisongit/Opalinetest/releases/download/1.12.1/uTube_1.12.1.ipa",
+          "size": 10898616,
+          "minOSVersion": "12.0",
+          "buildVersion": "606"
+        },
+        {
           "version": "1.12.0",
           "date": "2026-10-12T06:48:18Z",
           "localizedDescription": "This is kharrison's fork of Opaline, based on the original app by verback2308.\n\n- Added **Comment on YouTube** to the video and Shorts comment panels. Write comments and replies through YouTube's page inside Opaline, then tap **Done** to return.\n- Refresh the native comment list on return and ignore outdated requests from before the refresh.\n- Publish installable updates through kharrison's AltStore Classic source.\n\nYouTube may ask you to sign in in the browser. This sign-in is separate from the app's account sign-in. Commenting requires an internet connection and a video with comments enabled.",
@@ -43,14 +52,23 @@
           "buildVersion": "603"
         }
       ],
-      "version": "1.12.0",
-      "versionDate": "2026-10-12T06:48:18Z",
-      "versionDescription": "This is kharrison's fork of Opaline, based on the original app by verback2308.\n\n- Added **Comment on YouTube** to the video and Shorts comment panels. Write comments and replies through YouTube's page inside Opaline, then tap **Done** to return.\n- Refresh the native comment list on return and ignore outdated requests from before the refresh.\n- Publish installable updates through kharrison's AltStore Classic source.\n\nYouTube may ask you to sign in in the browser. This sign-in is separate from the app's account sign-in. Commenting requires an internet connection and a video with comments enabled.",
-      "downloadURL": "https://github.com/kharrisongit/Opalinetest/releases/download/1.12.0/Opaline_1.12.0.ipa",
-      "size": 6684986
+      "version": "1.12.1",
+      "versionDate": "2026-10-12T07:30:02Z",
+      "versionDescription": "uTube by kharrison, based on Opaline by verback2308.\n\n- Native comment editor and replies in videos and Shorts. Tap **Write a comment** or **Reply**, choose your connected YouTube channel, then **Post**.\n- Commenting account setup in Settings. Posting uses Google's YouTube API and requires your own iOS OAuth client ID; see NATIVE_COMMENTING.md in this repository. Playback sign-in is separate. No Google client is bundled.\n- Keep drafts after failed requests and only show a new comment after YouTube confirms it. Ambiguous network failures are never retried automatically.\n- New **uTube** app name, custom red icon, and **kharrison** attribution.\n- AirPlay background fixes: keep an active route playing when leaving the app, prevent automatic PiP from interrupting AirPlay, and avoid pausing AirPlay when PiP closes.\n\nUpdate through the same AltStore source. The bundle identifier is unchanged to preserve the existing installation. AirPlay still needs a check on your receiver; no live Google comment was posted during automated validation.",
+      "downloadURL": "https://github.com/kharrisongit/Opalinetest/releases/download/1.12.1/uTube_1.12.1.ipa",
+      "size": 10898616
     }
   ],
   "news": [
+    {
+      "title": "Opaline 1.12.1 — uTube 1.12.1 — kharrison",
+      "identifier": "release-1.12.1",
+      "caption": "Native comment editor and replies in videos and Shorts. Tap Write a comment or Reply, choose your connected YouTube c…",
+      "date": "2026-10-12T07:30:02Z",
+      "tintColor": "FF0000",
+      "appID": "com.verback.YTLite",
+      "url": "https://github.com/kharrisongit/Opalinetest/releases/tag/1.12.1"
+    },
     {
       "title": "Opaline 1.12.0 — kharrison's fork",
       "identifier": "release-1.12.0",
