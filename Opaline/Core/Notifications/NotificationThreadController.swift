@@ -5,6 +5,7 @@ final class NotificationThreadController: UIViewController {
     let item: YouTubeNotification
     let table = UITableView()
     let composer = InlineCommentComposer()
+    let contentStack = UIStackView()
     let message = UILabel()
     let more = UIButton(type: .system)
     var parent: Comment?
@@ -58,7 +59,7 @@ final class NotificationThreadController: UIViewController {
         parent = nil
         replies = []
         continuation = nil
-        composer.isHidden = true
+        setComposerVisible(false)
         table.reloadData()
         load()
     }
@@ -116,7 +117,7 @@ final class NotificationThreadController: UIViewController {
             return
         }
         let target = CommentPostTarget(videoID: videoID, parentID: parent.id)
-        composer.isHidden = (try? YouTubeCommentModel.writeBody(in: json, target: target)) == nil
+        setComposerVisible((try? YouTubeCommentModel.writeBody(in: json, target: target)) != nil)
         composer.configure(videoID: videoID)
         let recipient = replies.first { $0.id == item.destination.commentID } ?? parent
         composer.beginReply(to: parent, recipient: recipient, focus: false)

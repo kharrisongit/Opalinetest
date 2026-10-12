@@ -21,7 +21,8 @@ struct YouTubeNotificationDestination {
         commentID = linked.flatMap(Self.commentID)
             ?? watches.compactMap { $0["commentId"] as? String }.first
         channelID = commands.compactMap { $0["browseEndpoint"] as? [String: Any] }
-            .compactMap { $0["browseId"] as? String }.first { $0.hasPrefix("UC") }
+            .compactMap { $0["browseId"] as? String }
+            .first { $0.hasPrefix("UC") }
     }
 
     private static func commentID(in url: URL) -> String? {

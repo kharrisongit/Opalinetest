@@ -25,7 +25,8 @@ extension NotificationThreadController {
     }
 
     private func arrangeViews() {
-        let stack = UIStackView(arrangedSubviews: [table, composer])
+        let stack = contentStack
+        stack.addArrangedSubview(table)
         stack.axis = .vertical
         stack.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(stack)
@@ -38,6 +39,17 @@ extension NotificationThreadController {
         ])
         keyboardGuide = CommentKeyboardGuide(host: view, bottom: bottom)
         composer.isHidden = true
+    }
+
+    func setComposerVisible(_ visible: Bool) {
+        // Detach a hidden composer so its editor height cannot fight a zero-height stack row.
+        if visible {
+            composer.isHidden = false
+            if composer.superview == nil { contentStack.addArrangedSubview(composer) }
+        } else {
+            composer.removeFromSuperview()
+            composer.isHidden = true
+        }
     }
 
     func setupComposer() {
