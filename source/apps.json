@@ -27,6 +27,15 @@
       },
       "versions": [
         {
+          "version": "1.12.9",
+          "date": "2026-10-12T11:39:54Z",
+          "localizedDescription": "uTube by kharrison, based on Opaline by verback2308.\n\n- Replies now filters comment notifications from the working YouTube inbox, with support for wrapped comment links and older inbox pages.\n- Tap a comment notification to read its parent and replies inside the notification panel. The linked comment is highlighted; you can load more replies and send a reply without opening or changing the playing video.\n- Replying to someone inside a thread addresses that person. Drafts are kept separately for each recipient while replies stay in the correct thread.\n- Removed the old app-release news setting and stopped release-news polling. Credits remain in Settings; exported debug logs now use the uTube name.\n- The casting button stays red whether connected or disconnected.\n- Carousel cards fill more of the available height. Swipe left or right between cards, or pull down to refresh; upward vertical scrolling is disabled.\n\nThis update keeps uTube's separate app identity and the existing playback and solver configuration. Carousel previews still yield to a playing or minimized video and to AirPlay.",
+          "downloadURL": "https://github.com/kharrisongit/utube/releases/download/1.12.9/uTube_1.12.9.ipa",
+          "size": 11040588,
+          "minOSVersion": "12.0",
+          "buildVersion": "634"
+        },
+        {
           "version": "1.12.8",
           "date": "2026-10-12T10:56:23Z",
           "localizedDescription": "uTube by kharrison, based on Opaline by verback2308.\n\n- uTube now installs as its own app alongside Opaline, using the separate com.kharrison.utube app identifier.\n- The Open in uTube share action uses its own link handler so it opens uTube when both apps are installed.\n- The kharrison Apps source now offers the standalone uTube build. Older builds that shared Opaline's identity are no longer offered in the source.\n- Refreshed the GitHub page with uTube's features, icon, installation instructions, and credits. Removed upstream promotional and donation buttons.\n- Jailbreak packages also use their own package ID and app folder.\n\nInstall uTube from the refreshed kharrison Apps source as a new app. You can keep Opaline or the older uTube installation. Settings, downloads, and sign-in from the older installation do not transfer automatically; connect your account in the new app. Future uTube updates use this new identity.\n\nWall, Carousel, inline comments, YouTube notifications, customizable controls, and AirPlay behavior remain available.",
@@ -36,11 +45,11 @@
           "buildVersion": "630"
         }
       ],
-      "version": "1.12.8",
-      "versionDate": "2026-10-12T10:56:23Z",
-      "versionDescription": "uTube by kharrison, based on Opaline by verback2308.\n\n- uTube now installs as its own app alongside Opaline, using the separate com.kharrison.utube app identifier.\n- The Open in uTube share action uses its own link handler so it opens uTube when both apps are installed.\n- The kharrison Apps source now offers the standalone uTube build. Older builds that shared Opaline's identity are no longer offered in the source.\n- Refreshed the GitHub page with uTube's features, icon, installation instructions, and credits. Removed upstream promotional and donation buttons.\n- Jailbreak packages also use their own package ID and app folder.\n\nInstall uTube from the refreshed kharrison Apps source as a new app. You can keep Opaline or the older uTube installation. Settings, downloads, and sign-in from the older installation do not transfer automatically; connect your account in the new app. Future uTube updates use this new identity.\n\nWall, Carousel, inline comments, YouTube notifications, customizable controls, and AirPlay behavior remain available.",
-      "downloadURL": "https://github.com/kharrisongit/utube/releases/download/1.12.8/uTube_1.12.8.ipa",
-      "size": 11031083
+      "version": "1.12.9",
+      "versionDate": "2026-10-12T11:39:54Z",
+      "versionDescription": "uTube by kharrison, based on Opaline by verback2308.\n\n- Replies now filters comment notifications from the working YouTube inbox, with support for wrapped comment links and older inbox pages.\n- Tap a comment notification to read its parent and replies inside the notification panel. The linked comment is highlighted; you can load more replies and send a reply without opening or changing the playing video.\n- Replying to someone inside a thread addresses that person. Drafts are kept separately for each recipient while replies stay in the correct thread.\n- Removed the old app-release news setting and stopped release-news polling. Credits remain in Settings; exported debug logs now use the uTube name.\n- The casting button stays red whether connected or disconnected.\n- Carousel cards fill more of the available height. Swipe left or right between cards, or pull down to refresh; upward vertical scrolling is disabled.\n\nThis update keeps uTube's separate app identity and the existing playback and solver configuration. Carousel previews still yield to a playing or minimized video and to AirPlay.",
+      "downloadURL": "https://github.com/kharrisongit/utube/releases/download/1.12.9/uTube_1.12.9.ipa",
+      "size": 11040588
     },
     {
       "name": "The Last Dragonrider",
@@ -91,6 +100,15 @@
     }
   ],
   "news": [
+    {
+      "title": "uTube 1.12.9 — kharrison",
+      "identifier": "com.kharrison.utube.release-1.12.9",
+      "caption": "Replies now filters comment notifications from the working YouTube inbox, with support for wrapped comment links and…",
+      "date": "2026-10-12T11:39:54Z",
+      "tintColor": "FF0000",
+      "appID": "com.kharrison.utube",
+      "url": "https://github.com/kharrisongit/utube/releases/tag/1.12.9"
+    },
     {
       "title": "uTube 1.12.8 — kharrison",
       "identifier": "com.kharrison.utube.release-1.12.8",
