@@ -6,6 +6,59 @@
   "website": "https://github.com/kharrisongit/Opalinetest",
   "iconURL": "https://raw.githubusercontent.com/kharrisongit/Opalinetest/main/source/icon.png",
   "tintColor": "FF0000",
-  "apps": [],
-  "news": []
+  "apps": [
+    {
+      "name": "Opaline",
+      "bundleIdentifier": "com.verback.YTLite",
+      "developerName": "verback2308 · Fork maintained by Kurtis Harrison",
+      "subtitle": "Kurtis’s fork with in-app commenting",
+      "localizedDescription": "Kurtis’s fork of the native Opaline YouTube client by verback2308. Includes an in-app YouTube browser for writing comments and replies, plus the original playback, downloads, SponsorBlock, background audio, and Picture-in-Picture features. For AltStore Classic.",
+      "iconURL": "https://raw.githubusercontent.com/kharrisongit/Opalinetest/main/source/icon.png",
+      "tintColor": "FF0000",
+      "category": "entertainment",
+      "minOSVersion": "12.0",
+      "screenshots": [
+        "https://raw.githubusercontent.com/kharrisongit/Opalinetest/main/screenshots/app/iphone/dark/recommendations.jpeg",
+        "https://raw.githubusercontent.com/kharrisongit/Opalinetest/main/screenshots/app/iphone/dark/player.jpeg",
+        "https://raw.githubusercontent.com/kharrisongit/Opalinetest/main/screenshots/app/iphone/dark/channel.jpeg",
+        "https://raw.githubusercontent.com/kharrisongit/Opalinetest/main/screenshots/app/iphone/dark/subscriptions.jpeg",
+        "https://raw.githubusercontent.com/kharrisongit/Opalinetest/main/screenshots/app/iphone/dark/settings.jpeg"
+      ],
+      "appPermissions": {
+        "entitlements": [
+          "application-identifier",
+          "com.apple.developer.team-identifier",
+          "get-task-allow"
+        ],
+        "privacy": {}
+      },
+      "versions": [
+        {
+          "version": "1.12.0",
+          "date": "2026-10-12T06:48:18Z",
+          "localizedDescription": "This is Kurtis's fork of Opaline, based on the original app by verback2308.\n\n- Added **Comment on YouTube** to the video and Shorts comment panels. Write comments and replies through YouTube's page inside Opaline, then tap **Done** to return.\n- Refresh the native comment list on return and ignore outdated requests from before the refresh.\n- Publish installable updates through Kurtis's AltStore Classic source.\n\nYouTube may ask you to sign in in the browser. This sign-in is separate from the app's account sign-in. Commenting requires an internet connection and a video with comments enabled.",
+          "downloadURL": "https://github.com/kharrisongit/Opalinetest/releases/download/1.12.0/Opaline_1.12.0.ipa",
+          "size": 6684986,
+          "minOSVersion": "12.0",
+          "buildVersion": "603"
+        }
+      ],
+      "version": "1.12.0",
+      "versionDate": "2026-10-12T06:48:18Z",
+      "versionDescription": "This is Kurtis's fork of Opaline, based on the original app by verback2308.\n\n- Added **Comment on YouTube** to the video and Shorts comment panels. Write comments and replies through YouTube's page inside Opaline, then tap **Done** to return.\n- Refresh the native comment list on return and ignore outdated requests from before the refresh.\n- Publish installable updates through Kurtis's AltStore Classic source.\n\nYouTube may ask you to sign in in the browser. This sign-in is separate from the app's account sign-in. Commenting requires an internet connection and a video with comments enabled.",
+      "downloadURL": "https://github.com/kharrisongit/Opalinetest/releases/download/1.12.0/Opaline_1.12.0.ipa",
+      "size": 6684986
+    }
+  ],
+  "news": [
+    {
+      "title": "Opaline 1.12.0 — Kurtis's fork",
+      "identifier": "release-1.12.0",
+      "caption": "Added Comment on YouTube to the video and Shorts comment panels. Write comments and replies through YouTube's page in…",
+      "date": "2026-10-12T06:48:18Z",
+      "tintColor": "FF0000",
+      "appID": "com.verback.YTLite",
+      "url": "https://github.com/kharrisongit/Opalinetest/releases/tag/1.12.0"
+    }
+  ]
 }
