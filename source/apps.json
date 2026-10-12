@@ -2,7 +2,7 @@
   "name": "kharrison Apps",
   "identifier": "com.kharrisongit.opaline-source",
   "subtitle": "Personal apps, games, and projects",
-  "description": "Personal projects by kharrison. Home to uTube, a custom YouTube client, and The Last Dragonrider, a pixel-art RPG. Discover new projects and get the latest releases here.",
+  "description": "Personal projects by kharrison. Home to uTube, The Last Dragonrider, and Verse, a native lyric notebook with cloud sync, spell check, and offline rhymes.",
   "website": "https://github.com/kharrisongit",
   "iconURL": "https://raw.githubusercontent.com/kharrisongit/utube/main/source/kharrison-apps-icon-v1.png",
   "tintColor": "139AAA",
@@ -131,7 +131,7 @@
       "developerName": "kharrison",
       "subtitle": "Your next song starts here",
       "localizedDescription": "An offline lyric notebook for iPhone and iPad. Organize songs into notebooks, search titles and lyrics, add tags and favorites, and write with native spell check. Find perfect and near rhymes from a bundled English pronunciation dictionary with syllable filters. Connect a folder in iCloud Drive through Files on each device for cloud sync while Verse is open. Parallel edits remain separate drafts. Includes text sharing, complete backups, and recoverable deleted lyrics. iOS 16 or newer. For AltStore Classic.",
-      "iconURL": "https://github.com/kharrisongit/utube/releases/download/verse-1.0.0/verse-icon.png",
+      "iconURL": "https://github.com/kharrisongit/Verse/releases/download/verse-1.0.1/verse-icon.png",
       "tintColor": "197A66",
       "category": "productivity",
       "minOSVersion": "16.0",
@@ -145,6 +145,15 @@
       },
       "versions": [
         {
+          "version": "1.0.1",
+          "date": "2026-10-12T21:23:06Z",
+          "localizedDescription": "Verse 1.0.1 by kharrison\n\n- A dedicated native lyric notebook for iPhone and iPad, installable through AltStore Classic.\n- Notebooks, lyric search, tags, favorites, word and line counts, and quick Verse/Chorus/Bridge headings.\n- Native spell check with suggestions and a personal dictionary. Optional autocorrect starts off.\n- Offline perfect and near rhymes from the CMU Pronouncing Dictionary, with syllable filters. Select a word in your lyric and tap Rhyme.\n- Local autosave and cloud-folder sync through Files. Choose the same iCloud Drive folder in Settings on each device. Sync runs while the app is open; Files handles provider upload/download.\n- Immutable saved revisions preserve concurrent edits as separate drafts. Recover lyrics from Recently deleted, share plain text, and export or restore complete backups.\n\nCloud setup requires choosing a folder in iCloud Drive, not On My iPhone. iCloud propagation and AltStore installation still require confirmation on physical devices. The app does not require a custom CloudKit entitlement or a rhyme API subscription.\n\nVerse now has its own GitHub repository: https://github.com/kharrisongit/Verse",
+          "downloadURL": "https://github.com/kharrisongit/Verse/releases/download/verse-1.0.1/Verse.ipa",
+          "size": 1101445,
+          "minOSVersion": "16.0",
+          "buildVersion": "1"
+        },
+        {
           "version": "1.0.0",
           "date": "2026-10-12T21:13:22Z",
           "localizedDescription": "Verse 1.0.0 by kharrison\n\n- A dedicated native lyric notebook for iPhone and iPad, installable through AltStore Classic.\n- Notebooks, lyric search, tags, favorites, word and line counts, and quick Verse/Chorus/Bridge headings.\n- Native spell check with suggestions and a personal dictionary. Optional autocorrect starts off.\n- Offline perfect and near rhymes from the CMU Pronouncing Dictionary, with syllable filters. Select a word in your lyric and tap Rhyme.\n- Local autosave and cloud-folder sync through Files. Choose the same iCloud Drive folder in Settings on each device. Sync runs while the app is open; Files handles provider upload/download.\n- Immutable saved revisions preserve concurrent edits as separate drafts. Recover lyrics from Recently deleted, share plain text, and export or restore complete backups.\n\nCloud setup requires choosing a folder in iCloud Drive, not On My iPhone. iCloud propagation and AltStore installation still require confirmation on physical devices. The app does not require a custom CloudKit entitlement or a rhyme API subscription.",
@@ -154,14 +163,23 @@
           "buildVersion": "1"
         }
       ],
-      "version": "1.0.0",
-      "versionDate": "2026-10-12T21:13:22Z",
-      "versionDescription": "Verse 1.0.0 by kharrison\n\n- A dedicated native lyric notebook for iPhone and iPad, installable through AltStore Classic.\n- Notebooks, lyric search, tags, favorites, word and line counts, and quick Verse/Chorus/Bridge headings.\n- Native spell check with suggestions and a personal dictionary. Optional autocorrect starts off.\n- Offline perfect and near rhymes from the CMU Pronouncing Dictionary, with syllable filters. Select a word in your lyric and tap Rhyme.\n- Local autosave and cloud-folder sync through Files. Choose the same iCloud Drive folder in Settings on each device. Sync runs while the app is open; Files handles provider upload/download.\n- Immutable saved revisions preserve concurrent edits as separate drafts. Recover lyrics from Recently deleted, share plain text, and export or restore complete backups.\n\nCloud setup requires choosing a folder in iCloud Drive, not On My iPhone. iCloud propagation and AltStore installation still require confirmation on physical devices. The app does not require a custom CloudKit entitlement or a rhyme API subscription.",
-      "downloadURL": "https://github.com/kharrisongit/utube/releases/download/verse-1.0.0/Verse.ipa",
-      "size": 1100543
+      "version": "1.0.1",
+      "versionDate": "2026-10-12T21:23:06Z",
+      "versionDescription": "Verse 1.0.1 by kharrison\n\n- A dedicated native lyric notebook for iPhone and iPad, installable through AltStore Classic.\n- Notebooks, lyric search, tags, favorites, word and line counts, and quick Verse/Chorus/Bridge headings.\n- Native spell check with suggestions and a personal dictionary. Optional autocorrect starts off.\n- Offline perfect and near rhymes from the CMU Pronouncing Dictionary, with syllable filters. Select a word in your lyric and tap Rhyme.\n- Local autosave and cloud-folder sync through Files. Choose the same iCloud Drive folder in Settings on each device. Sync runs while the app is open; Files handles provider upload/download.\n- Immutable saved revisions preserve concurrent edits as separate drafts. Recover lyrics from Recently deleted, share plain text, and export or restore complete backups.\n\nCloud setup requires choosing a folder in iCloud Drive, not On My iPhone. iCloud propagation and AltStore installation still require confirmation on physical devices. The app does not require a custom CloudKit entitlement or a rhyme API subscription.\n\nVerse now has its own GitHub repository: https://github.com/kharrisongit/Verse",
+      "downloadURL": "https://github.com/kharrisongit/Verse/releases/download/verse-1.0.1/Verse.ipa",
+      "size": 1101445
     }
   ],
   "news": [
+    {
+      "title": "Verse 1.0.1",
+      "identifier": "com.kharrison.verse.release-1.0.1",
+      "caption": "A dedicated native lyric notebook for iPhone and iPad, installable through AltStore Classic.",
+      "date": "2026-10-12T21:23:06Z",
+      "tintColor": "197A66",
+      "appID": "com.kharrison.verse",
+      "url": "https://github.com/kharrisongit/Verse/releases/tag/verse-1.0.1"
+    },
     {
       "title": "Verse 1.0.0",
       "identifier": "com.kharrison.verse.release-1.0.0",
