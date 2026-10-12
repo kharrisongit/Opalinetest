@@ -74,7 +74,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Auto theme can go stale in the background (schedule boundary or a
         // system appearance change while suspended).
         ThemeManager.shared.refreshAutoTheme()
-        UpdateNotificationService.shared.checkIfNeeded()
         resolveDeferredAuthIfNeeded()
     }
 
@@ -221,7 +220,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                   !(root is AuthViewController),
                   !(root is SplashViewController),
                   root.presentedViewController == nil
-            else { return }
+            else {
+                return
+            }
             let auth = AuthViewController()
             auth.onAuthorized = { [weak self] in
                 root.dismiss(animated: true)

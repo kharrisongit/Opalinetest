@@ -210,7 +210,6 @@
 "settings.homeLayout.rails" = "Горизонтальні стрічки";
 
 "settings.section.notifications" = "Сповіщення";
-"settings.row.notifications" = "Сповіщення";
 
 "settings.row.feedCache" = "Кеш стрічки";
 "settings.row.feedCacheDuration" = "Строк кешу стрічки";
@@ -365,8 +364,6 @@
 "settings.language.restartTitle" = "Потрібен перезапуск";
 "settings.language.restartMessage" = "Зміни повністю набудуть чинності після перезапуску застосунку.";
 
-"settings.row.appUpdates" = "Оновлення додатку";
-"settings.footer.notifications" = "Доставка може затримуватися — iOS планує фонові перевірки і не виконує їх миттєво.";
 
 /* ===== Notifications ===== */
 

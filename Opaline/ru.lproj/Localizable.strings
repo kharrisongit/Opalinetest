@@ -254,7 +254,6 @@
 "settings.homeLayout.rails" = "Горизонтальные ленты";
 
 "settings.section.notifications" = "Уведомления";
-"settings.row.notifications" = "Уведомления";
 
 "settings.row.feedCache" = "Кэш ленты";
 "settings.row.feedCacheDuration" = "Срок кэша ленты";
@@ -410,8 +409,6 @@
 "settings.language.restartTitle" = "Требуется перезапуск";
 "settings.language.restartMessage" = "Изменения полностью вступят в силу после перезапуска приложения.";
 
-"settings.row.appUpdates" = "Обновления приложения";
-"settings.footer.notifications" = "Доставка может быть отложена — iOS планирует фоновые проверки и не выполняет их немедленно.";
 
 /* ===== Notifications ===== */
 

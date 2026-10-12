@@ -144,7 +144,7 @@ private extension WatchViewController {
             guard let parent else {
                 return
             }
-            self?.showCommentComposer(parent: parent)
+            self?.showCommentComposer(parent: parent, recipient: comment)
         }
         return cell
     }

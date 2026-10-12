@@ -3,16 +3,11 @@ import Foundation
 /// Refreshes the home and subscriptions feeds from a background fetch wake-up,
 /// so the cache is warm the next time either screen opens.
 ///
-/// Not wired up here — call `refresh(completion:)` from
-/// `AppDelegate+Notifications.swift`'s
-/// `application(_:performFetchWithCompletionHandler:)`, alongside the
-/// existing `UpdateNotificationService.shared.checkIfNeeded` call. The two
-/// share the ~30s background execution window.
+/// Called by `AppDelegate+Notifications.swift` during the system's background-fetch window.
 final class BackgroundRefreshService {
     static let shared = BackgroundRefreshService()
 
-    /// Self-imposed budget, well under iOS's ~30s background fetch window
-    /// (shared with the notification check running alongside this).
+    /// Self-imposed budget, well under iOS's ~30s background fetch window.
     private static let budget: TimeInterval = 20
 
     private let feedService: FeedService

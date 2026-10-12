@@ -105,7 +105,9 @@ enum YouTubeNotificationModel {
         let renderer = row["continuationItemRenderer"] as? [String: Any]
         let endpoint = renderer?["continuationEndpoint"] as? [String: Any]
         let command = endpoint?["continuationCommand"] as? [String: Any]
-        guard let token = command?["token"] as? String, !token.isEmpty else {
+        let menu = endpoint?["getNotificationMenuEndpoint"] as? [String: Any]
+        guard let token = command?["token"] as? String ?? menu?["ctoken"] as? String,
+              !token.isEmpty else {
             return nil
         }
         let request = command?["request"] as? String

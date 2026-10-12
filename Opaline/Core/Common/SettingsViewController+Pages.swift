@@ -67,7 +67,7 @@ extension SettingsViewController {
                 rows: [
                     .pageAppearance, .pageLanguage,
                     .pagePlayback, .pageShorts, .pageDownloads,
-                    .notificationSettings, .commentingAccount, .pageSponsorBlock,
+                    .commentingAccount, .pageSponsorBlock,
                     .pageCache, .pageDebug
                 ]
             ),

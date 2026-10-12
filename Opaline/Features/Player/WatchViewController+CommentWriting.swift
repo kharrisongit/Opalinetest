@@ -18,9 +18,9 @@ extension WatchViewController {
         }
     }
 
-    func showCommentComposer(parent: Comment?) {
+    func showCommentComposer(parent: Comment?, recipient: Comment? = nil) {
         commentComposer.configure(videoID: initialVideo.id)
-        commentComposer.beginReply(to: parent)
+        commentComposer.beginReply(to: parent, recipient: recipient)
     }
 
     private func presentCommentAccount() {

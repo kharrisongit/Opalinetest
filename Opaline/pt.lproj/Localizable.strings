@@ -246,7 +246,6 @@
 
 /* Notifications section */
 "settings.section.notifications" = "Notificações";
-"settings.row.notifications" = "Notificações";
 
 /* Cache rows */
 "settings.row.feedCache" = "Cache do feed";
@@ -422,8 +421,6 @@
 "settings.language.restartMessage" = "As alterações se aplicam completamente após reiniciar o app.";
 
 /* Notification settings screen (pushed from Settings > Home) */
-"settings.row.appUpdates" = "Atualizações do app";
-"settings.footer.notifications" = "A entrega pode ter atraso — iOS agenda verificações em segundo plano e não as executa imediatamente.";
 
 /* ===== Notifications ===== */
 

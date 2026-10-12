@@ -21,7 +21,6 @@ final class SettingsViewController: UIViewController {
         case imageCacheEnabled, imageCacheDays, thumbnailQuality
         case clearCache, rydEnabled
         case sponsorBlockEnabled, sponsorBlockSettings
-        case notificationSettings
         case playbackChain
         case resetIdentity
         case solverEndpoint
@@ -369,8 +368,6 @@ extension SettingsViewController: UITableViewDataSource, UITableViewDelegate {
             return makeDisclosureCell(
                 "settings.row.sponsorblockSettings".localized
             )
-        case .notificationSettings:
-            return makeDisclosureCell("settings.row.notifications".localized)
         case .playerControls:
             return makeDisclosureCell("player.controls.title".localized)
         case .commentingAccount:
@@ -418,7 +415,7 @@ extension SettingsViewController: UITableViewDataSource, UITableViewDelegate {
             handlePageSelection,
             handleDebugSelection, handleThemeSelection,
             handleLanguageSelection, handleAutoDubSelection,
-            handleNotificationsSelection, handleAboutSelection,
+            handleAboutSelection,
             handleDownloadSelection,
             handleGeneralSelection
         ]
@@ -912,7 +909,7 @@ extension SettingsViewController: UITableViewDataSource, UITableViewDelegate {
             return
         }
         let tempURL = FileManager.default.temporaryDirectory
-            .appendingPathComponent("opaline_debug.log")
+            .appendingPathComponent("utube_debug.log")
         try? data.write(to: tempURL)
         let activity = UIActivityViewController(
             activityItems: [tempURL],
@@ -941,7 +938,9 @@ extension SettingsViewController: UITableViewDataSource, UITableViewDelegate {
 
     func configureCenteredPopover(_ controller: UIViewController) {
         guard let pop = controller.popoverPresentationController
-        else { return }
+        else {
+            return
+        }
         pop.sourceView = view
         pop.sourceRect = CGRect(
             x: view.bounds.midX,

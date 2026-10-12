@@ -13,7 +13,10 @@ enum YouTubeInboxKind: Hashable {
     }
 
     func body(continuation: String? = nil) -> [String: Any] {
-        var body: [String: Any] = ["notificationsMenuRequestType": requestType]
+        var body: [String: Any] = [
+            "notificationsMenuRequestType": continuation == nil
+                ? Self.all.requestType : requestType
+        ]
         if let continuation {
             if self == .replies {
                 body["fetchCommentsParams"] = ["continuation": continuation]
@@ -33,6 +36,8 @@ struct YouTubeNotification {
     let destination: YouTubeNotificationDestination
     var avatarURL: String?
     var videoThumbnailURL: String?
+
+    var isComment: Bool { destination.videoID != nil && destination.commentID != nil }
 }
 
 struct YouTubeNotificationPage {

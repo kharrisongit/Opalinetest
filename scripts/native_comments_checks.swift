@@ -29,6 +29,7 @@ enum NativeCommentsChecks {
         try tokens()
         try playback()
         try drafts()
+        try nestedReplyRecipients()
         try websiteSession()
         try websiteComments()
         try interruptions()
@@ -135,6 +136,29 @@ enum NativeCommentsChecks {
 
 
 extension NativeCommentsChecks {
+    static func nestedReplyRecipients() throws {
+        func comment(_ id: String, _ author: String) -> Comment {
+            Comment(id: id, authorName: author, authorChannelId: nil, authorAvatarURL: nil,
+                    content: "Hello", publishedTime: nil, likeCount: nil, replyCount: nil,
+                    isPinned: false, replyContinuation: nil)
+        }
+        let root = comment("root", "@original")
+        let alice = CommentPostTarget.reply(videoID: "video", parent: root, recipient: comment("alice", "@Alice"))
+        let bob = CommentPostTarget.reply(videoID: "video", parent: root, recipient: comment("bob", "@Bob"))
+        try expect(alice.parentID == "root" && bob.parentID == "root", "Nested replies post to the actual root")
+        try expect(alice.parentAuthor == "@Alice" && bob.mentionPrefix == "@Bob ", "Address the tapped person")
+        try expect(alice.draftKey != bob.draftKey, "Different recipients do not inherit the original mention")
+        let store = CommentDraftStore()
+        store.update("@Alice First draft", for: alice)
+        store.update("@Bob Second draft", for: bob)
+        let sent = store.begin(alice)!
+        store.finish(sent, succeeded: true)
+        try expect(store.text(for: bob) == "@Bob Second draft", "Sending to one recipient preserves the other draft")
+        let body = try bob.body(text: "@Bob hello", channelID: nil)
+        let snippet = body["snippet"] as? [String: String]
+        try expect(snippet?["parentId"] == "root" && snippet?["textOriginal"] == "@Bob hello", "Write keeps parent and recipient separate")
+    }
+
     static func drafts() throws {
         let store = CommentDraftStore()
         let video = CommentPostTarget(videoID: "video-a")

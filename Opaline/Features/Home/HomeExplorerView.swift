@@ -130,7 +130,9 @@ final class HomeExplorerView: UIView {
         collection.dataSource = self
         collection.delegate = self
         collection.decelerationRate = mode == .carousel ? .fast : .normal
-        collection.alwaysBounceVertical = mode == .wall
+        collection.alwaysBounceVertical = true
+        collection.isDirectionalLockEnabled = mode == .carousel
+        collection.showsVerticalScrollIndicator = mode == .wall
         collection.showsHorizontalScrollIndicator = false
         collection.translatesAutoresizingMaskIntoConstraints = false
         addSubview(collection)

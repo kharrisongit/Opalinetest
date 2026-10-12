@@ -250,7 +250,6 @@
 
 /* Notifications section */
 "settings.section.notifications" = "通知";
-"settings.row.notifications" = "通知";
 
 /* Cache rows */
 "settings.row.feedCache" = "フィードキャッシュ";
@@ -426,8 +425,6 @@
 "settings.language.restartMessage" = "変更はアプリの再起動後に完全に適用されます。";
 
 /* Notification settings screen (pushed from Settings > Home) */
-"settings.row.appUpdates" = "アプリの更新";
-"settings.footer.notifications" = "配信は遅延する可能性があります — iOSはバックグラウンドチェックをスケジュール設定していますが、すぐには実行しません。";
 
 /* ===== Notifications ===== */
 

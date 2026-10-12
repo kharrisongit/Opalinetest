@@ -250,7 +250,6 @@
 
 /* Notifications section */
 "settings.section.notifications" = "Bildirimler";
-"settings.row.notifications" = "Bildirimler";
 
 /* Cache rows */
 "settings.row.feedCache" = "Akış Önbelleği";
@@ -426,8 +425,6 @@
 "settings.language.restartMessage" = "Değişiklikler uygulama yeniden başlatıldıktan sonra tam olarak uygulanır.";
 
 /* Notification settings screen (pushed from Settings > Home) */
-"settings.row.appUpdates" = "Uygulama Güncellemeleri";
-"settings.footer.notifications" = "Teslimat gecikebilir — iOS arka plan kontrolleri planlar, ancak bunları hemen çalıştırmaz.";
 
 /* ===== Notifications ===== */
 

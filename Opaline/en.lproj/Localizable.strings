@@ -353,7 +353,6 @@
 
 /* Notifications section */
 "settings.section.notifications" = "Notifications";
-"settings.row.notifications" = "Notifications";
 
 /* Cache rows */
 "settings.row.feedCache" = "Feed Cache";
@@ -565,8 +564,6 @@
 "notifications.detail.openLink" = "Open";
 
 /* Notification settings screen (pushed from Settings > Home) */
-"settings.row.appUpdates" = "App Updates";
-"settings.footer.notifications" = "Delivery may be delayed — iOS schedules background checks and does not run them immediately.";
 
 /* ===== Sign-in (OAuth device code) screen ===== */
 
@@ -690,4 +687,8 @@
 "home.explorer.mainPlaying" = "Your video keeps playing";
 "youtubeInbox.unread" = "New";
 "youtubeInbox.loadingThread" = "Loading this conversation…";
-"youtubeInbox.threadUnavailable" = "This comment thread could not be loaded. Try again, or open the notification to view it on the video.";
+"youtubeInbox.threadUnavailable" = "This comment thread could not be loaded. Try again; the comment may have been deleted or made unavailable.";
+
+"youtubeInbox.thread" = "Comment thread";
+"youtubeInbox.noThread" = "This notification doesn't include a comment thread.";
+"youtubeInbox.moreReplies" = "Load more replies";

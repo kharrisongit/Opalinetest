@@ -39,8 +39,27 @@ struct CommentPostTarget {
     let videoID: String
     var parentID: String?
     var parentAuthor: String?
+    var recipientID: String?
+
+    var mentionPrefix: String {
+        guard let recipientID, recipientID != parentID,
+              let author = parentAuthor, !author.isEmpty else {
+            return ""
+        }
+        return (author.hasPrefix("@") ? author : "@" + author) + " "
+    }
 
     var endpoint: String { parentID == nil ? "commentThreads" : "comments" }
+
+    static func reply(videoID: String, parent: Comment?, recipient: Comment?) -> Self {
+        let addressed = recipient ?? parent
+        return Self(
+            videoID: videoID,
+            parentID: parent?.id,
+            parentAuthor: addressed?.authorName,
+            recipientID: addressed?.id
+        )
+    }
 
     func body(text: String, channelID: String?) throws -> [String: Any] {
         guard !text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {

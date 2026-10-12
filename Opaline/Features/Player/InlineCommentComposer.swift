@@ -51,12 +51,13 @@ final class InlineCommentComposer: UIView {
         loadDraft()
     }
 
-    func beginReply(to parent: Comment?) {
-        target = CommentPostTarget(
-            videoID: target.videoID, parentID: parent?.id, parentAuthor: parent?.authorName
-        )
+    func beginReply(to parent: Comment?, recipient: Comment? = nil, focus: Bool = true) {
+        target = .reply(videoID: target.videoID, parent: parent, recipient: recipient)
+        if CommentDraftStore.shared.text(for: target).isEmpty {
+            CommentDraftStore.shared.update(target.mentionPrefix, for: target)
+        }
         loadDraft()
-        editor.becomeFirstResponder()
+        if focus { editor.becomeFirstResponder() }
     }
 
     func loadDraft() {

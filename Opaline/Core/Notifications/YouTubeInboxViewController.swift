@@ -6,13 +6,15 @@ final class YouTubeInboxViewController: UITableViewController {
     ])
     let statusLabel = UILabel()
     let moreButton = UIButton(type: .system)
-    var items: [YouTubeNotification] = []
+    var inboxItems: [YouTubeNotification] = []
+    var items: [YouTubeNotification] {
+        kind == .replies ? inboxItems.filter(\.isComment) : inboxItems
+    }
     var continuation: YouTubeInboxContinuation?
     var usedContinuations = Set<YouTubeInboxContinuation>()
+    var emptyPages = 0
     var loading = false
     var requestGeneration = 0
-    var activeReplyID: String?
-    var replyView: NotificationReplyView?
     let profileAvatar = ThumbnailImageView(frame: .zero)
     let profileName = UILabel()
     var kind: YouTubeInboxKind { filter.selectedSegmentIndex == 1 ? .replies : .all }
@@ -29,7 +31,7 @@ final class YouTubeInboxViewController: UITableViewController {
         super.viewDidLoad()
         title = "youtubeInbox.title".localized
         filter.selectedSegmentIndex = 0
-        filter.addTarget(self, action: #selector(reloadInbox), for: .valueChanged)
+        filter.addTarget(self, action: #selector(changeFilter), for: .valueChanged)
         navigationItem.leftBarButtonItem = UIBarButtonItem(
             title: "youtubeInbox.account".localized,
             style: .plain,
@@ -97,12 +99,12 @@ final class YouTubeInboxViewController: UITableViewController {
 
     @objc
     private func reloadInbox() {
-        closeInlineReply()
         updateProfile()
         YouTubeCommentClient.shared.refreshProfile { [weak self] _ in self?.updateProfile() }
         requestGeneration += 1
         loading = false
-        items = []
+        emptyPages = 0
+        inboxItems = []
         continuation = nil
         usedContinuations = []
         tableView.reloadData()
@@ -152,20 +154,29 @@ final class YouTubeInboxViewController: UITableViewController {
         switch result {
         case .success(let page):
             if let token { usedContinuations.insert(token) }
-            let existing = Set(items.map(\.id))
-            items.append(contentsOf: page.items.filter { !existing.contains($0.id) })
+            let existing = Set(inboxItems.map(\.id))
+            inboxItems.append(contentsOf: page.items.filter { !existing.contains($0.id) })
             continuation = page.continuation.flatMap { usedContinuations.contains($0) ? nil : $0 }
             YouTubeInboxService.shared.openedInbox()
-            tableView.backgroundView = items.isEmpty ? statusLabel : nil
-            statusLabel.text = "youtubeInbox.empty".localized
-            moreButton.setTitle("youtubeInbox.more".localized, for: .normal)
-            moreButton.isHidden = continuation == nil
-            tableView.reloadData()
+            changeFilter()
         case .failure:
             let message = "youtubeInbox.error.load".localized
             if items.isEmpty { showStatus(message) } else { ToastView.show(message, in: view) }
             moreButton.setTitle("youtubeInbox.retry".localized, for: .normal)
             moreButton.isHidden = false
+        }
+    }
+
+    @objc
+    private func changeFilter() {
+        tableView.backgroundView = items.isEmpty ? statusLabel : nil
+        statusLabel.text = (loading ? "youtubeInbox.loading" : "youtubeInbox.empty").localized
+        moreButton.setTitle("youtubeInbox.more".localized, for: .normal)
+        moreButton.isHidden = continuation == nil
+        tableView.reloadData()
+        if items.isEmpty, let continuation, !loading, emptyPages < 3 {
+            emptyPages += 1
+            fetch(continuation: continuation)
         }
     }
 
@@ -177,13 +188,11 @@ final class YouTubeInboxViewController: UITableViewController {
 
     @objc
     func openAccount() {
-        closeInlineReply()
         navigationController?.pushViewController(CommentAccountViewController(), animated: true)
     }
 
     @objc
     private func close() {
-        closeInlineReply()
         dismiss(animated: true)
     }
 }

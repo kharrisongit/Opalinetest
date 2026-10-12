@@ -90,6 +90,13 @@ final class YouTubeCommentClient {
         readSession("next", body: ["continuation": token], completion: completion)
     }
 
+    func readComments(
+        continuation: String,
+        completion: @escaping (Result<[String: Any], Error>) -> Void
+    ) {
+        readSession("next", body: ["continuation": continuation], completion: completion)
+    }
+
     private func readSession(
         _ endpoint: String,
         body: [String: Any],

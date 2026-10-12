@@ -7,7 +7,9 @@ final class HomeCarouselLayout: UICollectionViewFlowLayout {
         }
         scrollDirection = .horizontal
         let width = min(560, view.bounds.width * 0.76)
-        let height = max(1, min(view.bounds.height - 28, width * 9 / 16 + 170))
+        let available = view.bounds.height - view.adjustedContentInset.top
+            - view.adjustedContentInset.bottom
+        let height = max(1, available - 28)
         itemSize = CGSize(width: width, height: height)
         minimumLineSpacing = 14
         let side = max(0, (view.bounds.width - width) / 2)

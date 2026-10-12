@@ -48,5 +48,11 @@ final class CommentDraftStore {
 }
 
 extension CommentPostTarget {
-    var draftKey: String { "\(videoID):\(parentID ?? "")" }
+    var draftKey: String {
+        let base = "\(videoID):\(parentID ?? "")"
+        guard let recipientID, recipientID != parentID else {
+            return base
+        }
+        return "\(base):\(recipientID)"
+    }
 }

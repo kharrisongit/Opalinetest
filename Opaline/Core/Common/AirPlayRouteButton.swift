@@ -30,7 +30,7 @@ final class AirPlayRouteButton: AVRoutePickerView, AVRoutePickerViewDelegate {
 
     @objc
     private func applyTheme() {
-        tintColor = videoStyle || ThemeManager.shared.isDark ? .white : .darkGray
+        tintColor = ThemeManager.shared.accent
         activeTintColor = ThemeManager.shared.accent
     }
 

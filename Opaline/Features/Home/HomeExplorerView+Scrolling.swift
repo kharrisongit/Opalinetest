@@ -58,6 +58,14 @@ extension HomeExplorerView: UICollectionViewDataSource, UICollectionViewDelegate
         if hasMore, indexPath.item >= videos.count - 14 { onMore?() }
     }
 
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        // Carousel permits pulling down to refresh, but has no upward vertical travel.
+        let top = -scrollView.adjustedContentInset.top
+        if mode == .carousel, scrollView.contentOffset.y > top {
+            scrollView.contentOffset.y = top
+        }
+    }
+
     func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
         scrolling = false
         stopPreview()

@@ -246,7 +246,6 @@
 
 /* Notifications section */
 "settings.section.notifications" = "Notifiche";
-"settings.row.notifications" = "Notifiche";
 
 /* Cache rows */
 "settings.row.feedCache" = "Cache feed";
@@ -422,8 +421,6 @@
 "settings.language.restartMessage" = "Le modifiche si applicano completamente dopo il riavvio dell'app.";
 
 /* Notification settings screen (pushed from Settings > Home) */
-"settings.row.appUpdates" = "Aggiornamenti app";
-"settings.footer.notifications" = "La consegna potrebbe essere ritardata — iOS pianifica i controlli in background e non li esegue immediatamente.";
 
 /* ===== Notifications ===== */
 

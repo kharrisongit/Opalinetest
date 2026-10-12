@@ -244,7 +244,6 @@
 
 /* Notifications section */
 "settings.section.notifications" = "Benachrichtigungen";
-"settings.row.notifications" = "Benachrichtigungen";
 
 /* Cache rows */
 "settings.row.feedCache" = "Feed-Cache";
@@ -424,8 +423,6 @@
 "sponsorblock.category.highlight.description" = "Der Teil des Videos, den die meisten suchen. Vergleichbar mit „Video beginnt bei x“-Kommentaren.";
 
 /* Notification settings screen */
-"settings.row.appUpdates" = "App-Updates";
-"settings.footer.notifications" = "Die Zustellung kann verzögert sein — iOS plant Hintergrundprüfungen und führt sie nicht sofort aus.";
 
 /* ===== Notifications ===== */
 

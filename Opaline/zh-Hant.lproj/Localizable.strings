@@ -250,7 +250,6 @@
 
 /* Notifications section */
 "settings.section.notifications" = "通知";
-"settings.row.notifications" = "通知";
 
 /* Cache rows */
 "settings.row.feedCache" = "動態快取";
@@ -426,8 +425,6 @@
 "settings.language.restartMessage" = "變更在重新啟動應用程式後完全生效。";
 
 /* Notification settings screen (pushed from Settings > Home) */
-"settings.row.appUpdates" = "應用程式更新";
-"settings.footer.notifications" = "傳送可能延遲 — iOS 會排程背景檢查，但不會立即執行。";
 
 /* ===== Notifications ===== */
 

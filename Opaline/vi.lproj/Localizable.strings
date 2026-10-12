@@ -213,7 +213,6 @@
 
 /* Notifications section */
 "settings.section.notifications" = "Thông báo";
-"settings.row.notifications" = "Thông báo";
 
 /* Cache rows */
 "settings.row.feedCache" = "Bộ nhớ đệm nguồn cấp dữ liệu";
@@ -383,8 +382,6 @@
 "notifications.detail.openLink" = "Mở";
 
 /* Notification settings screen (pushed from Settings > Home) */
-"settings.row.appUpdates" = "Bản cập nhật ứng dụng";
-"settings.footer.notifications" = "Thông báo có thể bị chậm — iOS lên lịch kiểm tra trong nền và không chạy ngay lập tức.";
 
 /* ===== Sign-in (OAuth device code) screen ===== */
 

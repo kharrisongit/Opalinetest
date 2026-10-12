@@ -57,6 +57,9 @@ jobs:
             Opaline/Core/Notifications/YouTubeNotificationDestination.swift \
             Opaline/Core/Notifications/YouTubeNotificationModel.swift \
             Opaline/Core/Notifications/NotificationReplyTarget.swift \
+            Opaline/Core/Notifications/NotificationThreadPage.swift \
+            Opaline/Core/API/InnertubeClient+CommentParsing.swift \
+            Opaline/Core/API/InnertubeClient+CommentBuilding.swift \
             Opaline/Features/Home/HomePreviewPolicy.swift \
             scripts/youtube_notifications_checks.swift -o "$RUNNER_TEMP/youtube-notifications-checks"
           "$RUNNER_TEMP/youtube-notifications-checks"

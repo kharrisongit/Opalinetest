@@ -76,7 +76,7 @@ final class HomeExplorerCell: UICollectionViewCell {
         let width = contentView.bounds.width
         let height = contentView.bounds.height
         let compact = height < 260
-        let imageHeight = carousel && !compact ? min(width * 9 / 16, height - 160) : height
+        let imageHeight = carousel && !compact ? max(1, height - 170) : height
         previewHost.frame = CGRect(x: 0, y: 0, width: width, height: imageHeight)
         thumbnail.frame = previewHost.bounds
         durationLabel.frame = CGRect(x: width - 58, y: 8, width: 50, height: 18)

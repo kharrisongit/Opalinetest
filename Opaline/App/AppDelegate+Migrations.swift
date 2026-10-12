@@ -1,4 +1,5 @@
 import Foundation
+import UserNotifications
 
 /// One-shot upgrades of stored defaults, run once per launch from
 /// `application(_:didFinishLaunchingWithOptions:)`.
@@ -6,6 +7,22 @@ extension AppDelegate {
     func runMigrations() {
         OAuthClient.shared.migrateKeychainAccessibilityIfNeeded()
         migratePlaybackSourceToChain()
+        retireReleaseNews()
+    }
+
+    private func retireReleaseNews() {
+        let defaults = UserDefaults.standard
+        let key = "utube_retiredReleaseNews"
+        guard !defaults.bool(forKey: key) else {
+            return
+        }
+        UpdateNotificationService.updatesEnabled = false
+        let identifiers = AppNotificationStore.shared.notifications.map(\.id)
+        let center = UNUserNotificationCenter.current()
+        center.removePendingNotificationRequests(withIdentifiers: identifiers)
+        center.removeDeliveredNotifications(withIdentifiers: identifiers)
+        AppNotificationStore.shared.clear()
+        defaults.set(true, forKey: key)
     }
 
     /// The old picker stored one source: `auto`, `android_vr`, `mweb_pot`,
