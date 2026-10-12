@@ -13,6 +13,8 @@ struct PlaybackStep {
     /// Steps that need an account skip themselves when there is no session,
     /// which is what keeps "are we signed in?" out of the playback code.
     let requiresSignIn: Bool
+    var detail: String?
+    var timeout: TimeInterval?
     let make: (WatchService) -> VideoSource
 }
 
@@ -65,6 +67,32 @@ struct PlaybackStepRegistry {
             requiresSignIn: false
         ) { apiClient in
             ProgressiveSource(apiClient: apiClient)
+        },
+        PlaybackStep(
+            id: "web.hls",
+            title: "Web · native HLS",
+            requiresSignIn: false,
+            detail: "settings.playbackChain.webHLS".localized,
+            timeout: 45
+        ) { _ in
+            NativeWebHLSSource()
+        },
+        PlaybackStep(
+            id: "web.embedded.range",
+            title: "Embedded web · byte ranges",
+            requiresSignIn: false,
+            detail: "settings.playbackChain.embedded".localized,
+            timeout: 45
+        ) { apiClient in
+            let loader = WebPlaybackLoader(profile: .embedded)
+            return InnertubeVideoSource(
+                apiClient: apiClient,
+                client: EmbeddedWebClient(),
+                name: "web.embedded.range",
+                deliveryFactory: WebRangeDeliveryFactory(loader: loader),
+                customLoader: loader.load,
+                cancelCustomLoader: loader.cancel
+            )
         }
     ])
 

@@ -10,6 +10,9 @@ import Foundation
 /// URLs) and `tv` (OAuth, SABR-only). Which delivery runs follows from what the
 /// response carries, so the TV client lands on SABR without a branch here.
 final class InnertubeVideoSource: VideoSource {
+    typealias InfoLoader = (
+        String, CancellationToken?, @escaping (Result<DirectPlaybackInfo, Error>) -> Void
+    ) -> Void
     static let deliveryUnavailableError = NSError(
         domain: "InnertubeVideoSource",
         code: 1,
@@ -65,6 +68,8 @@ final class InnertubeVideoSource: VideoSource {
     /// original and rebuilding a second later.
     var pendingAudioTrackId: String?
     let poTokenProvider: PoTokenProvider
+    private let customLoader: InfoLoader?
+    private let cancelCustomLoader: (() -> Void)?
 
     init(
         apiClient: WatchService,
@@ -73,7 +78,9 @@ final class InnertubeVideoSource: VideoSource {
         deliveryFactory: StreamDeliveryFactory,
         transport: HTTPTransport = ServiceContainer.mediaTransport,
         resolver: HLSStreamResolver = .shared,
-        poTokenProvider: PoTokenProvider = RemotePoTokenService.shared
+        poTokenProvider: PoTokenProvider = RemotePoTokenService.shared,
+        customLoader: InfoLoader? = nil,
+        cancelCustomLoader: (() -> Void)? = nil
     ) {
         self.apiClient = apiClient
         self.transport = transport
@@ -81,6 +88,8 @@ final class InnertubeVideoSource: VideoSource {
         self.name = name
         self.deliveryFactory = deliveryFactory
         self.poTokenProvider = poTokenProvider
+        self.customLoader = customLoader
+        self.cancelCustomLoader = cancelCustomLoader
         liveHLS = LiveHLSPlayback(resolver: resolver)
     }
 
@@ -107,6 +116,10 @@ final class InnertubeVideoSource: VideoSource {
         completion: @escaping (Result<DirectPlaybackInfo, Error>) -> Void
     ) {
         currentVideoId = videoId
+        if let customLoader {
+            customLoader(videoId, cancellation, completion)
+            return
+        }
         mintingTokenIfNeeded { [weak self] poToken in
             guard let self else {
                 return
@@ -122,6 +135,7 @@ final class InnertubeVideoSource: VideoSource {
     }
 
     func releaseResources() {
+        cancelCustomLoader?()
         releaseDelivery()
     }
 
@@ -227,7 +241,12 @@ final class InnertubeVideoSource: VideoSource {
         )
     }
 
-    private func progressiveItem(
+}
+
+// MARK: - Live HLS
+
+private extension InnertubeVideoSource {
+    func progressiveItem(
         _ url: URL, info: DirectPlaybackInfo
     ) -> AVPlayerItem {
         let headers = client.streamHeaders(visitorData: info.visitorData)
@@ -237,18 +256,14 @@ final class InnertubeVideoSource: VideoSource {
         return AVPlayerItem(asset: asset)
     }
 
-    private func prepared(
+    func prepared(
         item: AVPlayerItem, info: DirectPlaybackInfo
     ) -> PreparedPlayback {
         PreparedPlayback(
             item: item, captions: info.captionTracks, duration: info.duration
         )
     }
-}
 
-// MARK: - Live HLS
-
-private extension InnertubeVideoSource {
     /// Live streams (no DASH SIDX ladder): [[LiveHLSPlayback]] exposes the
     /// multivariant playlist's variants as qualities and starts on Auto. A
     /// failed playlist fetch degrades to direct playback with no picker.

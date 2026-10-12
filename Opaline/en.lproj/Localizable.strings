@@ -692,3 +692,7 @@
 "youtubeInbox.thread" = "Comment thread";
 "youtubeInbox.noThread" = "This notification doesn't include a comment thread.";
 "youtubeInbox.moreReplies" = "Load more replies";
+
+/* Experimental playback routes */
+"settings.playbackChain.webHLS" = "Experimental · Auto quality. Uses your connected YouTube account when available; some videos and sessions offer no HLS.";
+"settings.playbackChain.embedded" = "Experimental · Anonymous. Only videos that allow embedded playback and provide compatible streams.";

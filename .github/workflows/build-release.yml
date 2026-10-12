@@ -33,6 +33,20 @@ jobs:
       - name: Check uTube links
         run: bash scripts/check_youtube_link_parser.sh
 
+      - name: Check experimental playback and fallback races
+        run: |
+          swiftc Opaline/Core/Playback/WebPlaybackProfile.swift \
+            Opaline/Core/Playback/WebPlayerConfiguration.swift \
+            Opaline/Core/Playback/WebPlaybackRequest.swift \
+            Opaline/Core/Playback/WebStreamURL.swift \
+            Opaline/Core/Playback/PlaybackAttemptState.swift \
+            Opaline/Core/Playback/VideoSource.swift \
+            Opaline/Core/Playback/Sources/FallbackChainSource.swift \
+            Opaline/Core/Common/CancellationToken.swift \
+            Opaline/Core/API/Models/SubtitleTrack.swift \
+            scripts/web_playback_checks.swift -o "$RUNNER_TEMP/web-playback-checks"
+          "$RUNNER_TEMP/web-playback-checks"
+
       - name: Check native comments and AirPlay policies
         run: |
           swiftc Opaline/Core/API/Models/Comment.swift \

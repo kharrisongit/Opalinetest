@@ -59,6 +59,15 @@ The inbox refreshes inside uTube; it does not provide iOS push notifications. Yo
 
 Playback connects to YouTube and, for some playback sources, a configurable helper service. SponsorBlock and Return YouTube Dislike use their respective services. Signing in does not make activity anonymous to YouTube.
 
+## Experimental playback options
+
+Two additional, opt-in sources are available after the existing four in **Settings → Debug → Playback sources**:
+
+- **Web · native HLS** asks for Apple's native streaming format. It uses your connected YouTube website account when available, with automatic quality selection. Some sessions do not receive HLS.
+- **Embedded web · byte ranges** tries anonymous embedded-player streams and feeds compatible video/audio into the existing native HLS pipeline. It only works for videos that allow embedding and return usable stream URLs.
+
+Both are off by default. The current sources and solver remain configured as before. These are experiments, not guaranteed fixes for YouTube restrictions. Read the [implementation notes and device test guide](EXPERIMENTAL_PLAYBACK.md) before comparing them or proposing them upstream.
+
 ## Build from source
 
 Use **macOS and Xcode**:

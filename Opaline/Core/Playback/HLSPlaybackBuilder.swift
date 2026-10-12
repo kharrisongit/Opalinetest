@@ -16,6 +16,8 @@ enum HLSPlaybackBuilder {
         /// Where the player should begin — the saved playhead on a resume,
         /// the current one on a rebuild, nil from the start of the video.
         var startAt: Double?
+        /// An experimental web session does not own the default visionOS visitor identity.
+        var invalidatesVisitorOnFailure = true
     }
 
     struct RangeRequest {

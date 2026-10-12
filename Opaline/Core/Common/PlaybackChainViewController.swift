@@ -94,6 +94,9 @@ extension PlaybackChainViewController: UITableViewDataSource, UITableViewDelegat
         cell.backgroundColor = ThemeManager.shared.surface
         cell.selectionStyle = .none
         cell.showsReorderControl = true
+        cell.detailTextLabel?.numberOfLines = 0
+        cell.detailTextLabel?.text = step.detail
+        cell.detailTextLabel?.textColor = ThemeManager.shared.secondaryText
         let signInNeeded = step.requiresSignIn && !OAuthClient.shared.isSignedIn
         if signInNeeded {
             cell.detailTextLabel?.text = "settings.playbackChain.signInNeeded".localized

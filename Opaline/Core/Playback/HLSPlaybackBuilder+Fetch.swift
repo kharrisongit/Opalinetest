@@ -41,7 +41,7 @@ extension HLSPlaybackBuilder {
                 "identity probe: \(healthy ? "ok" : "throttled")"
                     + " (HTTP \(code))"
             )
-            if !healthy {
+            if !healthy, input.invalidatesVisitorOnFailure {
                 InnertubeSession.invalidateVisitorIdentity(
                     reason: "googlevideo throttle"
                 )

@@ -10,11 +10,11 @@ enum PlaybackChainSettings {
     /// play past the anonymous one-minute cut-off, and TV needs an account
     /// to run at all.
     static let defaultOrder = [
-        "visionos.range", "visionos.sabr", "tv.sabr", "progressive"
+        "visionos.range", "visionos.sabr", "tv.sabr", "progressive",
+        "web.hls", "web.embedded.range"
     ]
-    /// Everything is on by default: a step that cannot run (TV without an
-    /// account) already skips itself.
-    static let defaultEnabled = defaultOrder
+    /// Keep the proven defaults. Website routes are opt-in experiments, including on upgrades.
+    static let defaultEnabled = Array(defaultOrder.prefix(4))
 
     static var order: [String] {
         get {

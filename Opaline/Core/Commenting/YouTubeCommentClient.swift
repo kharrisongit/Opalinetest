@@ -188,6 +188,50 @@ final class YouTubeCommentClient {
     }
 }
 
+extension YouTubeCommentClient {
+    /// Only the opt-in native web HLS source uses this. Credentials go to this fixed
+    /// YouTube endpoint, never to a media URL, the signature solver or shared storage.
+    func readWebPlayback(
+        body: [String: Any],
+        cancellation: CancellationToken,
+        completion: @escaping (Result<[String: Any], Error>) -> Void
+    ) {
+        do {
+            guard let session else { throw CommentAPIError(reason: "signedOut") }
+            let request = try webPlaybackRequest(body: body, session: session)
+            let expected = generation
+            transport.send(request, cancellation: cancellation) { [weak self] result in
+                guard self?.generation == expected else {
+                    completion(.failure(CommentAPIError(reason: "cancelled")))
+                    return
+                }
+                completion(result)
+            }
+        } catch {
+            completion(.failure(error))
+        }
+    }
+
+    private func webPlaybackRequest(
+        body: [String: Any], session: YouTubeCommentSession
+    ) throws -> URLRequest {
+        var payload = body
+        let saved = try session.context()
+        var context = body["context"] as? [String: Any] ?? [:]
+        var client = context["client"] as? [String: Any] ?? [:]
+        client["visitorData"] = (saved["client"] as? [String: Any])?["visitorData"]
+        context["client"] = client
+        context["user"] = saved["user"]
+        payload["context"] = context
+        var request = try WebPlaybackRequest.make(payload)
+        for (key, value) in try session.headers() {
+            request.setValue(value, forHTTPHeaderField: key)
+        }
+        return request
+    }
+
+}
+
 enum CommentPostingService {
     static var channel: CommentAPIChannel? {
         YouTubeCommentClient.shared.channel ?? CommentAPIClient.shared.channel

@@ -12,7 +12,11 @@ final class YouTubeCommentTransport: NSObject, URLSessionTaskDelegate {
         return URLSession(configuration: config, delegate: self, delegateQueue: nil)
     }()
 
-    func send(_ request: URLRequest, completion: @escaping (Result<[String: Any], Error>) -> Void) {
+    func send(
+        _ request: URLRequest,
+        cancellation: CancellationToken? = nil,
+        completion: @escaping (Result<[String: Any], Error>) -> Void
+    ) {
         let isWrite = request.url?.path.contains("/comment/") == true
         let task = session.dataTask(with: request) { data, response, error in
             let result: Result<[String: Any], Error> = Result {
@@ -23,8 +27,14 @@ final class YouTubeCommentTransport: NSObject, URLSessionTaskDelegate {
                     data: data, status: http.statusCode, isCommentWrite: isWrite
                 )
             }
-            DispatchQueue.main.async { completion(result) }
+            DispatchQueue.main.async {
+                guard cancellation?.isCancelled != true else {
+                    return
+                }
+                completion(result)
+            }
         }
+        cancellation?.register(task)
         task.resume()
     }
 

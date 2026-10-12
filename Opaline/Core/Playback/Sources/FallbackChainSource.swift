@@ -18,6 +18,8 @@ final class FallbackChainSource: VideoSource {
     /// Sources already built, by step id — a step is built once per video and
     /// reused if the chain comes back to it.
     private var built: [String: VideoSource] = [:]
+    private var attemptState = PlaybackAttemptState()
+    private var deadline: DispatchWorkItem?
     /// The step answering playback and quality questions right now.
     private(set) var active: VideoSource?
     private(set) var activeIndex = 0
@@ -111,6 +113,9 @@ final class FallbackChainSource: VideoSource {
     }
 
     func releaseResources() {
+        attemptState.invalidate()
+        deadline?.cancel()
+        deadline = nil
         built.values.forEach { $0.releaseResources() }
         built.removeAll()
         active = nil
@@ -149,7 +154,9 @@ final class FallbackChainSource: VideoSource {
         if index > 0 {
             PlaybackProgress.step("player.status.tryingFallback")
         }
-        source.loadPlayback(videoId: videoId, cancellation: cancellation) { [weak self] result in
+        let finish = guardedCompletion(
+            timeout: step.timeout, cancellation: cancellation
+        ) { [weak self] result in
             self?.stepFinished(
                 result,
                 step: step,
@@ -159,6 +166,33 @@ final class FallbackChainSource: VideoSource {
                 completion: completion
             )
         }
+        source.loadPlayback(videoId: videoId, cancellation: cancellation) { result in
+            DispatchQueue.main.async { finish(result) }
+        }
+    }
+
+    private func guardedCompletion(
+        timeout: TimeInterval?,
+        cancellation: CancellationToken?,
+        completion: @escaping (Result<PreparedPlayback, Error>) -> Void
+    ) -> (Result<PreparedPlayback, Error>) -> Void {
+        let expected = attemptState.begin()
+        deadline?.cancel()
+        let finish: (Result<PreparedPlayback, Error>) -> Void = { [weak self] result in
+            guard let self, cancellation?.isCancelled != true,
+                  attemptState.finish(expected) else {
+                return
+            }
+            deadline?.cancel()
+            deadline = nil
+            completion(result)
+        }
+        if let timeout {
+            let task = DispatchWorkItem { finish(.failure(WebPlaybackError.timedOut)) }
+            deadline = task
+            DispatchQueue.main.asyncAfter(deadline: .now() + timeout, execute: task)
+        }
+        return finish
     }
 
     // swiftlint:disable:next function_parameter_count
@@ -175,7 +209,12 @@ final class FallbackChainSource: VideoSource {
             return
         }
         AppLog.player("chain: \(step.id) failed (\(error.localizedDescription))")
+        active?.releaseResources()
+        let expected = attemptState.generation
         DispatchQueue.main.async { [weak self] in
+            guard self?.attemptState.generation == expected else {
+                return
+            }
             self?.attempt(
                 from: index + 1,
                 videoId: videoId,
