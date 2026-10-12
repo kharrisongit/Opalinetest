@@ -62,11 +62,11 @@ extension NotificationThreadController {
             guard let self else {
                 return
             }
-            self.composer.beginReply(to: self.parent, focus: false)
+            self.composer.beginReply(to: self.rootComment, focus: false)
             self.view.endEditing(true)
         }
         composer.onPosted = { [weak self] comment, target in
-            guard let self, target.parentID == self.parent?.id else {
+            guard let self, target.parentID == self.rootComment?.id else {
                 return
             }
             if !self.replies.contains(where: { $0.id == comment.id }) {
@@ -84,7 +84,7 @@ extension NotificationThreadController {
 extension NotificationThreadController: UITableViewDataSource, UITableViewDelegate,
     UITextViewDelegate {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        parent == nil ? 0 : replies.count + 1
+        rootComment == nil ? 0 : replies.count + 1
     }
 
     func tableView(
@@ -93,12 +93,12 @@ extension NotificationThreadController: UITableViewDataSource, UITableViewDelega
         let cell = tableView.dequeueReusableCell(
             withIdentifier: CommentCell.reuseId, for: indexPath
         )
-        guard let parent else {
+        guard let rootComment else {
             return cell
         }
-        let comment = indexPath.row == 0 ? parent : replies[indexPath.row - 1]
+        let comment = indexPath.row == 0 ? rootComment : replies[indexPath.row - 1]
         let reply: (() -> Void)? = composer.isHidden ? nil : { [weak self] in
-            self?.composer.beginReply(to: parent, recipient: comment)
+            self?.composer.beginReply(to: rootComment, recipient: comment)
         }
         (cell as? CommentCell)?.configure(
             comment, linkDelegate: self, isReply: indexPath.row > 0, onReply: reply

@@ -8,7 +8,7 @@ final class NotificationThreadController: UIViewController {
     let contentStack = UIStackView()
     let message = UILabel()
     let more = UIButton(type: .system)
-    var parent: Comment?
+    var rootComment: Comment?
     var replies: [Comment] = []
     var continuation: String?
     var usedTokens = Set<String>()
@@ -56,7 +56,7 @@ final class NotificationThreadController: UIViewController {
         generation += 1
         loading = false
         didRevealLinked = false
-        parent = nil
+        rootComment = nil
         replies = []
         continuation = nil
         setComposerVisible(false)
@@ -97,7 +97,7 @@ final class NotificationThreadController: UIViewController {
                 throw CommentAPIError(reason: "parentCommentNotFound")
             }
             let page = try NotificationThreadPage.parse(json, linkedID: linkedID)
-            parent = page.parent
+            rootComment = page.parent
             replies = page.replies
             continuation = page.continuation
             usedTokens = []
@@ -113,19 +113,19 @@ final class NotificationThreadController: UIViewController {
     }
 
     private func configureReply(json: [String: Any], videoID: String) {
-        guard let parent else {
+        guard let rootComment else {
             return
         }
-        let target = CommentPostTarget(videoID: videoID, parentID: parent.id)
+        let target = CommentPostTarget(videoID: videoID, parentID: rootComment.id)
         setComposerVisible((try? YouTubeCommentModel.writeBody(in: json, target: target)) != nil)
         composer.configure(videoID: videoID)
-        let recipient = replies.first { $0.id == item.destination.commentID } ?? parent
-        composer.beginReply(to: parent, recipient: recipient, focus: false)
+        let recipient = replies.first { $0.id == item.destination.commentID } ?? rootComment
+        composer.beginReply(to: rootComment, recipient: recipient, focus: false)
     }
 
     @objc
     func loadMore() {
-        guard parent != nil else {
+        guard rootComment != nil else {
             load()
             return
         }
@@ -154,7 +154,7 @@ final class NotificationThreadController: UIViewController {
             usedTokens.insert(token)
             var seen = Set(replies.map(\.id))
             replies.append(contentsOf: page.comments.filter {
-                $0.id != parent?.id && seen.insert($0.id).inserted
+                $0.id != rootComment?.id && seen.insert($0.id).inserted
             })
             continuation = page.continuation.flatMap { usedTokens.contains($0) ? nil : $0 }
             updateRows()
@@ -166,10 +166,10 @@ final class NotificationThreadController: UIViewController {
 
     @discardableResult
     func revealLinked() -> Bool {
-        guard !didRevealLinked, let parent else {
+        guard !didRevealLinked, let rootComment else {
             return didRevealLinked
         }
-        let comments = [parent] + replies
+        let comments = [rootComment] + replies
         guard let index = comments.firstIndex(where: { $0.id == item.destination.commentID })
         else {
             return false
@@ -177,7 +177,7 @@ final class NotificationThreadController: UIViewController {
         didRevealLinked = true
         table.scrollToRow(at: IndexPath(row: index, section: 0), at: .middle, animated: false)
         if focusReply, !composer.isHidden {
-            composer.beginReply(to: parent, recipient: comments[index])
+            composer.beginReply(to: rootComment, recipient: comments[index])
             focusReply = false
         }
         return true
