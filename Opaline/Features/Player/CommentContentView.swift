@@ -44,8 +44,8 @@ final class CommentContentView: UIView {
         self.linkDelegate = linkDelegate
         let url = comment.authorAvatarURL.flatMap { URL(string: $0) }
         avatarView.setAvatar(url: url, name: comment.authorName)
-        avatarSize?.constant = isReply ? 24 : 32
-        avatarView.layer.cornerRadius = isReply ? 12 : 16
+        avatarSize?.constant = isReply ? 28 : 36
+        avatarView.layer.cornerRadius = isReply ? 14 : 18
         // One grey line above the body, as in the official app: who and
         // when. Likes moved to the action row, replies to their own row.
         let name = comment.isPinned
@@ -66,7 +66,7 @@ final class CommentContentView: UIView {
         likeIcon.tintColor = theme.secondaryText
         likeLabel.textColor = theme.secondaryText
         contentTextView.attributedText = CommentBodyCache.body(for: comment)
-        contentTextView.linkTextAttributes = [.foregroundColor: theme.accent]
+        contentTextView.linkTextAttributes = [.foregroundColor: UIColor.systemBlue]
         contentTextView.delegate = linkDelegate
         authorLabel.textColor = theme.secondaryText
     }
@@ -84,7 +84,7 @@ final class CommentContentView: UIView {
         translatesAutoresizingMaskIntoConstraints = false
         avatarView.layer.cornerRadius = 16
         avatarView.layer.masksToBounds = true
-        authorLabel.font = UIFont.systemFont(ofSize: 12)
+        authorLabel.font = UIFont.systemFont(ofSize: 12, weight: .medium)
         authorLabel.numberOfLines = 1
         LinkifiedText.configure(contentTextView)
         likeIcon.image = UIImage(named: "icon_thumb_up")?
@@ -104,7 +104,7 @@ final class CommentContentView: UIView {
     }
 
     private func activateConstraints() {
-        let size = avatarView.widthAnchor.constraint(equalToConstant: 32)
+        let size = avatarView.widthAnchor.constraint(equalToConstant: 36)
         avatarSize = size
         NSLayoutConstraint.activate([
             avatarView.topAnchor.constraint(equalTo: topAnchor),
@@ -156,7 +156,7 @@ private enum CommentBodyCache {
         }
         let built = LinkifiedText.attributedString(
             from: comment.content,
-            font: UIFont.systemFont(ofSize: 13),
+            font: UIFont.systemFont(ofSize: 15),
             color: theme.primaryText,
             includeTimestamps: true
         )

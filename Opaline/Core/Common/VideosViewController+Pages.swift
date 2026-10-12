@@ -35,6 +35,7 @@ extension VideosViewController {
     }
 
     func setPage(_ page: FeedPage) {
+        defer { feedContentDidChange() }
         isLoadingInitial = false
         seenVideoIds = []
         loadingRailSections = []
@@ -60,6 +61,7 @@ extension VideosViewController {
     }
 
     func appendPage(_ page: FeedPage) {
+        defer { feedContentDidChange() }
         var newSections = makeSections(from: page)
         continuationToken = page.continuation
         isLoadingMore = false
@@ -119,5 +121,6 @@ extension VideosViewController {
 
     func finishLoadingMore() {
         isLoadingMore = false
+        feedContentDidChange()
     }
 }

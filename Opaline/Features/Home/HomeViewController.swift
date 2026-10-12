@@ -47,6 +47,8 @@ class HomeViewController: VideosViewController {
     /// cache to spot one written by background refresh.
     var appliedFeedAt = Date.distantPast
     lazy var chipBar = ChipBarView()
+    var explorer: HomeExplorerView?
+    var explorerVisible = false
 
     override var groupsByShelf: Bool { HomeLayout.selected == .rails }
 
@@ -108,6 +110,7 @@ class HomeViewController: VideosViewController {
         setupToolbar()
         observeSignOut()
         observeTokenRefresh()
+        applyExplorerLayout()
         NotificationCenter.default.addObserver(
             self,
             selector: #selector(handleDidBecomeActive),
@@ -115,6 +118,27 @@ class HomeViewController: VideosViewController {
             object: nil
         )
         loadCachedOrFetchFeed()
+    }
+
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        explorerVisible = true
+        explorer?.schedulePreview()
+    }
+
+    override func viewWillDisappear(_ animated: Bool) {
+        explorerVisible = false
+        explorer?.stopPreview()
+        super.viewWillDisappear(animated)
+    }
+
+    override func feedContentDidChange() {
+        updateExplorerFeed()
+    }
+
+    override func scrollToTop() {
+        super.scrollToTop()
+        explorer?.scrollToStart()
     }
 
     @objc

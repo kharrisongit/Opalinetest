@@ -9,9 +9,10 @@ extension InlineCommentComposer {
         addSubview(stack)
         setupEditor()
         setupReplyRow()
-        let input = UIStackView(arrangedSubviews: [editor, sendButton])
+        let input = UIStackView(arrangedSubviews: [avatar, editor, sendButton])
         input.axis = .horizontal
-        input.alignment = .bottom
+        input.alignment = .center
+        setupAvatar()
         input.spacing = 8
         sendButton.setContentHuggingPriority(.required, for: .horizontal)
         CommentControlStyle.apply(sendButton)
@@ -32,9 +33,16 @@ extension InlineCommentComposer {
         applyTheme()
     }
 
+    private func setupAvatar() {
+        avatar.layer.cornerRadius = 16
+        avatar.clipsToBounds = true
+        avatar.widthAnchor.constraint(equalToConstant: 32).isActive = true
+        avatar.heightAnchor.constraint(equalToConstant: 32).isActive = true
+    }
+
     private func setupEditor() {
         editor.font = .preferredFont(forTextStyle: .body)
-        editor.layer.cornerRadius = 10
+        editor.layer.cornerRadius = 22
         editor.textContainerInset = UIEdgeInsets(top: 10, left: 8, bottom: 10, right: 8)
         editor.accessibilityLabel = "nativeComments.placeholder".localized
         editorHeight = editor.heightAnchor.constraint(equalToConstant: 44)
@@ -65,15 +73,16 @@ extension InlineCommentComposer {
     func applyTheme() {
         let theme = ThemeManager.shared
         backgroundColor = theme.surface
-        editor.backgroundColor = theme.background
+        editor.backgroundColor = theme.primaryText.withAlphaComponent(0.06)
         editor.textColor = theme.primaryText
-        editor.tintColor = theme.accent
+        editor.tintColor = .systemBlue
         placeholder.textColor = theme.secondaryText
         status.textColor = theme.secondaryText
         replyLabel.textColor = theme.secondaryText
-        accountButton.tintColor = theme.accent
-        cancelReplyButton.tintColor = theme.accent
-        sendButton.backgroundColor = theme.accent
+        accountButton.tintColor = theme.secondaryText
+        cancelReplyButton.tintColor = .systemBlue
+        sendButton.backgroundColor = .systemBlue
+        sendButton.layer.cornerRadius = 22
     }
 }
 

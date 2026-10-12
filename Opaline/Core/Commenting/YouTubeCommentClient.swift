@@ -65,6 +65,50 @@ final class YouTubeCommentClient {
         }
     }
 
+    func refreshProfile(completion: @escaping (CommentAPIChannel?) -> Void) {
+        readSession("account/account_menu", body: [:]) { [weak self] result in
+            guard let self, var session = self.session,
+                  let profile = try? YouTubeCommentModel.account(result.get()) else {
+                completion(self?.channel)
+                return
+            }
+            session.channel = profile
+            self.session = session
+            try? YouTubeCommentStore.save(session)
+            completion(profile)
+        }
+    }
+
+    func readThread(
+        videoID: String,
+        commentID: String,
+        completion: @escaping (Result<[String: Any], Error>) -> Void
+    ) {
+        let token = InnertubeClient.buildCommentsContinuation(
+            videoId: videoID, sortBy: 0, commentId: commentID
+        )
+        readSession("next", body: ["continuation": token], completion: completion)
+    }
+
+    private func readSession(
+        _ endpoint: String,
+        body: [String: Any],
+        completion: @escaping (Result<[String: Any], Error>) -> Void
+    ) {
+        guard let session else {
+            completion(.failure(CommentAPIError(reason: "signedOut")))
+            return
+        }
+        let expected = generation
+        send(endpoint, body: body, session: session) { [weak self] result in
+            guard self?.generation == expected else {
+                completion(.failure(CommentAPIError(reason: "cancelled")))
+                return
+            }
+            completion(result)
+        }
+    }
+
     func post(
         _ submission: CommentSubmission,
         completion: @escaping (Result<Comment, Error>) -> Void

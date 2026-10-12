@@ -95,7 +95,9 @@ enum YouTubeNotificationModel {
             isRead: renderer["read"] as? Bool ?? false,
             destination: YouTubeNotificationDestination(
                 endpoint: renderer["navigationEndpoint"] as? [String: Any] ?? [:]
-            )
+            ),
+            avatarURL: YouTubeCommentModel.thumbnailURL(renderer["thumbnail"]),
+            videoThumbnailURL: YouTubeCommentModel.thumbnailURL(renderer["videoThumbnail"])
         )
     }
 

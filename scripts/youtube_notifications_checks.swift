@@ -86,7 +86,64 @@ enum YouTubeNotificationsChecks {
         let allBody = YouTubeInboxKind.all.body(continuation: "all-token")
         try expect(allBody["continuation"] as? String == "all-token", "Inbox continuation envelope")
         try destinations()
+        try previewPolicy()
+        try profilesAndReplies()
         print("Passed \(checks) YouTube notification parsing, paging, and navigation checks")
+    }
+
+    static func previewPolicy() throws {
+        for visible in [false, true] {
+            for active in [false, true] {
+                for main in [false, true] {
+                    for airPlay in [false, true] {
+                        let allowed = HomePreviewPolicy.allows(
+                            visible: visible, active: active, mainPlayerInUse: main, airPlay: airPlay
+                        )
+                        if main || airPlay || !active || !visible {
+                            try expect(!allowed, "Main/minimized video, AirPlay and background prohibit previews")
+                        } else {
+                            try expect(allowed, "Idle foreground carousel can preview")
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    static func profilesAndReplies() throws {
+        let old = Data("{\"id\":\"website-session\",\"title\":\"@me\"}".utf8)
+        let restored = try JSONDecoder().decode(CommentAPIChannel.self, from: old)
+        try expect(restored.avatarURL == nil && restored.title == "@me", "Old saved accounts still decode")
+        let profile = try YouTubeCommentModel.account(["activeAccountHeaderRenderer": [
+            "accountName": ["simpleText": "My Name"], "channelHandle": ["simpleText": "@me"],
+            "accountPhoto": ["thumbnails": [["url": "https://yt3.ggpht.com/me.jpg"]]]
+        ]])
+        try expect(profile.title == "@me" && profile.avatarURL != nil, "Profile handle and photo")
+        try expect(YouTubeCommentModel.thumbnailURL(["thumbnails": [["url": "file:///private/photo"]]]) == nil,
+                   "Only HTTPS images")
+        var photoRow = row("photo")
+        var renderer = photoRow["notificationRenderer"] as! [String: Any]
+        renderer["thumbnail"] = ["thumbnails": [["url": "https://yt3.ggpht.com/actor.jpg"]]]
+        renderer["videoThumbnail"] = ["thumbnails": [["url": "https://i.ytimg.com/video.jpg"]]]
+        photoRow["notificationRenderer"] = renderer
+        let photo = try YouTubeNotificationModel.page(menu([photoRow])).items[0]
+        try expect(photo.avatarURL != nil && photo.videoThumbnailURL != nil, "Notification images parsed")
+        let parent: [String: Any] = ["commentViewModel": ["commentId": "root"]]
+        let thread: [String: Any] = ["commentViewModel": parent,
+            "replies": ["commentRepliesRenderer": ["contents": [
+                ["commentViewModel": ["commentId": "linked-reply"]]
+            ]]]]
+        let page: [String: Any] = ["commentThreadRenderer": thread]
+        try expect(NotificationReplyTarget.parentID(in: page, linkedID: "root") == "root", "Root notification")
+        try expect(NotificationReplyTarget.parentID(in: page, linkedID: "linked-reply") == "root", "Nested reply's actual parent")
+        try expect(NotificationReplyTarget.parentID(in: page, linkedID: "root.guessed") == nil, "Never guess ID prefixes")
+        try expect(NotificationReplyTarget.parentID(in: page, linkedID: "unrelated") == nil, "Never pick unrelated first thread")
+        try expect(NotificationReplyTarget.parentID(in: page, linkedID: "") == nil, "Empty link rejected")
+        let conflicting: [String: Any] = ["threads": [page, ["commentThreadRenderer": [
+            "commentViewModel": ["commentId": "other"],
+            "replies": ["commentViewModel": ["commentId": "linked-reply"]]
+        ]]]]
+        try expect(NotificationReplyTarget.parentID(in: conflicting, linkedID: "linked-reply") == nil, "Ambiguous parent rejected")
     }
 
     static func destinations() throws {

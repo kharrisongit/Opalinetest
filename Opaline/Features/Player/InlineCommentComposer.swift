@@ -2,6 +2,7 @@ import UIKit
 
 final class InlineCommentComposer: UIView {
     let editor = UITextView()
+    let avatar = ThumbnailImageView(frame: .zero)
     let placeholder = UILabel()
     let sendButton = UIButton(type: .system)
     let accountButton = UIButton(type: .system)
@@ -14,6 +15,8 @@ final class InlineCommentComposer: UIView {
     var onPosted: ((Comment, CommentPostTarget) -> Void)?
     var onConnect: (() -> Void)?
     var onBeginEditing: (() -> Void)?
+    var onCancelReply: (() -> Void)?
+    var onResize: (() -> Void)?
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -23,7 +26,8 @@ final class InlineCommentComposer: UIView {
         accountButton.addTarget(self, action: #selector(connect), for: .touchUpInside)
         cancelReplyButton.addTarget(self, action: #selector(cancelReply), for: .touchUpInside)
         let changes = [
-            CommentAPIClient.didChange, YouTubeCommentClient.didChange, CommentDraftStore.didChange
+            CommentAPIClient.didChange, YouTubeCommentClient.didChange, CommentDraftStore.didChange,
+            ThemeManager.didChangeNotification
         ]
         for name in changes {
             NotificationCenter.default.addObserver(
@@ -71,7 +75,11 @@ final class InlineCommentComposer: UIView {
             editor.text = draft
             resizeEditor()
         }
+        applyTheme()
         let channel = CommentPostingService.channel
+        avatar.setAvatar(
+            url: channel?.avatarURL.flatMap(URL.init(string:)), name: channel?.title ?? ""
+        )
         accountButton.setTitle(
             channel.map { "nativeComments.postingAs".localized(with: $0.title) }
                 ?? "nativeComments.webConnect".localized,
@@ -97,6 +105,7 @@ final class InlineCommentComposer: UIView {
     func resizeEditor() {
         let height = editor.sizeThatFits(CGSize(width: max(100, editor.bounds.width), height: 120))
         editorHeight?.constant = min(100, max(44, height.height))
+        onResize?()
     }
 
     @objc
@@ -107,7 +116,7 @@ final class InlineCommentComposer: UIView {
 
     @objc
     private func cancelReply() {
-        beginReply(to: nil)
+        if let onCancelReply { onCancelReply() } else { beginReply(to: nil) }
     }
 
     @objc

@@ -54,7 +54,7 @@ final class CommentCell: UITableViewCell {
         content.configure(comment, linkDelegate: linkDelegate, isReply: isReply)
         self.onReply = onReply
         replyButton.isHidden = onReply == nil
-        replyButton.tintColor = ThemeManager.shared.accent
+        replyButton.tintColor = ThemeManager.shared.primaryText
         replyButton.accessibilityLabel = "nativeComments.replyingTo".localized(
             with: comment.authorName
         )
@@ -69,8 +69,8 @@ final class CommentCell: UITableViewCell {
     private func setupReplyButton() {
         replyButton.setTitle("nativeComments.reply".localized, for: .normal)
         replyButton.contentHorizontalAlignment = .leading
-        replyButton.titleLabel?.font = .systemFont(ofSize: 14, weight: .semibold)
-        replyButton.contentEdgeInsets = UIEdgeInsets(top: 12, left: 44, bottom: 12, right: 12)
+        replyButton.titleLabel?.font = .systemFont(ofSize: 12, weight: .semibold)
+        replyButton.contentEdgeInsets = UIEdgeInsets(top: 10, left: 48, bottom: 10, right: 12)
         replyButton.addTarget(self, action: #selector(reply), for: .touchUpInside)
         replyButton.isHidden = true
     }
@@ -124,12 +124,12 @@ final class CommentReplyCell: UITableViewCell {
     func configure(text: String, isExpanded: Bool) {
         label.text = text
         let theme = ThemeManager.shared
-        label.textColor = theme.primaryText
-        chevron.tintColor = theme.primaryText
+        label.textColor = .systemBlue
+        chevron.tintColor = .systemBlue
         chevron.transform = isExpanded
             ? CGAffineTransform(rotationAngle: .pi)
             : .identity
-        pill.backgroundColor = theme.primaryText.withAlphaComponent(0.12)
+        pill.backgroundColor = theme.primaryText.withAlphaComponent(0.04)
     }
 
     private func setup() {

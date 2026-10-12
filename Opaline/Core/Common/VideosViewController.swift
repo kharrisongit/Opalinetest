@@ -167,6 +167,8 @@ class VideosViewController: UIViewController, ScrollableToTop {
 
     func handleScroll(_ scrollView: UIScrollView) {}
 
+    func feedContentDidChange() {}
+
     @objc dynamic
     func scrollToTop() {
         topBarHider.showBars()

@@ -31,6 +31,8 @@ struct YouTubeNotification {
     let time: String
     let isRead: Bool
     let destination: YouTubeNotificationDestination
+    var avatarURL: String?
+    var videoThumbnailURL: String?
 }
 
 struct YouTubeNotificationPage {

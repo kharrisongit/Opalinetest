@@ -676,3 +676,18 @@
 "player.controls.loop" = "Repeat video";
 "player.controls.audioOnly" = "Audio Only";
 "player.controls.footer" = "Choose the buttons shown at the top of videos. The settings gear always stays available. AirPlay is also available beside the gear on the main screens.";
+
+/* uTube browsing and inbox */
+"settings.homeLayout.wall" = "Wall";
+"settings.homeLayout.carousel" = "Carousel";
+"home.explorer.wallHint" = "Drag to explore · Pinch to zoom";
+"home.explorer.carouselHint" = "Swipe to browse · Tap Play to watch";
+"home.explorer.refresh" = "Refresh";
+"home.explorer.play" = "Play";
+"home.explorer.preview" = "Muted preview";
+"home.explorer.previewUnavailable" = "Tap Play to watch";
+"home.explorer.previewPaused" = "Previews paused";
+"home.explorer.mainPlaying" = "Your video keeps playing";
+"youtubeInbox.unread" = "New";
+"youtubeInbox.loadingThread" = "Loading this conversation…";
+"youtubeInbox.threadUnavailable" = "This comment thread could not be loaded. Try again, or open the notification to view it on the video.";

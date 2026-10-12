@@ -4,7 +4,7 @@
   "developerName": "kharrison · Based on Opaline by verback2308",
   "subtitle": "Native YouTube viewing and commenting",
   "localizedDescription": "uTube by kharrison, based on Opaline by verback2308. Native comment and reply composer, playback, downloads, SponsorBlock, background audio, and Picture-in-Picture. Posting requires a configured Google iOS OAuth client and account authorization. For AltStore Classic.",
-  "iconURL": "https://raw.githubusercontent.com/kharrisongit/Opalinetest/main/source/icon.png",
+  "iconURL": "https://raw.githubusercontent.com/kharrisongit/Opalinetest/main/source/utube-icon.png",
   "tintColor": "FF0000",
   "category": "entertainment",
   "minOSVersion": "12.0",

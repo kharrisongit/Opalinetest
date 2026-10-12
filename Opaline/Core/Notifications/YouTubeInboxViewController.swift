@@ -11,6 +11,10 @@ final class YouTubeInboxViewController: UITableViewController {
     var usedContinuations = Set<YouTubeInboxContinuation>()
     var loading = false
     var requestGeneration = 0
+    var activeReplyID: String?
+    var replyView: NotificationReplyView?
+    let profileAvatar = ThumbnailImageView(frame: .zero)
+    let profileName = UILabel()
     var kind: YouTubeInboxKind { filter.selectedSegmentIndex == 1 ? .replies : .all }
 
     static func present(from presenter: UIViewController) {
@@ -26,7 +30,6 @@ final class YouTubeInboxViewController: UITableViewController {
         title = "youtubeInbox.title".localized
         filter.selectedSegmentIndex = 0
         filter.addTarget(self, action: #selector(reloadInbox), for: .valueChanged)
-        navigationItem.titleView = filter
         navigationItem.leftBarButtonItem = UIBarButtonItem(
             title: "youtubeInbox.account".localized,
             style: .plain,
@@ -40,6 +43,7 @@ final class YouTubeInboxViewController: UITableViewController {
             action: #selector(close)
         )
         setupTable()
+        setupProfileHeader()
         observeChanges()
         applyTheme()
         reloadInbox()
@@ -47,7 +51,12 @@ final class YouTubeInboxViewController: UITableViewController {
 
     private func setupTable() {
         tableView.rowHeight = UITableView.automaticDimension
-        tableView.estimatedRowHeight = 100
+        tableView.estimatedRowHeight = 140
+        tableView.separatorStyle = .none
+        tableView.keyboardDismissMode = .interactive
+        tableView.register(
+            YouTubeNotificationCell.self, forCellReuseIdentifier: YouTubeNotificationCell.reuseID
+        )
         let refresh = UIRefreshControl()
         refresh.addTarget(self, action: #selector(reloadInbox), for: .valueChanged)
         refreshControl = refresh
@@ -82,11 +91,15 @@ final class YouTubeInboxViewController: UITableViewController {
         tableView.separatorColor = theme.separator
         statusLabel.textColor = theme.secondaryText
         moreButton.tintColor = theme.accent
+        updateProfile()
         tableView.reloadData()
     }
 
     @objc
     private func reloadInbox() {
+        closeInlineReply()
+        updateProfile()
+        YouTubeCommentClient.shared.refreshProfile { [weak self] _ in self?.updateProfile() }
         requestGeneration += 1
         loading = false
         items = []
@@ -163,12 +176,14 @@ final class YouTubeInboxViewController: UITableViewController {
     }
 
     @objc
-    private func openAccount() {
+    func openAccount() {
+        closeInlineReply()
         navigationController?.pushViewController(CommentAccountViewController(), animated: true)
     }
 
     @objc
     private func close() {
+        closeInlineReply()
         dismiss(animated: true)
     }
 }

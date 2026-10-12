@@ -15,6 +15,7 @@ extension HomeViewController {
     /// hourly, so a quick app switch changes nothing).
     func adoptFreshCacheIfNeeded() {
         guard let collectionView, collectionView.contentOffset.y <= 1,
+              explorer?.isAtStart != false,
               let cachedAt = cache.feedUpdatedAt("home"),
               cachedAt > appliedFeedAt,
               let cachedPage = cache.cachedHomeFeed()

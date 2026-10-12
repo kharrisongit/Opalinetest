@@ -2,6 +2,7 @@ import UIKit
 
 final class VideoRouter {
     static let shared = VideoRouter()
+    static let playbackDidChange = Notification.Name("videoRouterPlaybackDidChange")
 
     var watchViewControllerFactory: ((Video) -> WatchViewController)?
     /// Shorts open in their own full-screen vertical feed, not the watch screen.
@@ -40,6 +41,7 @@ final class VideoRouter {
         from presenter: UIViewController,
         shorts: ShortsEntry = .pool([])
     ) {
+        NotificationCenter.default.post(name: Self.playbackDidChange, object: nil)
         if video.isShort,
            ShortsPlayerMode.selected == .vertical,
            let makeShorts = shortsViewControllerFactory {
@@ -65,6 +67,7 @@ final class VideoRouter {
         let newPanel = PlayerPanelViewController(watchVC: watchVC)
         newPanel.onClose = { [weak self] in
             self?.panel = nil
+            NotificationCenter.default.post(name: Self.playbackDidChange, object: nil)
         }
         panel = newPanel
         guard let tabBar = findTabBarController(from: presenter) else {

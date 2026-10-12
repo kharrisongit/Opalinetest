@@ -21,6 +21,7 @@ extension HomeViewController {
     /// Rebuilds the feed in the new layout from session caches.
     @objc
     private func handleLayoutSettingChange() {
+        applyExplorerLayout()
         selectCategory(at: selectedCategoryIndex)
     }
 

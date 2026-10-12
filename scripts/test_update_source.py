@@ -57,6 +57,16 @@ class UpdateSourceTests(unittest.TestCase):
         self.assertEqual(data["news"][0]["url"],
                          "https://github.com/kharrisongit/Opalinetest/releases/tag/1.12.1")
 
+    def test_fork_name_and_icon_are_preserved(self):
+        template = json.loads(self.template.read_text())
+        template["name"] = "uTube"
+        template["iconURL"] = "https://example.com/utube-icon.png"
+        self.template.write_text(json.dumps(template))
+        self.assertEqual(self.publish().returncode, 0)
+        data = json.loads(self.feed.read_text())
+        self.assertEqual(data["news"][0]["title"], "uTube 1.12.1")
+        self.assertEqual(data["apps"][0]["iconURL"], template["iconURL"])
+
     def test_repeated_publication_has_one_version_and_news_item(self):
         self.assertEqual(self.publish().returncode, 0)
         self.assertEqual(self.publish().returncode, 0)

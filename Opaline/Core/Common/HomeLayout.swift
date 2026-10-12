@@ -6,6 +6,8 @@ enum HomeLayout: String, CaseIterable {
     case grid = "grid"
     /// Each shelf is a horizontally scrolling rail (TV style).
     case rails = "shelf_rails"
+    case wall = "wall"
+    case carousel = "carousel"
 
     static var selected: HomeLayout {
         get {
@@ -32,6 +34,10 @@ enum HomeLayout: String, CaseIterable {
             return "settings.homeLayout.grid".localized
         case .rails:
             return "settings.homeLayout.rails".localized
+        case .wall:
+            return "settings.homeLayout.wall".localized
+        case .carousel:
+            return "settings.homeLayout.carousel".localized
         }
     }
 }

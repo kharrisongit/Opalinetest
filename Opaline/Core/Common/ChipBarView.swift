@@ -8,6 +8,7 @@ final class ChipBarView: UIView {
     static let preferredHeight: CGFloat = 44
 
     var onSelect: ((Int) -> Void)?
+    var neutralSelection = false
 
     private let scrollView: UIScrollView = {
         let sv = UIScrollView()
@@ -157,7 +158,7 @@ final class ChipBarView: UIView {
     }
 
     private func styleButton(_ btn: UIButton, selected: Bool) {
-        let accent = ThemeManager.shared.accent
+        let accent = neutralSelection ? ThemeManager.shared.primaryText : ThemeManager.shared.accent
         let textColor = ThemeManager.shared.primaryText
         if selected {
             btn.backgroundColor = accent

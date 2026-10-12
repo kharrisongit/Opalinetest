@@ -27,6 +27,7 @@ struct CommentAPITokens: Codable {
 struct CommentAPIChannel: Codable {
     let id: String
     let title: String
+    var avatarURL: String?
 }
 
 struct CommentAPIAccount: Codable {

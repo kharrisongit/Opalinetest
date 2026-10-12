@@ -106,7 +106,8 @@ final class PlayerSheetView: UIView {
         layer.masksToBounds = true
         handle.layer.cornerRadius = 2.5
         handle.layer.masksToBounds = true
-        titleLabel.font = UIFont.systemFont(ofSize: 16, weight: .semibold)
+        titleLabel.font = UIFont.systemFont(ofSize: 20, weight: .bold)
+        sortBar.neutralSelection = true
         titleLabel.setContentHuggingPriority(.defaultLow, for: .horizontal)
         setupButtonRow()
         headerStack.axis = .horizontal

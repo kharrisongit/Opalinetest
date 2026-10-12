@@ -61,12 +61,14 @@ extension VideosViewController {
             }
             sections[section].videos.remove(at: index)
             collectionView?.reloadData()
+            feedContentDidChange()
             return
         }
     }
 
     func endRefreshing() {
         collectionView?.refreshControl?.endRefreshing()
+        feedContentDidChange()
     }
 
     func shortCell(

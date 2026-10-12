@@ -35,7 +35,22 @@ enum YouTubeCommentModel {
               !title.isEmpty else {
             throw CommentAPIError(reason: "signedOut")
         }
-        return CommentAPIChannel(id: "website-session", title: title)
+        return CommentAPIChannel(
+            id: "website-session", title: title, avatarURL: thumbnailURL(header["accountPhoto"])
+        )
+    }
+
+    static func thumbnailURL(_ value: Any?) -> String? {
+        let image = value as? [String: Any]
+        let thumbnails = image?["thumbnails"] as? [[String: Any]] ?? []
+        return thumbnails.reversed().compactMap { thumbnail -> String? in
+            guard let raw = thumbnail["url"] as? String,
+                  let url = URL(string: raw), url.scheme == "https", url.host != nil,
+                  url.user == nil, url.password == nil else {
+                return nil
+            }
+            return url.absoluteString
+        }.first
     }
 
     static func writeBody(
