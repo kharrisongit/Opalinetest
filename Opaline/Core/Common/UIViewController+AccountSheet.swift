@@ -6,6 +6,7 @@ extension UIViewController {
     private static func performSignOut() {
         OAuthClient.shared.signOut()
         CommentAPIClient.shared.disconnect()
+        YouTubeCommentClient.shared.disconnect()
         UserProfileStore.shared.clear()
         AppCache.shared.clearHomeFeed()
         NotificationCenter.default.post(

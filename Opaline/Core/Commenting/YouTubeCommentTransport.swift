@@ -14,7 +14,7 @@ final class YouTubeCommentTransport: NSObject, URLSessionTaskDelegate {
 
     func send(_ request: URLRequest, completion: @escaping (Result<[String: Any], Error>) -> Void) {
         let isWrite = request.url?.path.contains("/comment/") == true
-        session.dataTask(with: request) { data, response, error in
+        let task = session.dataTask(with: request) { data, response, error in
             let result: Result<[String: Any], Error> = Result {
                 guard error == nil, let data, let http = response as? HTTPURLResponse else {
                     throw CommentAPIError(reason: isWrite ? "uncertain" : "network")
@@ -24,7 +24,8 @@ final class YouTubeCommentTransport: NSObject, URLSessionTaskDelegate {
                 )
             }
             DispatchQueue.main.async { completion(result) }
-        }.resume()
+        }
+        task.resume()
     }
 
     // swiftlint:disable:next function_parameter_count
