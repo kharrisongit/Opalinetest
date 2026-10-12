@@ -229,7 +229,6 @@ extension YouTubeCommentClient {
         }
         return request
     }
-
 }
 
 enum CommentPostingService {

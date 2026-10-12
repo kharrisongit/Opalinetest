@@ -46,6 +46,7 @@ enum WebPlaybackProfile {
         return lines.contains { $0.hasPrefix("#EXT-X-STREAM-INF:") || $0.hasPrefix("#EXTINF:") }
             && lines.contains { !$0.isEmpty && !$0.hasPrefix("#") }
     }
+
     func pageURL(videoID: String) throws -> URL {
         guard videoID.range(of: "^[A-Za-z0-9_-]{11}$", options: .regularExpression) != nil,
               let url = URL(string: self == .embedded
@@ -78,7 +79,6 @@ enum WebPlaybackProfile {
             "playbackContext": ["contentPlaybackContext": playback]
         ]
     }
-
 }
 
 enum WebPlaybackError: LocalizedError {

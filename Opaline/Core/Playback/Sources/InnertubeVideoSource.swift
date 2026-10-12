@@ -240,7 +240,6 @@ final class InnertubeVideoSource: VideoSource {
             completion: completion
         )
     }
-
 }
 
 // MARK: - Live HLS
