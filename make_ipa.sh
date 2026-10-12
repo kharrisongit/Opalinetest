@@ -168,7 +168,7 @@ rm -rf "$TMP"
 
 IPA_SIZE=$(stat -f%z "$OUTPUT" 2>/dev/null || stat -c%s "$OUTPUT" 2>/dev/null)
 DATE=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
-REPO_URL="https://github.com/verback2308/YTLite"
+REPO_URL="https://github.com/${GITHUB_REPOSITORY:-kharrisongit/Opalinetest}"
 DOWNLOAD_URL="$REPO_URL/releases/download/${VERSION}/${OUTPUT}"
 
 if [ "${UPDATE_SOURCE:-1}" = "1" ]; then
@@ -178,6 +178,7 @@ if [ "${UPDATE_SOURCE:-1}" = "1" ]; then
     --download-url "$DOWNLOAD_URL" \
     --size "$IPA_SIZE" \
     --date "$DATE" \
+    --ipa "$OUTPUT" \
     --file "$SOURCE_JSON"
 fi
 

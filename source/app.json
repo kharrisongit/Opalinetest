@@ -1,0 +1,26 @@
+{
+  "name": "Opaline",
+  "bundleIdentifier": "com.verback.YTLite",
+  "developerName": "verback2308 · Fork maintained by Kurtis Harrison",
+  "subtitle": "Kurtis’s fork with in-app commenting",
+  "localizedDescription": "Kurtis’s fork of the native Opaline YouTube client by verback2308. Includes an in-app YouTube browser for writing comments and replies, plus the original playback, downloads, SponsorBlock, background audio, and Picture-in-Picture features. For AltStore Classic.",
+  "iconURL": "https://raw.githubusercontent.com/kharrisongit/Opalinetest/main/source/icon.png",
+  "tintColor": "FF0000",
+  "category": "entertainment",
+  "minOSVersion": "12.0",
+  "screenshots": [
+    "https://raw.githubusercontent.com/kharrisongit/Opalinetest/main/screenshots/app/iphone/dark/recommendations.jpeg",
+    "https://raw.githubusercontent.com/kharrisongit/Opalinetest/main/screenshots/app/iphone/dark/player.jpeg",
+    "https://raw.githubusercontent.com/kharrisongit/Opalinetest/main/screenshots/app/iphone/dark/channel.jpeg",
+    "https://raw.githubusercontent.com/kharrisongit/Opalinetest/main/screenshots/app/iphone/dark/subscriptions.jpeg",
+    "https://raw.githubusercontent.com/kharrisongit/Opalinetest/main/screenshots/app/iphone/dark/settings.jpeg"
+  ],
+  "appPermissions": {
+    "entitlements": [
+      "application-identifier",
+      "com.apple.developer.team-identifier",
+      "get-task-allow"
+    ],
+    "privacy": {}
+  }
+}

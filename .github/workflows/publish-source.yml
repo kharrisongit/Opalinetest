@@ -10,8 +10,10 @@ on:
 
 permissions:
   contents: write
-  actions: write
-  issues: write
+
+concurrency:
+  group: opaline-release
+  cancel-in-progress: false
 
 jobs:
   update-source:
@@ -38,6 +40,10 @@ jobs:
           fi
           URL=${ASSET% *}
           SIZE=${ASSET##* }
+          IPA_DIR="$RUNNER_TEMP/source-ipa"
+          mkdir -p "$IPA_DIR"
+          gh release download "$TAG" --pattern '*.ipa' --dir "$IPA_DIR" --clobber
+          IPA=$(find "$IPA_DIR" -maxdepth 1 -name '*.ipa' -print -quit)
           NOTES_FILE="$RUNNER_TEMP/notes.md"
           gh api "repos/${{ github.repository }}/releases/$RELEASE_ID" \
             --jq '.body // ""' > "$NOTES_FILE"
@@ -46,6 +52,7 @@ jobs:
             --download-url "$URL" \
             --size "$SIZE" \
             --date "$PUBLISHED_AT" \
+            --ipa "$IPA" \
             --notes-file "$NOTES_FILE" \
             --release-title "$RELEASE_TITLE"
 
@@ -56,28 +63,8 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add source/apps.json
+          if git diff --cached --quiet; then
+            exit 0
+          fi
           git commit -m "Update source to $TAG [skip ci]"
           git push
-
-      - name: Close the issues this release ships
-        env:
-          GH_TOKEN: ${{ github.token }}
-          TAG: ${{ github.event.release.tag_name }}
-          NOTES: ${{ github.event.release.body }}
-        run: |
-          # Commits deliberately reference issues without a closing keyword,
-          # so nothing closes on the push that only produces a draft. The
-          # notes link every issue the release ships; close those here, now
-          # that the build is actually installable.
-          printf '%s' "$NOTES" |
-            grep -oE '/issues/[0-9]+' | grep -oE '[0-9]+' | sort -un |
-            while read -r n; do
-              state=$(gh issue view "$n" --json state --jq .state 2>/dev/null) || continue
-              [ "$state" = "OPEN" ] || continue
-              gh issue close "$n" --reason completed --comment "Shipped in $TAG."
-            done
-
-      # Nothing is triggered from here on purpose. The apt repo pulls this
-      # file and the release debs itself, hourly, and reaching across repos
-      # to trigger it would need a PAT -- worth adding only if the wait ever
-      # actually bites.

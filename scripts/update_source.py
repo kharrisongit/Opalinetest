@@ -7,8 +7,10 @@ Used by make_ipa.sh locally and by .github/workflows/publish-source.yml.
 """
 import argparse
 import json
+import plistlib
 import re
 from pathlib import Path
+import zipfile
 
 DEFAULT_NOTES = "See release notes on GitHub"
 DEFAULT_CAPTION = "Update available — see what's new."
@@ -71,6 +73,30 @@ def prepend_news(data, app, args, notes):
     data["news"] = [entry] + older
 
 
+def ipa_metadata(path, app, version, size):
+    """Reject a source entry that would fail AltStore's IPA identity checks."""
+    ipa = Path(path)
+    if ipa.stat().st_size != size:
+        raise ValueError("Source size does not match the IPA")
+    with zipfile.ZipFile(ipa) as archive:
+        names = [name for name in archive.namelist()
+                 if re.fullmatch(r"Payload/[^/]+\.app/Info\.plist", name)]
+        if len(names) != 1:
+            raise ValueError("Expected exactly one app in the IPA")
+        info = plistlib.loads(archive.read(names[0]))
+    if info.get("CFBundleIdentifier") != app["bundleIdentifier"]:
+        raise ValueError("Source bundle identifier does not match the IPA")
+    if info.get("CFBundleShortVersionString") != version:
+        raise ValueError("Source version does not match the IPA")
+    build = str(info.get("CFBundleVersion", ""))
+    if not build:
+        raise ValueError("IPA has no build number")
+    return {
+        "buildVersion": build,
+        "minOSVersion": info.get("MinimumOSVersion", MIN_OS_VERSION),
+    }
+
+
 def main():
     parser = argparse.ArgumentParser(description="Update the AltStore/SideStore source")
     parser.add_argument("--version", required=True)
@@ -80,6 +106,8 @@ def main():
     parser.add_argument("--notes-file", help="file with the changelog text")
     parser.add_argument("--release-title", help="GitHub release title for the news entry")
     parser.add_argument("--file", default="source/apps.json")
+    parser.add_argument("--app-template", default="source/app.json")
+    parser.add_argument("--ipa", help="Validate identity and read build metadata from this IPA")
     args = parser.parse_args()
 
     notes = DEFAULT_NOTES
@@ -90,7 +118,10 @@ def main():
 
     path = Path(args.file)
     data = json.loads(path.read_text(encoding="utf-8"))
-    app = data["apps"][0]
+    apps = data.get("apps", [])
+    app = apps[0] if apps else json.loads(Path(args.app_template).read_text(encoding="utf-8"))
+    if args.size <= 0:
+        raise ValueError("IPA size must be positive")
 
     entry = {
         "version": args.version,
@@ -100,8 +131,11 @@ def main():
         "size": args.size,
         "minOSVersion": MIN_OS_VERSION,
     }
+    if args.ipa:
+        entry.update(ipa_metadata(args.ipa, app, args.version, args.size))
     older = [v for v in app.get("versions", []) if v.get("version") != args.version]
     app["versions"] = [entry] + older
+    data["apps"] = [app]
 
     # AltStore reads these root-level duplicates of the latest version entry.
     app["version"] = args.version

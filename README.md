@@ -1,3 +1,13 @@
+> **Kurtis’s fork — AltStore Classic**
+>
+> Add this source in **AltStore → Sources → +**:
+>
+> `https://raw.githubusercontent.com/kharrisongit/Opalinetest/main/source/apps.json`
+>
+> Install **Opaline** from **Kurtis’s Opaline**. The source lists only this fork’s published builds. It stays empty until the first successful build publishes an IPA. To create that first build, open [Build IPA](https://github.com/kharrisongit/Opalinetest/actions/workflows/build-release.yml), enable workflows if GitHub asks, and choose **Run workflow → main**. Successful builds publish the release and update the source automatically. AltStore performs signing during installation; AltServer may need to be running for your AltStore setup.
+>
+> This fork retains Opaline’s original bundle identifier so it can update an existing Opaline installation. It installs as the same app, not a second copy. Original project and credits: [verback2308/Opaline](https://github.com/verback2308/Opaline).
+
 <div align="center">
 
 # Opaline
@@ -9,7 +19,7 @@
 
 **A lightweight, native YouTube client for iOS 12+. No ads, no tracking, no dependencies.**
 
-[![Latest release](https://img.shields.io/github/v/release/verback2308/Opaline?label=release&color=blue)](https://github.com/verback2308/Opaline/releases/latest)
+[![Latest release](https://img.shields.io/github/v/release/verback2308/Opaline?label=release&color=blue)](https://github.com/kharrisongit/Opalinetest/releases/latest)
 [![Downloads](https://img.shields.io/github/downloads/verback2308/Opaline/total?color=brightgreen)](https://github.com/verback2308/Opaline/releases)
 ![iOS 12+](https://img.shields.io/badge/iOS-12%2B-lightgrey?logo=apple)
 [![License: GPL v3](https://img.shields.io/badge/license-GPLv3-blue)](LICENSE)
@@ -122,17 +132,17 @@ For older hardware — armv7 devices on iOS 9.3, such as the iPad 2, iPad 3, iPa
 
 Add the Opaline source to your sideloading app to receive automatic updates:
 
-<a href="https://stikstore.app/altdirect/?url=https://verback2308.github.io/repo/apps.json"><img src="https://github.com/StikStore/altdirect/raw/main/assets/png/AltSource_Blue.png" height="55" alt="Add Source"></a>
+<a href="https://stikstore.app/altdirect/?url=https://raw.githubusercontent.com/kharrisongit/Opalinetest/main/source/apps.json"><img src="https://github.com/StikStore/altdirect/raw/main/assets/png/AltSource_Blue.png" height="55" alt="Add Source"></a>
 
 **Option 2 — Manual install**
 
-[Download the latest IPA](https://github.com/verback2308/Opaline/releases/latest) and install via **SideStore**, **AltStore**, or **LiveContainer**.
+[Download the latest IPA](https://github.com/kharrisongit/Opalinetest/releases/latest) and install via **SideStore**, **AltStore**, or **LiveContainer**.
 
 **Option 3 — Build from source**
 
 ```bash
-git clone https://github.com/verback2308/Opaline.git
-cd Opaline
+git clone https://github.com/kharrisongit/Opalinetest.git
+cd Opalinetest
 cp Config/Local.xcconfig.example Config/Local.xcconfig
 ./make_ipa.sh
 ```
@@ -211,8 +221,8 @@ This generates a log file you can attach to your GitHub issue. The log includes 
 ## Building
 
 ```bash
-git clone https://github.com/verback2308/Opaline.git
-cd Opaline
+git clone https://github.com/kharrisongit/Opalinetest.git
+cd Opalinetest
 cp Config/Local.xcconfig.example Config/Local.xcconfig
 open Opaline.xcodeproj
 ```
