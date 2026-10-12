@@ -9,21 +9,14 @@
   "apps": [
     {
       "name": "uTube",
-      "bundleIdentifier": "com.verback.YTLite",
-      "developerName": "kharrison · Based on Opaline by verback2308",
+      "bundleIdentifier": "com.kharrison.utube",
+      "developerName": "kharrison",
       "subtitle": "Native YouTube viewing and commenting",
-      "localizedDescription": "Watch YouTube with AirPlay, background playback, downloads, and custom Home layouts. Read and write comments and replies inline using your connected YouTube account, and view your YouTube notifications. Maintained by kharrison, based on Opaline by verback2308. For AltStore Classic.",
+      "localizedDescription": "A personal YouTube client with inline comments and replies, a YouTube inbox, Wall and Carousel Home layouts, AirPlay, background playback, downloads, and customizable controls. Light mode by default. Installs alongside Opaline as its own app; existing Opaline settings and sign-in do not transfer. Maintained by kharrison, based on Opaline by verback2308. For AltStore Classic.",
       "iconURL": "https://raw.githubusercontent.com/kharrisongit/utube/main/source/utube-icon.png",
       "tintColor": "FF0000",
       "category": "entertainment",
       "minOSVersion": "12.0",
-      "screenshots": [
-        "https://raw.githubusercontent.com/kharrisongit/utube/main/screenshots/app/iphone/dark/recommendations.jpeg",
-        "https://raw.githubusercontent.com/kharrisongit/utube/main/screenshots/app/iphone/dark/player.jpeg",
-        "https://raw.githubusercontent.com/kharrisongit/utube/main/screenshots/app/iphone/dark/channel.jpeg",
-        "https://raw.githubusercontent.com/kharrisongit/utube/main/screenshots/app/iphone/dark/subscriptions.jpeg",
-        "https://raw.githubusercontent.com/kharrisongit/utube/main/screenshots/app/iphone/dark/settings.jpeg"
-      ],
       "appPermissions": {
         "entitlements": [
           "application-identifier",
@@ -34,83 +27,20 @@
       },
       "versions": [
         {
-          "version": "1.12.7",
-          "date": "2026-10-12T09:26:41Z",
-          "localizedDescription": "uTube by kharrison, based on Opaline by verback2308.\n\n- New Wall layout: a dense, staggered thumbnail canvas with two-dimensional scrolling and pinch to zoom.\n- New Carousel layout: swipe between animated video cards, with muted previews and a Play button that opens the standard player.\n- Browsing either layout preserves the current full-size or minimized video. Carousel previews stay off while the main player is in use, AirPlay is connected, or the app is inactive.\n- Redesigned YouTube notifications with profile photos, video thumbnails, unread highlighting and replies directly inside the inbox. Replying loads and validates the linked thread before enabling Send; drafts survive closing the panel.\n- Refreshed video comments with larger text and avatars, neutral sort chips, blue reply controls and an avatar beside the inline composer.\n- AltStore now uses a fresh icon URL for the matching custom uTube artwork.\n\nChoose a layout in Settings → Home Layout. Existing Shelf Rails and Plain Grid remain available. Notification replies use the YouTube account already connected for commenting; no Google app registration is added. Removed or unavailable threads show a retry message instead of sending to a guessed comment. Receiver-specific AirPlay behavior and signed-in notification replies still need confirmation on a device.",
-          "downloadURL": "https://github.com/kharrisongit/utube/releases/download/1.12.7/uTube_1.12.7.ipa",
-          "size": 11035290,
+          "version": "1.12.8",
+          "date": "2026-10-12T10:56:23Z",
+          "localizedDescription": "uTube by kharrison, based on Opaline by verback2308.\n\n- uTube now installs as its own app alongside Opaline, using the separate com.kharrison.utube app identifier.\n- The Open in uTube share action uses its own link handler so it opens uTube when both apps are installed.\n- The kharrison Apps source now offers the standalone uTube build. Older builds that shared Opaline's identity are no longer offered in the source.\n- Refreshed the GitHub page with uTube's features, icon, installation instructions, and credits. Removed upstream promotional and donation buttons.\n- Jailbreak packages also use their own package ID and app folder.\n\nInstall uTube from the refreshed kharrison Apps source as a new app. You can keep Opaline or the older uTube installation. Settings, downloads, and sign-in from the older installation do not transfer automatically; connect your account in the new app. Future uTube updates use this new identity.\n\nWall, Carousel, inline comments, YouTube notifications, customizable controls, and AirPlay behavior remain available.",
+          "downloadURL": "https://github.com/kharrisongit/utube/releases/download/1.12.8/uTube_1.12.8.ipa",
+          "size": 11031083,
           "minOSVersion": "12.0",
-          "buildVersion": "621"
-        },
-        {
-          "version": "1.12.6",
-          "date": "2026-10-12T08:46:26Z",
-          "localizedDescription": "uTube by kharrison, based on Opaline by verback2308.\n\n- AirPlay beside the settings gear on the main screens and at the top of videos, including Shorts.\n- Choose visible player buttons in Settings → Playback → Video controls. Audio Only is hidden by default; the settings gear stays available.\n- The bell now opens your YouTube notifications, with All and Replies tabs, using the account already connected for comments. Pull to refresh and load older notifications. Video notifications open in uTube, with linked comments passed to the comments list.\n- Remove feedback and support-development buttons; keep upstream credits in About.\n- Default to light appearance while preserving any explicitly saved theme. Rename the bottom Library tab to History.\n\nThe existing commenting connection and AirPlay background-playback behavior remain in place. YouTube notifications refresh in the app, not through a new push service. Notification text stays in memory and is cleared on account changes. The new inbox and AirPlay picker still need confirmation on your signed-in device and receiver.",
-          "downloadURL": "https://github.com/kharrisongit/utube/releases/download/1.12.6/uTube_1.12.6.ipa",
-          "size": 10969719,
-          "minOSVersion": "12.0",
-          "buildVersion": "617"
-        },
-        {
-          "version": "1.12.5",
-          "date": "2026-10-12T08:42:51Z",
-          "localizedDescription": "uTube by kharrison, based on Opaline by verback2308.\n\n- AirPlay beside the settings gear on the main screens and at the top of videos, including Shorts.\n- Choose visible player buttons in Settings → Playback → Video controls. Audio Only is hidden by default; the settings gear stays available.\n- The bell now opens your YouTube notifications, with All and Replies tabs, using the account already connected for comments. Pull to refresh and load older notifications. Video notifications open in uTube, with linked comments passed to the comments list.\n- Remove feedback and support-development buttons; keep upstream credits in About.\n- Default to light appearance while preserving any explicitly saved theme. Rename the bottom Library tab to History.\n\nThe existing commenting connection and AirPlay background-playback behavior remain in place. YouTube notifications refresh in the app, not through a new push service. Notification text stays in memory and is cleared on account changes. The new inbox and AirPlay picker still need confirmation on your signed-in device and receiver.",
-          "downloadURL": "https://github.com/kharrisongit/utube/releases/download/1.12.5/uTube_1.12.5.ipa",
-          "size": 10972469,
-          "minOSVersion": "12.0",
-          "buildVersion": "616"
-        },
-        {
-          "version": "1.12.4",
-          "date": "2026-10-12T08:14:34Z",
-          "localizedDescription": "uTube by kharrison, based on Opaline by verback2308.\n\n- Type comments and replies directly in the comments list, then tap Send. No separate writing window or deliberate playback pause.\n- Replace the Google client-ID setup form with Connect YouTube for commenting. This uses a one-time website sign-in without registering uTube in Google Cloud. The unofficial connection may change or be blocked by YouTube; your existing viewing login is separate.\n- Keep drafts isolated by video and reply, prevent duplicate sends, and preserve text after failures. No automatic retries after an uncertain submission.\n- Use Apple's long-form AirPlay video routing and resume after temporary audio interruptions only when iOS permits and you have not paused or disconnected. Add playback diagnostics for investigating delayed TV stops.\n\nUpdate through the same AltStore source. The uTube name, custom icon, kharrison attribution and bundle identifier stay in place. Live account sign-in, posting, and a sustained AirPlay session on your receiver still need device testing; no live comment was posted during automated validation.",
-          "downloadURL": "https://github.com/kharrisongit/utube/releases/download/1.12.4/uTube_1.12.4.ipa",
-          "size": 10930000,
-          "minOSVersion": "12.0",
-          "buildVersion": "613"
-        },
-        {
-          "version": "1.12.3",
-          "date": "2026-10-12T08:12:30Z",
-          "localizedDescription": "uTube by kharrison, based on Opaline by verback2308.\n\n- Type comments and replies directly in the comments list, then tap Send. No separate writing window or deliberate playback pause.\n- Replace the Google client-ID setup form with Connect YouTube for commenting. This uses a one-time website sign-in without registering uTube in Google Cloud. The unofficial connection may change or be blocked by YouTube; your existing viewing login is separate.\n- Keep drafts isolated by video and reply, prevent duplicate sends, and preserve text after failures. No automatic retries after an uncertain submission.\n- Use Apple's long-form AirPlay video routing and resume after temporary audio interruptions only when iOS permits and you have not paused or disconnected. Add playback diagnostics for investigating delayed TV stops.\n\nUpdate through the same AltStore source. The uTube name, custom icon, kharrison attribution and bundle identifier stay in place. Live account sign-in, posting, and a sustained AirPlay session on your receiver still need device testing; no live comment was posted during automated validation.",
-          "downloadURL": "https://github.com/kharrisongit/utube/releases/download/1.12.3/uTube_1.12.3.ipa",
-          "size": 10932892,
-          "minOSVersion": "12.0",
-          "buildVersion": "612"
-        },
-        {
-          "version": "1.12.2",
-          "date": "2026-10-12T07:33:10Z",
-          "localizedDescription": "uTube by kharrison, based on Opaline by verback2308.\n\n- Native comment editor and replies in videos and Shorts. Tap **Write a comment** or **Reply**, choose your connected YouTube channel, then **Post**.\n- Commenting account setup in Settings. Posting uses Google's YouTube API and requires your own iOS OAuth client ID; see NATIVE_COMMENTING.md in this repository. Playback sign-in is separate. No Google client is bundled.\n- Keep drafts after failed requests and only show a new comment after YouTube confirms it. Ambiguous network failures are never retried automatically.\n- New **uTube** app name, custom red icon, and **kharrison** attribution.\n- AirPlay background fixes: keep an active route playing when leaving the app, prevent automatic PiP from interrupting AirPlay, and avoid pausing AirPlay when PiP closes.\n\nUpdate through the same AltStore source. The bundle identifier is unchanged to preserve the existing installation. AirPlay still needs a check on your receiver; no live Google comment was posted during automated validation.",
-          "downloadURL": "https://github.com/kharrisongit/utube/releases/download/1.12.2/uTube_1.12.2.ipa",
-          "size": 10896601,
-          "minOSVersion": "12.0",
-          "buildVersion": "607"
-        },
-        {
-          "version": "1.12.1",
-          "date": "2026-10-12T07:30:02Z",
-          "localizedDescription": "uTube by kharrison, based on Opaline by verback2308.\n\n- Native comment editor and replies in videos and Shorts. Tap **Write a comment** or **Reply**, choose your connected YouTube channel, then **Post**.\n- Commenting account setup in Settings. Posting uses Google's YouTube API and requires your own iOS OAuth client ID; see NATIVE_COMMENTING.md in this repository. Playback sign-in is separate. No Google client is bundled.\n- Keep drafts after failed requests and only show a new comment after YouTube confirms it. Ambiguous network failures are never retried automatically.\n- New **uTube** app name, custom red icon, and **kharrison** attribution.\n- AirPlay background fixes: keep an active route playing when leaving the app, prevent automatic PiP from interrupting AirPlay, and avoid pausing AirPlay when PiP closes.\n\nUpdate through the same AltStore source. The bundle identifier is unchanged to preserve the existing installation. AirPlay still needs a check on your receiver; no live Google comment was posted during automated validation.",
-          "downloadURL": "https://github.com/kharrisongit/utube/releases/download/1.12.1/uTube_1.12.1.ipa",
-          "size": 10898616,
-          "minOSVersion": "12.0",
-          "buildVersion": "606"
-        },
-        {
-          "version": "1.12.0",
-          "date": "2026-10-12T06:48:18Z",
-          "localizedDescription": "This is kharrison's fork of Opaline, based on the original app by verback2308.\n\n- Added **Comment on YouTube** to the video and Shorts comment panels. Write comments and replies through YouTube's page inside Opaline, then tap **Done** to return.\n- Refresh the native comment list on return and ignore outdated requests from before the refresh.\n- Publish installable updates through kharrison's AltStore Classic source.\n\nYouTube may ask you to sign in in the browser. This sign-in is separate from the app's account sign-in. Commenting requires an internet connection and a video with comments enabled.",
-          "downloadURL": "https://github.com/kharrisongit/utube/releases/download/1.12.0/Opaline_1.12.0.ipa",
-          "size": 6684986,
-          "minOSVersion": "12.0",
-          "buildVersion": "603"
+          "buildVersion": "630"
         }
       ],
-      "version": "1.12.7",
-      "versionDate": "2026-10-12T09:26:41Z",
-      "versionDescription": "uTube by kharrison, based on Opaline by verback2308.\n\n- New Wall layout: a dense, staggered thumbnail canvas with two-dimensional scrolling and pinch to zoom.\n- New Carousel layout: swipe between animated video cards, with muted previews and a Play button that opens the standard player.\n- Browsing either layout preserves the current full-size or minimized video. Carousel previews stay off while the main player is in use, AirPlay is connected, or the app is inactive.\n- Redesigned YouTube notifications with profile photos, video thumbnails, unread highlighting and replies directly inside the inbox. Replying loads and validates the linked thread before enabling Send; drafts survive closing the panel.\n- Refreshed video comments with larger text and avatars, neutral sort chips, blue reply controls and an avatar beside the inline composer.\n- AltStore now uses a fresh icon URL for the matching custom uTube artwork.\n\nChoose a layout in Settings → Home Layout. Existing Shelf Rails and Plain Grid remain available. Notification replies use the YouTube account already connected for commenting; no Google app registration is added. Removed or unavailable threads show a retry message instead of sending to a guessed comment. Receiver-specific AirPlay behavior and signed-in notification replies still need confirmation on a device.",
-      "downloadURL": "https://github.com/kharrisongit/utube/releases/download/1.12.7/uTube_1.12.7.ipa",
-      "size": 11035290
+      "version": "1.12.8",
+      "versionDate": "2026-10-12T10:56:23Z",
+      "versionDescription": "uTube by kharrison, based on Opaline by verback2308.\n\n- uTube now installs as its own app alongside Opaline, using the separate com.kharrison.utube app identifier.\n- The Open in uTube share action uses its own link handler so it opens uTube when both apps are installed.\n- The kharrison Apps source now offers the standalone uTube build. Older builds that shared Opaline's identity are no longer offered in the source.\n- Refreshed the GitHub page with uTube's features, icon, installation instructions, and credits. Removed upstream promotional and donation buttons.\n- Jailbreak packages also use their own package ID and app folder.\n\nInstall uTube from the refreshed kharrison Apps source as a new app. You can keep Opaline or the older uTube installation. Settings, downloads, and sign-in from the older installation do not transfer automatically; connect your account in the new app. Future uTube updates use this new identity.\n\nWall, Carousel, inline comments, YouTube notifications, customizable controls, and AirPlay behavior remain available.",
+      "downloadURL": "https://github.com/kharrisongit/utube/releases/download/1.12.8/uTube_1.12.8.ipa",
+      "size": 11031083
     },
     {
       "name": "The Last Dragonrider",
@@ -162,6 +92,15 @@
   ],
   "news": [
     {
+      "title": "uTube 1.12.8 — kharrison",
+      "identifier": "com.kharrison.utube.release-1.12.8",
+      "caption": "uTube now installs as its own app alongside Opaline, using the separate com.kharrison.utube app identifier.",
+      "date": "2026-10-12T10:56:23Z",
+      "tintColor": "FF0000",
+      "appID": "com.kharrison.utube",
+      "url": "https://github.com/kharrisongit/utube/releases/tag/1.12.8"
+    },
+    {
       "title": "The Last Dragonrider 1.0.1",
       "identifier": "com.kharrison.lastdragonrider.release-1.0.1",
       "caption": "New Corin and Aurelius silhouette icon, using the exact raised-wing pose from the game’s title screen.",
@@ -178,78 +117,6 @@
       "tintColor": "E0913F",
       "appID": "com.kharrison.lastdragonrider",
       "url": "https://github.com/kharrisongit/utube/releases/tag/ldr-1.0.0"
-    },
-    {
-      "title": "uTube 1.12.7 — kharrison",
-      "identifier": "release-1.12.7",
-      "caption": "New Wall layout: a dense, staggered thumbnail canvas with two-dimensional scrolling and pinch to zoom.",
-      "date": "2026-10-12T09:26:41Z",
-      "tintColor": "FF0000",
-      "appID": "com.verback.YTLite",
-      "url": "https://github.com/kharrisongit/utube/releases/tag/1.12.7"
-    },
-    {
-      "title": "Opaline 1.12.6 — uTube 1.12.6 — kharrison",
-      "identifier": "release-1.12.6",
-      "caption": "AirPlay beside the settings gear on the main screens and at the top of videos, including Shorts.",
-      "date": "2026-10-12T08:46:26Z",
-      "tintColor": "FF0000",
-      "appID": "com.verback.YTLite",
-      "url": "https://github.com/kharrisongit/utube/releases/tag/1.12.6"
-    },
-    {
-      "title": "Opaline 1.12.5 — uTube 1.12.5 — kharrison",
-      "identifier": "release-1.12.5",
-      "caption": "AirPlay beside the settings gear on the main screens and at the top of videos, including Shorts.",
-      "date": "2026-10-12T08:42:51Z",
-      "tintColor": "FF0000",
-      "appID": "com.verback.YTLite",
-      "url": "https://github.com/kharrisongit/utube/releases/tag/1.12.5"
-    },
-    {
-      "title": "Opaline 1.12.4 — uTube 1.12.4 — kharrison",
-      "identifier": "release-1.12.4",
-      "caption": "Type comments and replies directly in the comments list, then tap Send. No separate writing window or deliberate play…",
-      "date": "2026-10-12T08:14:34Z",
-      "tintColor": "FF0000",
-      "appID": "com.verback.YTLite",
-      "url": "https://github.com/kharrisongit/utube/releases/tag/1.12.4"
-    },
-    {
-      "title": "Opaline 1.12.3 — uTube 1.12.3 — kharrison",
-      "identifier": "release-1.12.3",
-      "caption": "Type comments and replies directly in the comments list, then tap Send. No separate writing window or deliberate play…",
-      "date": "2026-10-12T08:12:30Z",
-      "tintColor": "FF0000",
-      "appID": "com.verback.YTLite",
-      "url": "https://github.com/kharrisongit/utube/releases/tag/1.12.3"
-    },
-    {
-      "title": "Opaline 1.12.2 — uTube 1.12.2 — kharrison",
-      "identifier": "release-1.12.2",
-      "caption": "Native comment editor and replies in videos and Shorts. Tap Write a comment or Reply, choose your connected YouTube c…",
-      "date": "2026-10-12T07:33:10Z",
-      "tintColor": "FF0000",
-      "appID": "com.verback.YTLite",
-      "url": "https://github.com/kharrisongit/utube/releases/tag/1.12.2"
-    },
-    {
-      "title": "Opaline 1.12.1 — uTube 1.12.1 — kharrison",
-      "identifier": "release-1.12.1",
-      "caption": "Native comment editor and replies in videos and Shorts. Tap Write a comment or Reply, choose your connected YouTube c…",
-      "date": "2026-10-12T07:30:02Z",
-      "tintColor": "FF0000",
-      "appID": "com.verback.YTLite",
-      "url": "https://github.com/kharrisongit/utube/releases/tag/1.12.1"
-    },
-    {
-      "title": "Opaline 1.12.0 — kharrison's fork",
-      "identifier": "release-1.12.0",
-      "caption": "Added Comment on YouTube to the video and Shorts comment panels. Write comments and replies through YouTube's page in…",
-      "date": "2026-10-12T06:48:18Z",
-      "tintColor": "FF0000",
-      "appID": "com.verback.YTLite",
-      "url": "https://github.com/kharrisongit/utube/releases/tag/1.12.0"
     }
   ]
 }
