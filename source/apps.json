@@ -27,6 +27,15 @@
       },
       "versions": [
         {
+          "version": "1.12.12",
+          "date": "2026-10-12T13:53:16Z",
+          "localizedDescription": "uTube by kharrison, based on Opaline by verback2308.\n\n- Added three more experimental playback methods after the previous six: Mobile web · native HLS, Embedded web · native HLS, and TV compatibility · byte ranges.\n- Mobile and embedded HLS use the standard native player with automatic quality. The embedded route stays anonymous and requires an embeddable video with a usable playlist.\n- TV compatibility uses the YouTube account already connected for comments and notifications. It tries compatible separate video/audio streams with the existing solver and native delivery. No new Google project or account setup is required when that account is connected.\n- New methods are off by default. Enable them in Settings → Debug → Playback sources. Your existing order, enabled choices, and working solver are preserved.\n- Improved embedded request configuration and added regression checks for delivery selection, account requirements and settings migration.\n\nAll five experimental alternatives depend on the video and session. Live playback and sustained AirPlay still need device testing; these are not guaranteed fixes for YouTube restrictions. The original four methods remain the defaults. See EXPERIMENTAL_PLAYBACK.md for the comparison and test guide.",
+          "downloadURL": "https://github.com/kharrisongit/utube/releases/download/1.12.12/uTube_1.12.12.ipa",
+          "size": 11090956,
+          "minOSVersion": "12.0",
+          "buildVersion": "641"
+        },
+        {
           "version": "1.12.11",
           "date": "2026-10-12T12:15:12Z",
           "localizedDescription": "uTube by kharrison, based on Opaline by verback2308.\n\n- Added two experimental playback options after the existing four: Web · native HLS and Embedded web · byte ranges. Enable them in Settings → Debug → Playback sources. Both are off by default; your existing choices and solver stay configured as before.\n- Native web HLS can use the YouTube website account you already connected, with automatic quality in the standard player. No separate Google registration or web player window is needed. Availability depends on the video and session.\n- Embedded playback tries anonymous compatible streams for videos that allow embedding, using the existing signature solver and native HLS delivery with quality selection.\n- HLS manifest links also support throttling challenges embedded in their URL path, using the existing solver.\n- Added time limits for experimental loading and guards against late, duplicate or cancelled source responses replacing the current video.\n\nThese are experimental alternatives, not guaranteed fixes for YouTube restrictions. Live playback and sustained AirPlay on the new methods still need device testing. The current four playback methods remain the defaults. See EXPERIMENTAL_PLAYBACK.md in the repository for details and the test guide.",
@@ -63,11 +72,11 @@
           "buildVersion": "630"
         }
       ],
-      "version": "1.12.11",
-      "versionDate": "2026-10-12T12:15:12Z",
-      "versionDescription": "uTube by kharrison, based on Opaline by verback2308.\n\n- Added two experimental playback options after the existing four: Web · native HLS and Embedded web · byte ranges. Enable them in Settings → Debug → Playback sources. Both are off by default; your existing choices and solver stay configured as before.\n- Native web HLS can use the YouTube website account you already connected, with automatic quality in the standard player. No separate Google registration or web player window is needed. Availability depends on the video and session.\n- Embedded playback tries anonymous compatible streams for videos that allow embedding, using the existing signature solver and native HLS delivery with quality selection.\n- HLS manifest links also support throttling challenges embedded in their URL path, using the existing solver.\n- Added time limits for experimental loading and guards against late, duplicate or cancelled source responses replacing the current video.\n\nThese are experimental alternatives, not guaranteed fixes for YouTube restrictions. Live playback and sustained AirPlay on the new methods still need device testing. The current four playback methods remain the defaults. See EXPERIMENTAL_PLAYBACK.md in the repository for details and the test guide.",
-      "downloadURL": "https://github.com/kharrisongit/utube/releases/download/1.12.11/uTube_1.12.11.ipa",
-      "size": 11082421
+      "version": "1.12.12",
+      "versionDate": "2026-10-12T13:53:16Z",
+      "versionDescription": "uTube by kharrison, based on Opaline by verback2308.\n\n- Added three more experimental playback methods after the previous six: Mobile web · native HLS, Embedded web · native HLS, and TV compatibility · byte ranges.\n- Mobile and embedded HLS use the standard native player with automatic quality. The embedded route stays anonymous and requires an embeddable video with a usable playlist.\n- TV compatibility uses the YouTube account already connected for comments and notifications. It tries compatible separate video/audio streams with the existing solver and native delivery. No new Google project or account setup is required when that account is connected.\n- New methods are off by default. Enable them in Settings → Debug → Playback sources. Your existing order, enabled choices, and working solver are preserved.\n- Improved embedded request configuration and added regression checks for delivery selection, account requirements and settings migration.\n\nAll five experimental alternatives depend on the video and session. Live playback and sustained AirPlay still need device testing; these are not guaranteed fixes for YouTube restrictions. The original four methods remain the defaults. See EXPERIMENTAL_PLAYBACK.md for the comparison and test guide.",
+      "downloadURL": "https://github.com/kharrisongit/utube/releases/download/1.12.12/uTube_1.12.12.ipa",
+      "size": 11090956
     },
     {
       "name": "The Last Dragonrider",
@@ -118,6 +127,15 @@
     }
   ],
   "news": [
+    {
+      "title": "uTube 1.12.12 — kharrison",
+      "identifier": "com.kharrison.utube.release-1.12.12",
+      "caption": "Added three more experimental playback methods after the previous six: Mobile web · native HLS, Embedded web · native…",
+      "date": "2026-10-12T13:53:16Z",
+      "tintColor": "FF0000",
+      "appID": "com.kharrison.utube",
+      "url": "https://github.com/kharrisongit/utube/releases/tag/1.12.12"
+    },
     {
       "title": "uTube 1.12.11 — kharrison",
       "identifier": "com.kharrison.utube.release-1.12.11",
