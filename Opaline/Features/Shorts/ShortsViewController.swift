@@ -145,6 +145,10 @@ final class ShortsViewController: UIViewController {
 
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
+        if presentedViewController is ShortsCommentsViewController,
+           !isMovingFromParent, !isBeingDismissed {
+            return
+        }
         visibleNavigationController?
             .setNavigationBarHidden(false, animated: animated)
         setTabBarDark(false)

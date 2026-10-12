@@ -28,10 +28,27 @@ enum BackgroundPlaybackService {
         do {
             // Always use .playback so Now Playing / remote controls work.
             // Background pause (when isEnabled=false) is handled in appDidEnterBackground.
-            try session.setCategory(.playback, mode: .moviePlayback)
+            if #available(iOS 13.0, *) {
+                try session.setCategory(
+                    .playback, mode: .moviePlayback, routeSharingPolicy: .longFormVideo, options: []
+                )
+            } else {
+                try session.setCategory(.playback, mode: .moviePlayback)
+            }
             try session.setActive(true)
         } catch {
             AppLog.player("AVAudioSession error: \(error)")
+        }
+    }
+
+    @discardableResult
+    static func activate() -> Bool {
+        do {
+            try AVAudioSession.sharedInstance().setActive(true)
+            return true
+        } catch {
+            AppLog.player("audio session activation failed: \((error as NSError).code)")
+            return false
         }
     }
 }

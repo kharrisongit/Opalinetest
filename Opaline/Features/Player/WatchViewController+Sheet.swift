@@ -49,6 +49,7 @@ extension WatchViewController {
         // the hierarchy first, or `detachSheet` later looks at the new view
         // and strands the old one on top of everything.
         if sheetView !== content {
+            commentComposer.endEditing(true)
             sheetView?.isHidden = true
             detachSheet()
         }
@@ -75,6 +76,7 @@ extension WatchViewController {
     }
 
     func collapseSheet() {
+        commentComposer.endEditing(true)
         guard presentedSheet != nil else {
             return
         }
@@ -194,6 +196,13 @@ extension WatchViewController {
         return expanded ? view.safeAreaInsets.top : playerContainer.frame.maxY
     }
 
+    func expandCommentsForKeyboard() {
+        guard presentedSheet == .comments, !sheetSlot.isLandscape else {
+            return
+        }
+        animateSheet(toExpandedDetent: true)
+    }
+
     private func animateSheet(toExpandedDetent expanded: Bool) {
         isSheetDetentExpanded = expanded
         let target = detentConstant(expanded: expanded)
@@ -218,6 +227,7 @@ extension WatchViewController {
         }
         switch gesture.state {
         case .began:
+            commentComposer.endEditing(true)
             isSheetOffsetPinned = true
         case .changed:
             applySheetDrag(constraint, gesture: gesture)

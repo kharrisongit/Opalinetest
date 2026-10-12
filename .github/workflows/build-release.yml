@@ -34,6 +34,10 @@ jobs:
           swiftc Opaline/Core/API/Models/Comment.swift \
             Opaline/Core/Commenting/CommentAPIModel.swift \
             Opaline/Core/Commenting/CommentOAuthRequest.swift \
+            Opaline/Core/Commenting/CommentDraftStore.swift \
+            Opaline/Core/Commenting/YouTubeCommentSession.swift \
+            Opaline/Core/Commenting/YouTubeCommentModel.swift \
+            Opaline/Core/Playback/PlaybackInterruptionState.swift \
             Opaline/Core/Playback/BackgroundPlaybackPolicy.swift \
             scripts/native_comments_checks.swift -o "$RUNNER_TEMP/native-comments-checks"
           "$RUNNER_TEMP/native-comments-checks"

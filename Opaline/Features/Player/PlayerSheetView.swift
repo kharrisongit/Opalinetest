@@ -30,6 +30,8 @@ final class PlayerSheetView: UIView {
     /// The list itself: a table view for comments, a collection view for the
     /// queue. Both are scroll views and the chrome treats them the same.
     private let list: UIScrollView
+    private var listBottom: NSLayoutConstraint?
+    private var commentKeyboard: CommentKeyboardGuide?
 
     init(list: UIScrollView) {
         self.list = list
@@ -40,6 +42,27 @@ final class PlayerSheetView: UIView {
     @available(*, unavailable)
     required init?(coder: NSCoder) {
         fatalError("Not implemented")
+    }
+
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        commentKeyboard?.update()
+    }
+
+    func setComposer(_ composer: InlineCommentComposer) {
+        listBottom?.isActive = false
+        composer.translatesAutoresizingMaskIntoConstraints = false
+        addSubview(composer)
+        let bottom = composer.bottomAnchor.constraint(equalTo: bottomAnchor)
+        bottom.priority = UILayoutPriority(999)
+        let tableBottom = list.bottomAnchor.constraint(equalTo: composer.topAnchor)
+        tableBottom.priority = UILayoutPriority(999)
+        NSLayoutConstraint.activate([
+            composer.leadingAnchor.constraint(equalTo: leadingAnchor),
+            composer.trailingAnchor.constraint(equalTo: trailingAnchor),
+            tableBottom, bottom
+        ])
+        commentKeyboard = CommentKeyboardGuide(host: self, bottom: bottom)
     }
 
     func applyTheme(_ theme: ThemeManager) {
@@ -170,5 +193,6 @@ final class PlayerSheetView: UIView {
         let tableBottom = list.bottomAnchor.constraint(equalTo: bottomAnchor)
         tableBottom.priority = UILayoutPriority(999)
         tableBottom.isActive = true
+        listBottom = tableBottom
     }
 }

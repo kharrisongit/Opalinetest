@@ -158,6 +158,7 @@ final class NowPlayingService {
         _ center: MPRemoteCommandCenter
     ) {
         add(center.playCommand) { [weak self] _ in
+            BackgroundPlaybackService.activate()
             self?.player?.play()
             return .success
         }
@@ -169,7 +170,12 @@ final class NowPlayingService {
             guard let player = self?.player else {
                 return .commandFailed
             }
-            if player.rate > 0 { self?.pauseFromRemote() } else { player.play() }
+            if player.rate > 0 {
+                self?.pauseFromRemote()
+            } else {
+                BackgroundPlaybackService.activate()
+                player.play()
+            }
             return .success
         }
     }

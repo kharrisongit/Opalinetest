@@ -141,6 +141,7 @@ extension VideoPlayerView {
     /// layer revives it, only a new player (i.e. another video).
     @objc
     func appDidEnterBackground() {
+        logPlaybackState("entered background")
         guard BackgroundPlaybackPolicy.shouldContinue(
             backgroundEnabled: BackgroundPlaybackService.isEnabled,
             airPlayActive: isAirPlayActive,
@@ -191,6 +192,7 @@ extension VideoPlayerView {
 
     @objc
     func appDidBecomeActive() {
+        logPlaybackState("became active")
         guard let player else {
             return
         }

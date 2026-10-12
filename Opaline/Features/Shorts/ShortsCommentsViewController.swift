@@ -12,10 +12,8 @@ final class ShortsCommentsViewController: UIViewController {
     private var continuation: String?
     private var isLoading = false
     private var loadGeneration = 0
-    var onWriteComment: (() -> Void)?
-    private lazy var writeButton = CommentComposerViewController.makeWriteButton(
-        target: self, action: #selector(writeComment)
-    )
+    private let composer = InlineCommentComposer()
+    private var keyboard: CommentKeyboardGuide?
 
     init(videoId: String, watchService: WatchService) {
         self.videoId = videoId
@@ -31,9 +29,15 @@ final class ShortsCommentsViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupHeader()
+        setupComposer()
         setupTable()
         applyTheme()
         loadNextPage()
+    }
+
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        keyboard?.update()
     }
 
     func loadNextPage() {
@@ -84,7 +88,7 @@ final class ShortsCommentsViewController: UIViewController {
         tableView.backgroundColor = theme.background
         titleLabel.textColor = theme.primaryText
         tableView.separatorColor = theme.separator
-        writeButton.tintColor = theme.primaryText
+        composer.applyTheme()
     }
 
     private func setupHeader() {
@@ -95,7 +99,7 @@ final class ShortsCommentsViewController: UIViewController {
         close.addTarget(
             self, action: #selector(closeTapped), for: .touchUpInside
         )
-        for subview in [titleLabel, close, spinner, writeButton] {
+        for subview in [titleLabel, close, spinner] {
             subview.translatesAutoresizingMaskIntoConstraints = false
             view.addSubview(subview)
         }
@@ -111,10 +115,6 @@ final class ShortsCommentsViewController: UIViewController {
                 equalTo: guide.trailingAnchor, constant: -16
             ),
             close.centerYAnchor.constraint(equalTo: titleLabel.centerYAnchor),
-            writeButton.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 12),
-            writeButton.leadingAnchor.constraint(equalTo: guide.leadingAnchor, constant: 16),
-            writeButton.trailingAnchor.constraint(equalTo: guide.trailingAnchor, constant: -16),
-            writeButton.heightAnchor.constraint(greaterThanOrEqualToConstant: 44),
             spinner.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             spinner.centerYAnchor.constraint(equalTo: view.centerYAnchor)
         ])
@@ -131,11 +131,11 @@ final class ShortsCommentsViewController: UIViewController {
         let guide = view.safeAreaLayoutGuide
         NSLayoutConstraint.activate([
             tableView.topAnchor.constraint(
-                equalTo: writeButton.bottomAnchor, constant: 8
+                equalTo: titleLabel.bottomAnchor, constant: 16
             ),
             tableView.leadingAnchor.constraint(equalTo: guide.leadingAnchor),
             tableView.trailingAnchor.constraint(equalTo: guide.trailingAnchor),
-            tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+            tableView.bottomAnchor.constraint(equalTo: composer.topAnchor)
         ])
     }
 }
@@ -177,27 +177,32 @@ extension ShortsCommentsViewController: UITableViewDataSource, UITableViewDelega
 extension ShortsCommentsViewController: UITextViewDelegate {}
 
 extension ShortsCommentsViewController {
-    @objc
-    private func writeComment() {
-        showComposer(parent: nil)
+    private func setupComposer() {
+        composer.configure(videoID: videoId)
+        composer.onPosted = { [weak self] comment, target in
+            self?.didPost(comment, isReply: target.parentID != nil)
+        }
+        composer.onConnect = { [weak self] in
+            let navigation = RotatingNavigationController(
+                rootViewController: CommentAccountViewController()
+            )
+            navigation.modalPresentationStyle = .formSheet
+            self?.present(navigation, animated: true)
+        }
+        composer.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(composer)
+        let bottom = composer.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+        NSLayoutConstraint.activate([
+            composer.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            composer.trailingAnchor.constraint(equalTo: view.trailingAnchor), bottom
+        ])
+        keyboard = CommentKeyboardGuide(host: view, bottom: bottom)
     }
 
     private func showComposer(parent: Comment?) {
-        guard presentedViewController == nil else {
-            return
-        }
-        let target = CommentPostTarget(
-            videoID: videoId, parentID: parent?.id, parentAuthor: parent?.authorName
-        )
-        let composer = CommentComposerViewController(target: target)
-        composer.onPosted = { [weak self] comment in
-            self?.didPost(comment, isReply: parent != nil)
-        }
-        let navigation = RotatingNavigationController(rootViewController: composer)
-        navigation.modalPresentationStyle = .fullScreen
-        onWriteComment?()
-        present(navigation, animated: true)
+        composer.beginReply(to: parent)
     }
+
     private func didPost(_ comment: Comment, isReply: Bool) {
         loadGeneration += 1
         isLoading = false
@@ -206,12 +211,6 @@ extension ShortsCommentsViewController {
             comments.insert(comment, at: 0)
             tableView.reloadData()
             tableView.setContentOffset(.zero, animated: false)
-        } else {
-            let alert = UIAlertController(
-                title: "nativeComments.posted".localized, message: nil, preferredStyle: .alert
-            )
-            alert.addAction(UIAlertAction(title: "common.close".localized, style: .default))
-            present(alert, animated: true)
         }
         UIAccessibility.post(
             notification: .announcement, argument: "nativeComments.posted".localized

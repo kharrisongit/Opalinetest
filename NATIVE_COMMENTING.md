@@ -1,35 +1,38 @@
-# Native commenting in uTube
+# Inline commenting in uTube
 
-uTube has a native comment editor for videos and Shorts, including replies. Posting uses the official YouTube Data API. It needs a separate Google authorization from the app's playback account. A Google OAuth client is not bundled with this fork.
+Write directly in the comments list and tap **Send**. Replies use the same inline box. Typing, sending and connecting an account never deliberately pause the player, and a submitted comment appears only after YouTube returns its created resource.
 
-## One-time setup
+## Connect once, without app registration
 
-1. In [Google Cloud Console](https://console.cloud.google.com/), create or select your own project and enable **YouTube Data API v3** in the API Library.
-2. Configure **Google Auth Platform → Branding** with an app name such as **uTube** and your support/contact email. For personal testing, set the audience to **External**, keep it in **Testing**, and add the Google account you will use under **Test users**.
-3. Under **Data Access**, add `https://www.googleapis.com/auth/youtube.force-ssl`. This is the scope Google requires for creating comments; Google's consent screen describes broader YouTube management permissions. uTube uses it to identify your channel and post only the comments you explicitly submit.
-4. Under **Clients**, create an **iOS** OAuth client. Use the installed app's bundle identifier. The distributed IPA uses `com.verback.YTLite`; sideloading software may change it when signing. The commenting account screen displays the installed identifier to copy. App Store ID is optional because this app is sideloaded. This build does not integrate App Check.
-5. Copy the **Client ID** ending in `.apps.googleusercontent.com`. In uTube, open **Settings → Commenting account**, paste it, and tap **Connect Google account**. Do not paste an API key or client secret.
-6. Complete Google's sign-in and consent. Back in uTube, confirm the displayed YouTube channel is the one you intend to post as.
+1. Tap **Connect YouTube for commenting** below the comments, or open **Settings → Commenting account**.
+2. Sign in on the visible YouTube website, choose the channel you want, and tap **Use account**. Check the channel shown by uTube before posting.
+3. Close the account screen and type in the comments list. Connecting never submits a draft.
 
-Open a video's comments and tap **Write a comment**, or tap **Reply** beneath a comment. Enter your text and tap **Post**. Connecting an account never posts a draft automatically.
+There is no Google Cloud project, client ID or uTube app registration to create. The existing TV-style viewing login cannot supply the website session needed to post, so commenting still needs this one-time website sign-in. If Google rejects the embedded sign-in browser, this route is unavailable; uTube does not bypass that rejection. Session expiration can require reconnecting.
 
-Google may show an unverified-app notice for your own test project. Public distribution of a shared OAuth client can require Google's verification. Test-mode refresh tokens can expire after seven days, so you may need to reconnect. A YouTube channel must exist on the selected account, and the video's creator must allow comments.
+This is an unofficial YouTube website connection and can break when YouTube changes. It does not make account activity anonymous or guarantee that Google will not identify a third-party client. Public comments identify the selected YouTube channel.
 
-## Account and drafts
+## Privacy and behavior
 
-Access and refresh tokens stay in the iOS Keychain on this device. They are sent only to Google's OAuth and YouTube API endpoints; request logging and the app's playback authentication middleware are not used. The Client ID is a public identifier, saved locally. Disconnect removes local credentials; revoke the grant separately in your Google account if desired.
+The sign-in browser uses temporary website storage and does not intercept passwords. After the user taps Use account, uTube keeps only secure YouTube-domain session cookies and the selected website account context in the device Keychain, accessible only while unlocked and never synchronized to other devices. Requests go directly to `https://www.youtube.com` using a dedicated ephemeral transport with no request logging, shared cookie jar, redirects, or automatic comment retries. No intermediary server receives the session or comment.
 
-Drafts stay in memory until posted or the app exits. A failed request leaves the draft visible. If the app cannot tell whether YouTube accepted a comment, check the comment list before posting again: writes are never retried automatically.
+The app fetches the signed-in comments page and uses only its offered create-comment or reply action. It does not forge a posting capability when comments are unavailable or execute account-creation or challenge actions returned by the website. Unsupported responses keep the draft and show an error.
 
-## Validation
+Drafts stay in memory until posted or the app exits, separately for each video and reply. An in-flight request cannot clear another video's draft. After an ambiguous response, check the list before sending again to avoid a duplicate.
 
-The build runs deterministic checks against the production OAuth, response parsing, comment body, and AirPlay policy code. It also runs the existing source publisher checks and builds the iOS app with strict SwiftLint. These checks do not authorize a Google account or publish a comment. Complete the account setup and check a deliberate post yourself to validate your Google project.
+Disconnect deletes the local website session and any legacy official-API commenting credentials. Existing official-API accounts connected in an older build remain usable until disconnected, but the developer setup form is no longer presented.
 
-For the AirPlay fix, start a video on your receiver, leave uTube, lock the phone, and return. Check both the Background Playback toggle states. Playback should continue on AirPlay; manually pausing should stay paused. Test disconnecting the route and using PiP independently too. A physical receiver cannot be verified by the build job.
+## AirPlay changes and validation
+
+The audio session uses Apple's long-form video route policy on iOS 13+. After a temporary audio interruption, the app reactivates the session and resumes only when iOS permits it, the same player is still present, and the user has not paused or disconnected the output. Other apps' ongoing audio interruptions are respected. Diagnostic entries include playback state, route type, background state and buffer state, without adding credentials or comment content to logs.
+
+Automated checks cover draft isolation and duplicate-send prevention, cookie domain/expiry handling, selected account context, server response handling, and interruption recovery policy. CI compiles the iOS app with strict SwiftLint. Automated checks do not log in to Google, send a live comment or establish a physical AirPlay connection.
+
+Device checks still required: connect a commenting session; deliberately send a comment and reply; play on the receiver for at least ten minutes while using another app; verify manual pause stays paused, disconnection does not switch unexpectedly to the phone speaker, and an ended interruption resumes only when allowed. These changes address identified gaps but do not establish the cause of the reported delayed TV stop without receiver testing or device logs.
 
 ## References
 
-- [Google OAuth for iOS and desktop apps](https://developers.google.com/identity/protocols/oauth2/native-app)
-- [Create a top-level comment](https://developers.google.com/youtube/v3/docs/commentThreads/insert)
-- [Create a reply](https://developers.google.com/youtube/v3/docs/comments/insert)
-- [Apple web authentication sessions](https://developer.apple.com/documentation/authenticationservices/aswebauthenticationsession)
+- [YouTube.js website authentication](https://ytjs.dev/guide/authentication)
+- [YouTube.js comment creation](https://github.com/LuanRT/YouTube.js/blob/main/src/parser/youtube/Comments.ts)
+- [Apple AirPlay integration](https://developer.apple.com/documentation/avfoundation/integrating-airplay-for-long-form-video-apps)
+- [Apple audio interruptions](https://developer.apple.com/documentation/avfaudio/handling-audio-interruptions)

@@ -142,6 +142,7 @@ extension VideoPlayerView {
             multitaskPause.lastUserPause = CACurrentMediaTime()
             player.pause()
         } else {
+            BackgroundPlaybackService.activate()
             player.play()
         }
         scheduleAutoHide()

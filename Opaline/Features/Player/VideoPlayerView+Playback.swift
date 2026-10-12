@@ -13,6 +13,8 @@ final class ClockResyncState {
 
 extension VideoPlayerView {
     func attach(player newPlayer: AVPlayer) {
+        interruption.state = PlaybackInterruptionState()
+        BackgroundPlaybackService.activate()
         player = newPlayer
         playerLayer.isHidden = false
         playerLayer.player = newPlayer
@@ -160,6 +162,7 @@ extension VideoPlayerView {
     private func handleTimeControlChange(on player: AVPlayer) {
         switch player.timeControlStatus {
         case .waitingToPlayAtSpecifiedRate:
+            logPlaybackState("waiting for playback")
             scheduleBufferingIndicator()
             if CMTimeGetSeconds(player.currentTime()) > 1 {
                 clockResync.isStalled = true
@@ -171,6 +174,7 @@ extension VideoPlayerView {
                 scheduleClockResync()
             }
         case .paused:
+            logPlaybackState("playback paused")
             hideBufferingIndicator()
             clockResync.isStalled = false
             clockResync.workItem?.cancel()
@@ -252,19 +256,14 @@ extension VideoPlayerView {
     // MARK: - Progress
 
     func updateProgress(time: CMTime) {
+        if (player?.rate ?? 0) > 0 {
+            interruption.lastPlayingAt = CACurrentMediaTime()
+        }
         guard duration > 0 else {
             return
         }
         let secs = CMTimeGetSeconds(time)
-        // The overlay is hidden most of the time, and while it is there is
-        // nothing to redraw — but the observer still ticks 10x/sec to drive
-        // SponsorBlock, subtitles and watchtime through `onTimeUpdate`, so
-        // only the seek bar work is skipped.
-        //
-        // While the user drags the thumb, `onScrubChanged` owns the label
-        // and the bar's fill/thumb — the periodic observer must not fight
-        // the finger with the actual playback position (issue: label was
-        // unreadable mid-scrub).
+        // Hidden controls need no redraw; seeking owns the thumb during scrubbing.
         if controlsVisible, !seekBar.isScrubbing {
             // This string changes once a second; assigning it every tick
             // invalidates the label's intrinsic size and relays out the

@@ -135,6 +135,7 @@ final class WatchViewController: UIViewController {
     /// The one instance that ever backs the collapsed preview row.
     let commentPreviewContentView = CommentContentView()
     /// Expanded-panel chrome — see `WatchViewController+Sheet`.
+    let commentComposer = InlineCommentComposer()
     lazy var commentsPanel = PlayerSheetView(list: commentsTableView)
     var loadedQueuePanel: QueuePanelController?
     /// Bottom strip naming the queue while one is playing — see

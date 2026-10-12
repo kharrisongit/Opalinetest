@@ -2,36 +2,35 @@ import UIKit
 
 extension WatchViewController {
     func setupCommentWriting() {
-        let button = CommentComposerViewController.makeWriteButton(
-            target: self, action: #selector(writeComment)
-        )
-        commentsPanel.setHeaderButtons([button])
-    }
-
-    @objc
-    private func writeComment() {
-        showCommentComposer(parent: nil)
+        commentComposer.configure(videoID: initialVideo.id)
+        commentsPanel.setComposer(commentComposer)
+        commentComposer.onPosted = { [weak self] comment, target in
+            guard let self, self.initialVideo.id == target.videoID else {
+                return
+            }
+            self.didPostComment(comment, parentID: target.parentID)
+        }
+        commentComposer.onBeginEditing = { [weak self] in
+            self?.expandCommentsForKeyboard()
+        }
+        commentComposer.onConnect = { [weak self] in
+            self?.presentCommentAccount()
+        }
     }
 
     func showCommentComposer(parent: Comment?) {
+        commentComposer.configure(videoID: initialVideo.id)
+        commentComposer.beginReply(to: parent)
+    }
+
+    private func presentCommentAccount() {
         guard presentedViewController == nil else {
             return
         }
-        let videoID = initialVideo.id
-        let target = CommentPostTarget(
-            videoID: videoID, parentID: parent?.id, parentAuthor: parent?.authorName
+        let navigation = RotatingNavigationController(
+            rootViewController: CommentAccountViewController()
         )
-        let composer = CommentComposerViewController(target: target)
-        composer.onPosted = { [weak self] comment in
-            guard let self, self.initialVideo.id == videoID else {
-                return
-            }
-            self.didPostComment(comment, parentID: parent?.id)
-        }
-        let navigation = RotatingNavigationController(rootViewController: composer)
-        navigation.modalPresentationStyle = .fullScreen
-        videoPlayerView?.multitaskPause.lastUserPause = CACurrentMediaTime()
-        videoPlayerView?.player?.pause()
+        navigation.modalPresentationStyle = .formSheet
         present(navigation, animated: true)
     }
 

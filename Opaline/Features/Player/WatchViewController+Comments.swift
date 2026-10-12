@@ -4,6 +4,7 @@ import UIKit
 
 extension WatchViewController {
     func resetComments() {
+        commentComposer.configure(videoID: initialVideo.id)
         commentsLoadGeneration += 1
         commentThreads = []
         commentSortOptions = []

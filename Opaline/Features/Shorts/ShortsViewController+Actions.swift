@@ -48,9 +48,6 @@ extension ShortsViewController {
         let sheet = ShortsCommentsViewController(
             videoId: video.id, watchService: watchService
         )
-        sheet.onWriteComment = { [weak self] in
-            self?.playerView.setPaused(true)
-        }
         if #available(iOS 13.0, *) {
             sheet.modalPresentationStyle = .pageSheet
         } else {

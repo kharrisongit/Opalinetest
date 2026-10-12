@@ -618,7 +618,7 @@
 "nativeComments.privacy" = "Google handles sign-in. uTube stores posting tokens in the device Keychain. Your playback account is separate. Disconnect removes the tokens from this device.";
 "nativeComments.setupHelp" = "This personal build needs a Google iOS client ID once. Enable YouTube Data API v3 in your Google project, add your Google account as a test user, and create an iOS OAuth client using the installed bundle ID shown below. Paste its client ID below, then connect. Full instructions are in the repository’s NATIVE_COMMENTING.md. No client secret is needed.";
 "nativeComments.error.setup" = "Enter a valid Google iOS client ID ending in .apps.googleusercontent.com.";
-"nativeComments.error.signedOut" = "Connect your commenting account again, then tap Post. Your draft is still here.";
+"nativeComments.error.signedOut" = "Sign in to YouTube for commenting, then tap Send. Your draft is still here.";
 "nativeComments.error.noChannel" = "This Google account has no YouTube channel. Create a channel on YouTube or connect a different account.";
 "nativeComments.error.callback" = "Google sign-in could not be verified. Please connect again.";
 "nativeComments.error.scope" = "Google did not grant permission to post comments. Connect again and allow the requested YouTube permission.";
@@ -633,13 +633,21 @@
 "nativeComments.error.commentTextRequired" = "Write something before posting.";
 "nativeComments.error.videoNotFound" = "This video is unavailable to the connected account.";
 "nativeComments.error.parentCommentNotFound" = "That comment is no longer available.";
-"nativeComments.error.operationNotSupported" = "YouTube does not allow a reply to this comment.";
+"nativeComments.error.operationNotSupported" = "YouTube did not offer a posting action for this comment or video. Your draft is still here.";
 "nativeComments.error.quotaExceeded" = "This Google project has reached its YouTube API quota. Try later. Your draft is saved.";
 "nativeComments.error.dailyLimitExceeded" = "This Google project has reached its daily API limit. Your draft is saved.";
 "nativeComments.error.accessNotConfigured" = "Enable YouTube Data API v3 in the Google project for this client ID.";
 "nativeComments.error.ineligibleAccount" = "This Google account cannot post comments. Connect an account with a YouTube channel.";
 "nativeComments.error.forbidden" = "YouTube did not allow this comment. Check your account permissions and whether replies are enabled.";
 "nativeComments.error.invalid_grant" = "Google authorization expired or was revoked. Connect your commenting account again.";
-"nativeComments.error.generic" = "YouTube could not complete the request. Your draft is saved. Check your Google setup and try again.";
+"nativeComments.error.generic" = "YouTube could not complete the request. Your draft is saved. Try reconnecting your commenting account.";
 
 "nativeComments.bundleID" = "Installed bundle ID: %@";
+"nativeComments.send" = "Send";
+"nativeComments.placeholder" = "Add a comment…";
+"nativeComments.webConnect" = "Connect YouTube for commenting";
+"nativeComments.webSignIn" = "YouTube sign-in";
+"nativeComments.useAccount" = "Use account";
+"nativeComments.webSignInHelp" = "Sign in on YouTube, choose your channel, then tap Use account. If Google blocks sign-in here, this connection cannot be used.";
+"nativeComments.webExplanation" = "Sign in to YouTube once to send comments here. No Google project or app registration is needed. Your existing viewing sign-in stays connected.";
+"nativeComments.webPrivacy" = "Comments are public and tied to your YouTube account. The YouTube website connection is saved only in this device’s Keychain and sent directly to YouTube. Disconnect removes it. This unofficial connection can stop working when YouTube changes.";

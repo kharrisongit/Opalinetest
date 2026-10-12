@@ -35,7 +35,8 @@ extension VideoPlayerView {
             return
         }
         let now = CACurrentMediaTime()
-        guard !isPiPActive,
+        guard !interruption.state.active,
+              !isPiPActive,
               !isAirPlayActive,
               !hasPlayedToEnd,
               UIApplication.shared.applicationState == .active,
@@ -71,11 +72,13 @@ extension VideoPlayerView {
         else {
             return
         }
+        logPlaybackState("audio output disconnected")
         multitaskPause.lastUserPause = CACurrentMediaTime()
     }
 
     private func resumeAfterSystemPause() {
-        guard let player, player.rate == 0, !isPiPActive, !isAirPlayActive,
+        guard !interruption.state.active, let player, player.rate == 0,
+              !isPiPActive, !isAirPlayActive,
               CACurrentMediaTime() - multitaskPause.lastUserPause > 0.5
         else {
             return
