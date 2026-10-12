@@ -34,6 +34,15 @@
       },
       "versions": [
         {
+          "version": "1.12.4",
+          "date": "2026-10-12T08:14:34Z",
+          "localizedDescription": "uTube by kharrison, based on Opaline by verback2308.\n\n- Type comments and replies directly in the comments list, then tap Send. No separate writing window or deliberate playback pause.\n- Replace the Google client-ID setup form with Connect YouTube for commenting. This uses a one-time website sign-in without registering uTube in Google Cloud. The unofficial connection may change or be blocked by YouTube; your existing viewing login is separate.\n- Keep drafts isolated by video and reply, prevent duplicate sends, and preserve text after failures. No automatic retries after an uncertain submission.\n- Use Apple's long-form AirPlay video routing and resume after temporary audio interruptions only when iOS permits and you have not paused or disconnected. Add playback diagnostics for investigating delayed TV stops.\n\nUpdate through the same AltStore source. The uTube name, custom icon, kharrison attribution and bundle identifier stay in place. Live account sign-in, posting, and a sustained AirPlay session on your receiver still need device testing; no live comment was posted during automated validation.",
+          "downloadURL": "https://github.com/kharrisongit/Opalinetest/releases/download/1.12.4/uTube_1.12.4.ipa",
+          "size": 10930000,
+          "minOSVersion": "12.0",
+          "buildVersion": "613"
+        },
+        {
           "version": "1.12.3",
           "date": "2026-10-12T08:12:30Z",
           "localizedDescription": "uTube by kharrison, based on Opaline by verback2308.\n\n- Type comments and replies directly in the comments list, then tap Send. No separate writing window or deliberate playback pause.\n- Replace the Google client-ID setup form with Connect YouTube for commenting. This uses a one-time website sign-in without registering uTube in Google Cloud. The unofficial connection may change or be blocked by YouTube; your existing viewing login is separate.\n- Keep drafts isolated by video and reply, prevent duplicate sends, and preserve text after failures. No automatic retries after an uncertain submission.\n- Use Apple's long-form AirPlay video routing and resume after temporary audio interruptions only when iOS permits and you have not paused or disconnected. Add playback diagnostics for investigating delayed TV stops.\n\nUpdate through the same AltStore source. The uTube name, custom icon, kharrison attribution and bundle identifier stay in place. Live account sign-in, posting, and a sustained AirPlay session on your receiver still need device testing; no live comment was posted during automated validation.",
@@ -70,14 +79,23 @@
           "buildVersion": "603"
         }
       ],
-      "version": "1.12.3",
-      "versionDate": "2026-10-12T08:12:30Z",
+      "version": "1.12.4",
+      "versionDate": "2026-10-12T08:14:34Z",
       "versionDescription": "uTube by kharrison, based on Opaline by verback2308.\n\n- Type comments and replies directly in the comments list, then tap Send. No separate writing window or deliberate playback pause.\n- Replace the Google client-ID setup form with Connect YouTube for commenting. This uses a one-time website sign-in without registering uTube in Google Cloud. The unofficial connection may change or be blocked by YouTube; your existing viewing login is separate.\n- Keep drafts isolated by video and reply, prevent duplicate sends, and preserve text after failures. No automatic retries after an uncertain submission.\n- Use Apple's long-form AirPlay video routing and resume after temporary audio interruptions only when iOS permits and you have not paused or disconnected. Add playback diagnostics for investigating delayed TV stops.\n\nUpdate through the same AltStore source. The uTube name, custom icon, kharrison attribution and bundle identifier stay in place. Live account sign-in, posting, and a sustained AirPlay session on your receiver still need device testing; no live comment was posted during automated validation.",
-      "downloadURL": "https://github.com/kharrisongit/Opalinetest/releases/download/1.12.3/uTube_1.12.3.ipa",
-      "size": 10932892
+      "downloadURL": "https://github.com/kharrisongit/Opalinetest/releases/download/1.12.4/uTube_1.12.4.ipa",
+      "size": 10930000
     }
   ],
   "news": [
+    {
+      "title": "Opaline 1.12.4 — uTube 1.12.4 — kharrison",
+      "identifier": "release-1.12.4",
+      "caption": "Type comments and replies directly in the comments list, then tap Send. No separate writing window or deliberate play…",
+      "date": "2026-10-12T08:14:34Z",
+      "tintColor": "FF0000",
+      "appID": "com.verback.YTLite",
+      "url": "https://github.com/kharrisongit/Opalinetest/releases/tag/1.12.4"
+    },
     {
       "title": "Opaline 1.12.3 — uTube 1.12.3 — kharrison",
       "identifier": "release-1.12.3",
