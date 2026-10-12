@@ -118,8 +118,8 @@
       "developerName": "kharrison",
       "subtitle": "A dragon-riding pixel RPG",
       "localizedDescription": "Explore Emberfell with Corin and his dragon in this pixel-art adventure. The game is included in the app for offline single-player play, with persistent saves on your device. Existing Google cloud saves and story co-op are available online through the game's sign-in flow. Browser-local saves do not transfer automatically. For AltStore Classic on iPhone and iPad running iOS 15 or newer.",
-      "iconURL": "https://github.com/kharrisongit/Opalinetest/releases/download/ldr-1.0.0/dragonrider-icon.png",
-      "tintColor": "E0913F",
+      "iconURL": "https://github.com/kharrisongit/Opalinetest/releases/download/ldr-1.0.1/dragonrider-icon.png",
+      "tintColor": "426663",
       "category": "games",
       "minOSVersion": "15.0",
       "screenshots": [
@@ -135,6 +135,15 @@
       },
       "versions": [
         {
+          "version": "1.0.1",
+          "date": "2026-10-12T10:41:35Z",
+          "localizedDescription": "The Last Dragonrider 1.0.1 by kharrison.\n\n- New Corin and Aurelius silhouette icon, using the exact raised-wing pose from the game’s title screen.\n- Matching artwork on your Home Screen and in AltStore.\n- Offline single-player and device saves remain available.\n- Full-screen native app, with bundled art, music and controls.\n- Browser handoff for the existing Google account; cloud saves and story co-op require internet.\n\nExisting browser-local saves are separate. Sync them with your Google account before moving to the app. Native Google sign-in and co-op still require confirmation on your device. Updating preserves app saves; removing the app removes device-only saves.\n\nGame revision: 0bc6003d7648614a0e0029d7936e8d534c0cb598",
+          "downloadURL": "https://github.com/kharrisongit/Opalinetest/releases/download/ldr-1.0.1/LastDragonrider.ipa",
+          "size": 185290367,
+          "minOSVersion": "15.0",
+          "buildVersion": "2"
+        },
+        {
           "version": "1.0.0",
           "date": "2026-10-12T10:13:47Z",
           "localizedDescription": "The Last Dragonrider 1.0.0 by kharrison.\n\n- Install the full game on iPhone or iPad, with offline single-player and device saves.\n- Full-screen native app, with bundled art, music and controls.\n- Browser handoff for the existing Google account; cloud saves and story co-op require internet.\n\nExisting browser-local saves are separate. Sync them with your Google account before moving to the app. Native Google sign-in and co-op still require confirmation on your device. Updating preserves app saves; removing the app removes device-only saves.\n\nGame revision: 2bd55635e4ca2f0ba79d2ae20ee8d7a3302afbe3",
@@ -144,14 +153,23 @@
           "buildVersion": "1"
         }
       ],
-      "version": "1.0.0",
-      "versionDate": "2026-10-12T10:13:47Z",
-      "versionDescription": "The Last Dragonrider 1.0.0 by kharrison.\n\n- Install the full game on iPhone or iPad, with offline single-player and device saves.\n- Full-screen native app, with bundled art, music and controls.\n- Browser handoff for the existing Google account; cloud saves and story co-op require internet.\n\nExisting browser-local saves are separate. Sync them with your Google account before moving to the app. Native Google sign-in and co-op still require confirmation on your device. Updating preserves app saves; removing the app removes device-only saves.\n\nGame revision: 2bd55635e4ca2f0ba79d2ae20ee8d7a3302afbe3",
-      "downloadURL": "https://github.com/kharrisongit/Opalinetest/releases/download/ldr-1.0.0/LastDragonrider.ipa",
-      "size": 184856692
+      "version": "1.0.1",
+      "versionDate": "2026-10-12T10:41:35Z",
+      "versionDescription": "The Last Dragonrider 1.0.1 by kharrison.\n\n- New Corin and Aurelius silhouette icon, using the exact raised-wing pose from the game’s title screen.\n- Matching artwork on your Home Screen and in AltStore.\n- Offline single-player and device saves remain available.\n- Full-screen native app, with bundled art, music and controls.\n- Browser handoff for the existing Google account; cloud saves and story co-op require internet.\n\nExisting browser-local saves are separate. Sync them with your Google account before moving to the app. Native Google sign-in and co-op still require confirmation on your device. Updating preserves app saves; removing the app removes device-only saves.\n\nGame revision: 0bc6003d7648614a0e0029d7936e8d534c0cb598",
+      "downloadURL": "https://github.com/kharrisongit/Opalinetest/releases/download/ldr-1.0.1/LastDragonrider.ipa",
+      "size": 185290367
     }
   ],
   "news": [
+    {
+      "title": "The Last Dragonrider 1.0.1",
+      "identifier": "com.kharrison.lastdragonrider.release-1.0.1",
+      "caption": "New Corin and Aurelius silhouette icon, using the exact raised-wing pose from the game’s title screen.",
+      "date": "2026-10-12T10:41:35Z",
+      "tintColor": "E0913F",
+      "appID": "com.kharrison.lastdragonrider",
+      "url": "https://github.com/kharrisongit/Opalinetest/releases/tag/ldr-1.0.1"
+    },
     {
       "title": "The Last Dragonrider 1.0.0",
       "identifier": "com.kharrison.lastdragonrider.release-1.0.0",
