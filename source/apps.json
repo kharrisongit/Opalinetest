@@ -124,9 +124,53 @@
       "versionDescription": "The Last Dragonrider 1.0.1 by kharrison.\n\n- New Corin and Aurelius silhouette icon, using the exact raised-wing pose from the game’s title screen.\n- Matching artwork on your Home Screen and in AltStore.\n- Offline single-player and device saves remain available.\n- Full-screen native app, with bundled art, music and controls.\n- Browser handoff for the existing Google account; cloud saves and story co-op require internet.\n\nExisting browser-local saves are separate. Sync them with your Google account before moving to the app. Native Google sign-in and co-op still require confirmation on your device. Updating preserves app saves; removing the app removes device-only saves.\n\nGame revision: 0bc6003d7648614a0e0029d7936e8d534c0cb598",
       "downloadURL": "https://github.com/kharrisongit/utube/releases/download/ldr-1.0.1/LastDragonrider.ipa",
       "size": 185290367
+    },
+    {
+      "name": "Verse",
+      "bundleIdentifier": "com.kharrison.verse",
+      "developerName": "kharrison",
+      "subtitle": "Your next song starts here",
+      "localizedDescription": "An offline lyric notebook for iPhone and iPad. Organize songs into notebooks, search titles and lyrics, add tags and favorites, and write with native spell check. Find perfect and near rhymes from a bundled English pronunciation dictionary with syllable filters. Connect a folder in iCloud Drive through Files on each device for cloud sync while Verse is open. Parallel edits remain separate drafts. Includes text sharing, complete backups, and recoverable deleted lyrics. iOS 16 or newer. For AltStore Classic.",
+      "iconURL": "https://github.com/kharrisongit/utube/releases/download/verse-1.0.0/verse-icon.png",
+      "tintColor": "197A66",
+      "category": "productivity",
+      "minOSVersion": "16.0",
+      "appPermissions": {
+        "entitlements": [
+          "application-identifier",
+          "com.apple.developer.team-identifier",
+          "get-task-allow"
+        ],
+        "privacy": {}
+      },
+      "versions": [
+        {
+          "version": "1.0.0",
+          "date": "2026-10-12T21:13:22Z",
+          "localizedDescription": "Verse 1.0.0 by kharrison\n\n- A dedicated native lyric notebook for iPhone and iPad, installable through AltStore Classic.\n- Notebooks, lyric search, tags, favorites, word and line counts, and quick Verse/Chorus/Bridge headings.\n- Native spell check with suggestions and a personal dictionary. Optional autocorrect starts off.\n- Offline perfect and near rhymes from the CMU Pronouncing Dictionary, with syllable filters. Select a word in your lyric and tap Rhyme.\n- Local autosave and cloud-folder sync through Files. Choose the same iCloud Drive folder in Settings on each device. Sync runs while the app is open; Files handles provider upload/download.\n- Immutable saved revisions preserve concurrent edits as separate drafts. Recover lyrics from Recently deleted, share plain text, and export or restore complete backups.\n\nCloud setup requires choosing a folder in iCloud Drive, not On My iPhone. iCloud propagation and AltStore installation still require confirmation on physical devices. The app does not require a custom CloudKit entitlement or a rhyme API subscription.",
+          "downloadURL": "https://github.com/kharrisongit/utube/releases/download/verse-1.0.0/Verse.ipa",
+          "size": 1100543,
+          "minOSVersion": "16.0",
+          "buildVersion": "1"
+        }
+      ],
+      "version": "1.0.0",
+      "versionDate": "2026-10-12T21:13:22Z",
+      "versionDescription": "Verse 1.0.0 by kharrison\n\n- A dedicated native lyric notebook for iPhone and iPad, installable through AltStore Classic.\n- Notebooks, lyric search, tags, favorites, word and line counts, and quick Verse/Chorus/Bridge headings.\n- Native spell check with suggestions and a personal dictionary. Optional autocorrect starts off.\n- Offline perfect and near rhymes from the CMU Pronouncing Dictionary, with syllable filters. Select a word in your lyric and tap Rhyme.\n- Local autosave and cloud-folder sync through Files. Choose the same iCloud Drive folder in Settings on each device. Sync runs while the app is open; Files handles provider upload/download.\n- Immutable saved revisions preserve concurrent edits as separate drafts. Recover lyrics from Recently deleted, share plain text, and export or restore complete backups.\n\nCloud setup requires choosing a folder in iCloud Drive, not On My iPhone. iCloud propagation and AltStore installation still require confirmation on physical devices. The app does not require a custom CloudKit entitlement or a rhyme API subscription.",
+      "downloadURL": "https://github.com/kharrisongit/utube/releases/download/verse-1.0.0/Verse.ipa",
+      "size": 1100543
     }
   ],
   "news": [
+    {
+      "title": "Verse 1.0.0",
+      "identifier": "com.kharrison.verse.release-1.0.0",
+      "caption": "A dedicated native lyric notebook for iPhone and iPad, installable through AltStore Classic.",
+      "date": "2026-10-12T21:13:22Z",
+      "tintColor": "197A66",
+      "appID": "com.kharrison.verse",
+      "url": "https://github.com/kharrisongit/utube/releases/tag/verse-1.0.0"
+    },
     {
       "title": "uTube 1.12.12 — kharrison",
       "identifier": "com.kharrison.utube.release-1.12.12",
