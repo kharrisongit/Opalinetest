@@ -3,11 +3,16 @@ import Foundation
 
 /// Direct HTTPS HLS, so AVPlayer/AirPlay can use Apple's adaptive playback without a web view.
 final class NativeWebHLSSource: VideoSource {
-    let name = "web.hls"
+    let name: String
     let supportsQualitySelection = false
     let availableQualities: [VideoQuality] = []
     let currentQuality: VideoQuality? = nil
-    private let loader = WebPlaybackLoader(profile: .nativeHLS)
+    private let loader: WebPlaybackLoader
+
+    init(name: String = "web.hls", profile: WebPlaybackProfile = .nativeHLS) {
+        self.name = name
+        loader = WebPlaybackLoader(profile: profile, delivery: .nativeHLS)
+    }
 
     func loadPlayback(
         videoId: String,

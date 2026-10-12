@@ -1,9 +1,9 @@
 uTube by kharrison, based on Opaline by verback2308.
 
-- Added two experimental playback options after the existing four: Web · native HLS and Embedded web · byte ranges. Enable them in Settings → Debug → Playback sources. Both are off by default; your existing choices and solver stay configured as before.
-- Native web HLS can use the YouTube website account you already connected, with automatic quality in the standard player. No separate Google registration or web player window is needed. Availability depends on the video and session.
-- Embedded playback tries anonymous compatible streams for videos that allow embedding, using the existing signature solver and native HLS delivery with quality selection.
-- HLS manifest links also support throttling challenges embedded in their URL path, using the existing solver.
-- Added time limits for experimental loading and guards against late, duplicate or cancelled source responses replacing the current video.
+- Added three more experimental playback methods after the previous six: Mobile web · native HLS, Embedded web · native HLS, and TV compatibility · byte ranges.
+- Mobile and embedded HLS use the standard native player with automatic quality. The embedded route stays anonymous and requires an embeddable video with a usable playlist.
+- TV compatibility uses the YouTube account already connected for comments and notifications. It tries compatible separate video/audio streams with the existing solver and native delivery. No new Google project or account setup is required when that account is connected.
+- New methods are off by default. Enable them in Settings → Debug → Playback sources. Your existing order, enabled choices, and working solver are preserved.
+- Improved embedded request configuration and added regression checks for delivery selection, account requirements and settings migration.
 
-These are experimental alternatives, not guaranteed fixes for YouTube restrictions. Live playback and sustained AirPlay on the new methods still need device testing. The current four playback methods remain the defaults. See EXPERIMENTAL_PLAYBACK.md in the repository for details and the test guide.
+All five experimental alternatives depend on the video and session. Live playback and sustained AirPlay still need device testing; these are not guaranteed fixes for YouTube restrictions. The original four methods remain the defaults. See EXPERIMENTAL_PLAYBACK.md for the comparison and test guide.

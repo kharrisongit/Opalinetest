@@ -1,16 +1,71 @@
 import Foundation
 
 /// Experimental website profiles, deliberately separate from the proven default chain.
-enum WebPlaybackProfile {
+enum WebPlaybackProfile: CaseIterable {
     case nativeHLS
     case embedded
+    case mobile
+    case legacyTV
 
     static let userAgent = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
         + "AppleWebKit/605.1.15 (KHTML, like Gecko) Version/15.5 Safari/605.1.15"
     static let fallbackVersion = "2.20260708.00.00"
 
-    var clientName: String { self == .embedded ? "WEB_EMBEDDED_PLAYER" : "WEB" }
-    var headerName: String { self == .embedded ? "56" : "1" }
+    var clientName: String {
+        switch self {
+        case .nativeHLS:
+            return "WEB"
+        case .embedded:
+            return "WEB_EMBEDDED_PLAYER"
+        case .mobile:
+            return "MWEB"
+        case .legacyTV:
+            return "TVHTML5"
+        }
+    }
+
+    var headerName: String {
+        switch self {
+        case .nativeHLS:
+            return "1"
+        case .embedded:
+            return "56"
+        case .mobile:
+            return "2"
+        case .legacyTV:
+            return "7"
+        }
+    }
+
+    var version: String {
+        switch self {
+        case .nativeHLS, .embedded:
+            return Self.fallbackVersion
+        case .mobile:
+            return "2.20260708.05.00"
+        case .legacyTV:
+            return "5.20260707"
+        }
+    }
+
+    var requestUserAgent: String {
+        switch self {
+        case .nativeHLS, .embedded:
+            return Self.userAgent
+        case .mobile:
+            return "Mozilla/5.0 (iPad; CPU OS 16_7_10 like Mac OS X) "
+                + "AppleWebKit/605.1.15 (KHTML, like Gecko) "
+                + "Version/16.6 Mobile/15E148 Safari/604.1"
+        case .legacyTV:
+            return "Mozilla/5.0 (ChromiumStylePlatform) Cobalt/Version"
+        }
+    }
+
+    /// The compatibility TV profile uses the web player's paired STS/JS, as yt-dlp does.
+    /// Its client version stays 5.x even if the watch page advertises WEB 2.x.
+    var pageUserAgent: String { self == .legacyTV ? Self.userAgent : requestUserAgent }
+    var usesWebsiteAccount: Bool { self != .embedded }
+    var requiresWebsiteAccount: Bool { self == .legacyTV }
 
     /// Reject restrictions and unrelated responses before interpreting any stream URLs.
     static func streamingData(_ json: [String: Any], videoID: String) throws -> [String: Any] {
@@ -48,10 +103,12 @@ enum WebPlaybackProfile {
     }
 
     func pageURL(videoID: String) throws -> URL {
-        guard videoID.range(of: "^[A-Za-z0-9_-]{11}$", options: .regularExpression) != nil,
-              let url = URL(string: self == .embedded
-                  ? "https://www.youtube.com/embed/\(videoID)"
-                  : "https://www.youtube.com/watch?v=\(videoID)") else {
+        guard videoID.range(of: "^[A-Za-z0-9_-]{11}$", options: .regularExpression) != nil else {
+            throw WebPlaybackError.invalidResponse
+        }
+        let host = self == .mobile ? "m.youtube.com" : "www.youtube.com"
+        let path = self == .embedded ? "/embed/\(videoID)" : "/watch?v=\(videoID)"
+        guard let url = URL(string: "https://\(host)\(path)") else {
             throw WebPlaybackError.invalidResponse
         }
         return url
@@ -59,10 +116,16 @@ enum WebPlaybackProfile {
 
     func context(config: WebPlayerConfiguration) -> [String: Any] {
         var client: [String: Any] = [
-            "clientName": clientName, "clientVersion": config.version,
-            "userAgent": Self.userAgent, "browserName": "Safari", "browserVersion": "15.5",
-            "osName": "Macintosh", "osVersion": "10_15_7", "hl": "en", "gl": "US"
+            "clientName": clientName,
+            "clientVersion": self == .legacyTV ? version : config.version,
+            "userAgent": requestUserAgent, "hl": "en", "gl": "US"
         ]
+        if self != .legacyTV {
+            client["browserName"] = "Safari"
+            client["browserVersion"] = self == .mobile ? "16.6" : "15.5"
+            client["osName"] = self == .mobile ? "iPad" : "Macintosh"
+            client["osVersion"] = self == .mobile ? "16.7.10" : "10_15_7"
+        }
         client["visitorData"] = config.visitorData
         var context: [String: Any] = ["client": client]
         if self == .embedded {
@@ -74,6 +137,9 @@ enum WebPlaybackProfile {
     func body(videoID: String, config: WebPlayerConfiguration) -> [String: Any] {
         var playback: [String: Any] = ["html5Preference": "HTML5_PREF_WANTS"]
         playback["signatureTimestamp"] = config.timestamp
+        if self == .embedded {
+            playback["encryptedHostFlags"] = config.encryptedHostFlags
+        }
         return [
             "context": context(config: config), "videoId": videoID,
             "playbackContext": ["contentPlaybackContext": playback]
@@ -86,6 +152,7 @@ enum WebPlaybackError: LocalizedError {
     case invalidResponse
     case timedOut
     case solveFailed
+    case accountRequired
 
     var errorDescription: String? {
         switch self {
@@ -97,6 +164,8 @@ enum WebPlaybackError: LocalizedError {
             return "The experimental playback method timed out."
         case .solveFailed:
             return "The web player signature could not be resolved."
+        case .accountRequired:
+            return "Connect your YouTube commenting account to try TV compatibility playback."
         }
     }
 }

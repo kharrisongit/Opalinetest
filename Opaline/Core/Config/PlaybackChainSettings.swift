@@ -11,7 +11,7 @@ enum PlaybackChainSettings {
     /// to run at all.
     static let defaultOrder = [
         "visionos.range", "visionos.sabr", "tv.sabr", "progressive",
-        "web.hls", "web.embedded.range"
+        "web.hls", "web.embedded.range", "web.mobile.hls", "web.embedded.hls", "web.tv.range"
     ]
     /// Keep the proven defaults. Website routes are opt-in experiments, including on upgrades.
     static let defaultEnabled = Array(defaultOrder.prefix(4))
@@ -53,12 +53,15 @@ enum PlaybackChainSettings {
     /// The steps to try, in order: enabled, and possible for this session.
     static func activeSteps(
         from registry: PlaybackStepRegistry = .default,
-        isSignedIn: Bool = OAuthClient.shared.isSignedIn
+        isSignedIn: Bool = OAuthClient.shared.isSignedIn,
+        isWebsiteSignedIn: Bool = YouTubeCommentClient.shared.channel != nil
     ) -> [PlaybackStep] {
         let on = enabled
         return order
             .compactMap { registry.step(id: $0) }
             .filter { on.contains($0.id) }
-            .filter { isSignedIn || !$0.requiresSignIn }
+            .filter {
+                $0.isAvailable(isSignedIn: isSignedIn, isWebsiteSignedIn: isWebsiteSignedIn)
+            }
     }
 }

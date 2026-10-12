@@ -189,7 +189,7 @@ final class YouTubeCommentClient {
 }
 
 extension YouTubeCommentClient {
-    /// Only the opt-in native web HLS source uses this. Credentials go to this fixed
+    /// Only opt-in website playback sources use this. Credentials go to this fixed
     /// YouTube endpoint, never to a media URL, the signature solver or shared storage.
     func readWebPlayback(
         body: [String: Any],

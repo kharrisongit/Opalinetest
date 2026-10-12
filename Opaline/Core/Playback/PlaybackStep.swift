@@ -15,104 +15,10 @@ struct PlaybackStep {
     let requiresSignIn: Bool
     var detail: String?
     var timeout: TimeInterval?
+    var requiresWebsiteSignIn = false
     let make: (WatchService) -> VideoSource
-}
 
-/// Every way this app knows how to play a video, in the order they are
-/// offered by default.
-///
-/// Composed here rather than switched on anywhere: the registry is the only
-/// place that knows which clients and deliveries exist.
-struct PlaybackStepRegistry {
-    static let `default` = PlaybackStepRegistry(steps: [
-        PlaybackStep(
-            id: "visionos.range",
-            title: "visionOS · byte ranges",
-            requiresSignIn: false
-        ) { apiClient in
-            innertube(
-                apiClient: apiClient,
-                client: VisionOSClient(),
-                delivery: ByteRangeDeliveryFactory(),
-                title: "visionos.range"
-            )
-        },
-        PlaybackStep(
-            id: "tv.sabr",
-            title: "TV · SABR",
-            requiresSignIn: true
-        ) { apiClient in
-            innertube(
-                apiClient: apiClient,
-                client: TVClient(),
-                delivery: SABRDeliveryFactory(),
-                title: "tv.sabr"
-            )
-        },
-        PlaybackStep(
-            id: "visionos.sabr",
-            title: "visionOS · SABR",
-            requiresSignIn: false
-        ) { apiClient in
-            innertube(
-                apiClient: apiClient,
-                client: VisionOSClient(),
-                delivery: SABRDeliveryFactory(),
-                title: "visionos.sabr"
-            )
-        },
-        PlaybackStep(
-            id: "progressive",
-            title: "Progressive 360p",
-            requiresSignIn: false
-        ) { apiClient in
-            ProgressiveSource(apiClient: apiClient)
-        },
-        PlaybackStep(
-            id: "web.hls",
-            title: "Web · native HLS",
-            requiresSignIn: false,
-            detail: "settings.playbackChain.webHLS".localized,
-            timeout: 45
-        ) { _ in
-            NativeWebHLSSource()
-        },
-        PlaybackStep(
-            id: "web.embedded.range",
-            title: "Embedded web · byte ranges",
-            requiresSignIn: false,
-            detail: "settings.playbackChain.embedded".localized,
-            timeout: 45
-        ) { apiClient in
-            let loader = WebPlaybackLoader(profile: .embedded)
-            return InnertubeVideoSource(
-                apiClient: apiClient,
-                client: EmbeddedWebClient(),
-                name: "web.embedded.range",
-                deliveryFactory: WebRangeDeliveryFactory(loader: loader),
-                customLoader: loader.load,
-                cancelCustomLoader: loader.cancel
-            )
-        }
-    ])
-
-    let steps: [PlaybackStep]
-
-    private static func innertube(
-        apiClient: WatchService,
-        client: PlaybackClient,
-        delivery: StreamDeliveryFactory,
-        title: String
-    ) -> VideoSource {
-        InnertubeVideoSource(
-            apiClient: apiClient,
-            client: client,
-            name: title,
-            deliveryFactory: delivery
-        )
-    }
-
-    func step(id: String) -> PlaybackStep? {
-        steps.first { $0.id == id }
+    func isAvailable(isSignedIn: Bool, isWebsiteSignedIn: Bool) -> Bool {
+        (!requiresSignIn || isSignedIn) && (!requiresWebsiteSignIn || isWebsiteSignedIn)
     }
 }

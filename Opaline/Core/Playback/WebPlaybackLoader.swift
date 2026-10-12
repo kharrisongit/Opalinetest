@@ -3,13 +3,19 @@ import Foundation
 /// Website reads only. No player window, playback side effects, identity rotation or retries.
 final class WebPlaybackLoader {
     let profile: WebPlaybackProfile
+    private let delivery: WebPlaybackDelivery
     private(set) var scriptURL: URL?
     private let transport: HTTPTransport
     private var token = CancellationToken()
     private var generation = 0
 
-    init(profile: WebPlaybackProfile, transport: HTTPTransport = ServiceContainer.mediaTransport) {
+    init(
+        profile: WebPlaybackProfile,
+        delivery: WebPlaybackDelivery,
+        transport: HTTPTransport = ServiceContainer.mediaTransport
+    ) {
         self.profile = profile
+        self.delivery = delivery
         self.transport = transport
     }
 
@@ -56,6 +62,10 @@ final class WebPlaybackLoader {
         completion: @escaping (Result<DirectPlaybackInfo, Error>) -> Void
     ) {
         cancel()
+        guard !profile.requiresWebsiteAccount || YouTubeCommentClient.shared.channel != nil else {
+            completion(.failure(WebPlaybackError.accountRequired))
+            return
+        }
         let expected = generation
         let finish: (Result<DirectPlaybackInfo, Error>) -> Void = { [weak self] result in
             guard self?.generation == expected, cancellation?.isCancelled != true else {
@@ -87,7 +97,7 @@ final class WebPlaybackLoader {
         videoID: String,
         completion: @escaping (Result<DirectPlaybackInfo, Error>) -> Void
     ) {
-        var config = WebPlayerConfiguration(html: html)
+        var config = WebPlayerConfiguration(html: html, profile: profile)
         scriptURL = config.scriptURL
         // The embed page sometimes puts STS only in its referenced player script.
         if config.timestamp == nil, let url = config.scriptURL {
@@ -114,10 +124,12 @@ final class WebPlaybackLoader {
             }
             completion(result.flatMap { json in Result { try self.parse(json, videoID: videoID) } })
         }
-        if profile == .nativeHLS, YouTubeCommentClient.shared.channel != nil {
+        if profile.usesWebsiteAccount, YouTubeCommentClient.shared.channel != nil {
             YouTubeCommentClient.shared.readWebPlayback(
                 body: body, cancellation: token, completion: parse
             )
+        } else if profile.requiresWebsiteAccount {
+            completion(.failure(WebPlaybackError.accountRequired))
         } else {
             readAnonymous(body: body, completion: parse)
         }
@@ -155,7 +167,7 @@ final class WebPlaybackLoader {
         send(HTTPRequest(
             method: .get,
             url: url,
-            headers: ["User-Agent": WebPlaybackProfile.userAgent],
+            headers: ["User-Agent": profile.pageUserAgent],
             timeout: 15,
             sendsCookies: false,
             isPlayback: true
@@ -191,19 +203,9 @@ final class WebPlaybackLoader {
     private func parse(_ json: [String: Any], videoID: String) throws -> DirectPlaybackInfo {
         _ = try WebPlaybackProfile.streamingData(json, videoID: videoID)
         var clean = InnertubeClient.unwrappingSignatureCiphers(json)
-        var data = clean["streamingData"] as? [String: Any] ?? [:]
-        if profile == .nativeHLS {
-            guard let url = WebPlaybackProfile.mediaURL(data["hlsManifestUrl"] as? String) else {
-                throw WebPlaybackError.unavailable
-            }
-            data = ["hlsManifestUrl": url.absoluteString]
-        } else {
-            let formats = (data["adaptiveFormats"] as? [[String: Any]] ?? []).filter {
-                WebPlaybackProfile.mediaURL($0["url"] as? String) != nil && $0["drmFamilies"] == nil
-            }
-            data = ["adaptiveFormats": formats]
-        }
-        clean["streamingData"] = data
+        clean["streamingData"] = try delivery.streamingData(
+            from: clean["streamingData"] as? [String: Any] ?? [:]
+        )
         guard let info = InnertubeClient.parseDirectPlaybackInfo(clean) else {
             throw WebPlaybackError.invalidResponse
         }

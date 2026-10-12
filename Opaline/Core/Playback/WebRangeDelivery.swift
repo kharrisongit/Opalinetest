@@ -11,7 +11,9 @@ struct WebRangeDeliveryFactory: StreamDeliveryFactory {
     func make(
         client: PlaybackClient, transport: HTTPTransport, poToken: Data?
     ) -> StreamDelivery {
-        WebRangeDelivery(scriptURL: loader.scriptURL)
+        WebRangeDelivery(
+            scriptURL: loader.scriptURL, headers: client.streamHeaders(visitorData: nil)
+        )
     }
 }
 
@@ -19,9 +21,11 @@ struct WebRangeDeliveryFactory: StreamDeliveryFactory {
 final class WebRangeDelivery: StreamDelivery {
     let label = "web-range"
     private let scriptURL: URL?
+    private let headers: [String: String]
 
-    init(scriptURL: URL?) {
+    init(scriptURL: URL?, headers: [String: String]) {
         self.scriptURL = scriptURL
+        self.headers = headers
     }
 
     func prepare(
@@ -103,7 +107,7 @@ final class WebRangeDelivery: StreamDelivery {
             audioURL: audio,
             videoFormat: request.video,
             audioFormat: request.audio,
-            headers: EmbeddedWebClient().streamHeaders(visitorData: nil),
+            headers: headers,
             startAt: request.resumeAt,
             invalidatesVisitorOnFailure: false
         )

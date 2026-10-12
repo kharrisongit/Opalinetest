@@ -2,11 +2,12 @@ import Foundation
 
 /// Media-only profile. The request loader reads the matching website configuration.
 /// SABR is deliberately unsupported; only explicit clear adaptive URLs are accepted.
-struct EmbeddedWebClient: PlaybackClient {
-    let name = "WEB_EMBEDDED_PLAYER"
-    let version = WebPlaybackProfile.fallbackVersion
-    let headerName = "56"
-    let userAgent = WebPlaybackProfile.userAgent
+struct WebRangeClient: PlaybackClient {
+    let profile: WebPlaybackProfile
+    var name: String { profile.clientName }
+    var version: String { profile.version }
+    var headerName: String { profile.headerName }
+    var userAgent: String { profile.requestUserAgent }
     let playerURL = "player"
     let authorization = PlaybackAuthorization.anonymous
     let sendsCookies = false

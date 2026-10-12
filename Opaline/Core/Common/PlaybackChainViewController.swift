@@ -45,6 +45,16 @@ final class PlaybackChainViewController: UIViewController {
         ])
     }
 
+    private func detail(for step: PlaybackStep) -> String? {
+        if step.requiresWebsiteSignIn, YouTubeCommentClient.shared.channel == nil {
+            return "settings.playbackChain.websiteSignInNeeded".localized
+        }
+        if step.requiresSignIn, !OAuthClient.shared.isSignedIn {
+            return "settings.playbackChain.signInNeeded".localized
+        }
+        return step.detail
+    }
+
     private func steps() -> [PlaybackStep] {
         order.compactMap { registry.step(id: $0) }
     }
@@ -95,16 +105,15 @@ extension PlaybackChainViewController: UITableViewDataSource, UITableViewDelegat
         cell.selectionStyle = .none
         cell.showsReorderControl = true
         cell.detailTextLabel?.numberOfLines = 0
-        cell.detailTextLabel?.text = step.detail
+        cell.detailTextLabel?.text = detail(for: step)
         cell.detailTextLabel?.textColor = ThemeManager.shared.secondaryText
-        let signInNeeded = step.requiresSignIn && !OAuthClient.shared.isSignedIn
-        if signInNeeded {
-            cell.detailTextLabel?.text = "settings.playbackChain.signInNeeded".localized
-            cell.detailTextLabel?.textColor = ThemeManager.shared.secondaryText
-        }
+        let available = step.isAvailable(
+            isSignedIn: OAuthClient.shared.isSignedIn,
+            isWebsiteSignedIn: YouTubeCommentClient.shared.channel != nil
+        )
         let toggle = UISwitch()
         toggle.isOn = enabled.contains(step.id)
-        toggle.isEnabled = !signInNeeded
+        toggle.isEnabled = available
         toggle.tag = indexPath.row
         toggle.addTarget(self, action: #selector(toggleStep(_:)), for: .valueChanged)
         cell.editingAccessoryView = toggle

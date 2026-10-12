@@ -6,20 +6,25 @@ struct WebPlayerConfiguration {
     var visitorData: String?
     var timestamp: Int?
     var scriptURL: URL?
+    var encryptedHostFlags: String?
 
-    init(html: String) {
+    init(html: String, profile: WebPlaybackProfile = .nativeHLS) {
         version = Self.string("INNERTUBE_CLIENT_VERSION", in: html)
-            ?? WebPlaybackProfile.fallbackVersion
+            ?? profile.version
+        if profile == .legacyTV {
+            version = profile.version
+        }
         visitorData = Self.string("VISITOR_DATA", in: html)
         timestamp = Self.signatureTimestamp(in: html)
         let path = Self.string("PLAYER_JS_URL", in: html)
             ?? Self.string("jsUrl", in: html)
         scriptURL = Self.validScriptURL(path)
+        encryptedHostFlags = Self.string("encryptedHostFlags", in: html)
     }
 
     static func signatureTimestamp(in text: String) -> Int? {
         guard let value = capture(
-            #"(?:"STS"|"sts"|"signatureTimestamp"|signatureTimestamp)\s*:\s*([0-9]+)"#,
+            #"(?:"STS"|"sts"|"signatureTimestamp"|signatureTimestamp|sts)\s*:\s*([0-9]+)"#,
             in: text
         ) else {
             return nil

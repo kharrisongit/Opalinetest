@@ -38,6 +38,9 @@ jobs:
           swiftc Opaline/Core/Playback/WebPlaybackProfile.swift \
             Opaline/Core/Playback/WebPlayerConfiguration.swift \
             Opaline/Core/Playback/WebPlaybackRequest.swift \
+            Opaline/Core/Playback/WebPlaybackDelivery.swift \
+            Opaline/Core/Playback/PlaybackStep.swift \
+            Opaline/Core/Config/PlaybackChainSettings.swift \
             Opaline/Core/Playback/WebStreamURL.swift \
             Opaline/Core/Playback/PlaybackAttemptState.swift \
             Opaline/Core/Playback/VideoSource.swift \

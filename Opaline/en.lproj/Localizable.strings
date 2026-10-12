@@ -696,3 +696,8 @@
 /* Experimental playback routes */
 "settings.playbackChain.webHLS" = "Experimental · Auto quality. Uses your connected YouTube account when available; some videos and sessions offer no HLS.";
 "settings.playbackChain.embedded" = "Experimental · Anonymous. Only videos that allow embedded playback and provide compatible streams.";
+
+"settings.playbackChain.mobileHLS" = "Experimental · Auto quality. Tries mobile Safari HLS using your connected YouTube account when available. Some videos and sessions offer no HLS.";
+"settings.playbackChain.embeddedHLS" = "Experimental · Auto quality. Tries anonymous HLS for embeddable videos. Availability depends on the video and session.";
+"settings.playbackChain.tvCompatibility" = "Experimental · Uses your connected YouTube commenting account to request compatible TV video/audio streams. Some videos and sessions are unsupported.";
+"settings.playbackChain.websiteSignInNeeded" = "Connect your YouTube account in Comments or Notifications to use this method.";

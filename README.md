@@ -61,12 +61,16 @@ Playback connects to YouTube and, for some playback sources, a configurable help
 
 ## Experimental playback options
 
-Two additional, opt-in sources are available after the existing four in **Settings → Debug → Playback sources**:
+Five additional, opt-in sources are available after the existing four in **Settings → Debug → Playback sources**:
 
 - **Web · native HLS** asks for Apple's native streaming format. It uses your connected YouTube website account when available, with automatic quality selection. Some sessions do not receive HLS.
 - **Embedded web · byte ranges** tries anonymous embedded-player streams and feeds compatible video/audio into the existing native HLS pipeline. It only works for videos that allow embedding and return usable stream URLs.
 
-Both are off by default. The current sources and solver remain configured as before. These are experiments, not guaranteed fixes for YouTube restrictions. Read the [implementation notes and device test guide](EXPERIMENTAL_PLAYBACK.md) before comparing them or proposing them upstream.
+- **Mobile web · native HLS** requests a mobile Safari playlist, using your existing commenting account when connected.
+- **Embedded web · native HLS** requests anonymous HLS for embeddable videos, as an alternative to the embedded byte-range route.
+- **TV compatibility · byte ranges** uses your existing commenting account with a TV compatibility profile and the native adaptive-format pipeline. This account is separate from the original TV SABR playback login.
+
+All five are off by default on a fresh install. Updates preserve previously enabled choices. The current sources and solver remain configured as before. These are experiments, not guaranteed fixes for YouTube restrictions. Read the [implementation notes and device test guide](EXPERIMENTAL_PLAYBACK.md) before comparing them or proposing them upstream.
 
 ## Build from source
 
