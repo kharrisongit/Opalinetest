@@ -3,7 +3,7 @@
   "bundleIdentifier": "com.verback.YTLite",
   "developerName": "kharrison · Based on Opaline by verback2308",
   "subtitle": "Native YouTube viewing and commenting",
-  "localizedDescription": "uTube by kharrison, based on Opaline by verback2308. Native comment and reply composer, playback, downloads, SponsorBlock, background audio, and Picture-in-Picture. Posting requires a configured Google iOS OAuth client and account authorization. For AltStore Classic.",
+  "localizedDescription": "Watch YouTube with AirPlay, background playback, downloads, and custom Home layouts. Read and write comments and replies inline using your connected YouTube account, and view your YouTube notifications. Maintained by kharrison, based on Opaline by verback2308. For AltStore Classic.",
   "iconURL": "https://raw.githubusercontent.com/kharrisongit/Opalinetest/main/source/utube-icon.png",
   "tintColor": "FF0000",
   "category": "entertainment",
