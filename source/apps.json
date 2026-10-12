@@ -2,7 +2,7 @@
   "name": "kharrison Apps",
   "identifier": "com.kharrisongit.opaline-source",
   "subtitle": "Personal apps, games, and projects",
-  "description": "Personal projects by kharrison. Home to uTube, The Last Dragonrider, and Verse, a native lyric notebook with cloud sync, spell check, and offline rhymes.",
+  "description": "Apps, games, and experiments by kharrison. A home for personal projects, creative tools, and customized favorites, with new releases and updates in one place.",
   "website": "https://github.com/kharrisongit",
   "iconURL": "https://raw.githubusercontent.com/kharrisongit/utube/main/source/kharrison-apps-icon-v1.png",
   "tintColor": "139AAA",
@@ -168,9 +168,71 @@
       "versionDescription": "Verse 1.0.1 by kharrison\n\n- A dedicated native lyric notebook for iPhone and iPad, installable through AltStore Classic.\n- Notebooks, lyric search, tags, favorites, word and line counts, and quick Verse/Chorus/Bridge headings.\n- Native spell check with suggestions and a personal dictionary. Optional autocorrect starts off.\n- Offline perfect and near rhymes from the CMU Pronouncing Dictionary, with syllable filters. Select a word in your lyric and tap Rhyme.\n- Local autosave and cloud-folder sync through Files. Choose the same iCloud Drive folder in Settings on each device. Sync runs while the app is open; Files handles provider upload/download.\n- Immutable saved revisions preserve concurrent edits as separate drafts. Recover lyrics from Recently deleted, share plain text, and export or restore complete backups.\n\nCloud setup requires choosing a folder in iCloud Drive, not On My iPhone. iCloud propagation and AltStore installation still require confirmation on physical devices. The app does not require a custom CloudKit entitlement or a rhyme API subscription.\n\nVerse now has its own GitHub repository: https://github.com/kharrisongit/Verse",
       "downloadURL": "https://github.com/kharrisongit/Verse/releases/download/verse-1.0.1/Verse.ipa",
       "size": 1101445
+    },
+    {
+      "name": "Quill",
+      "bundleIdentifier": "com.kharrison.quill",
+      "developerName": "kharrison",
+      "subtitle": "A quiet place for your next novel",
+      "localizedDescription": "Write and organize novels on iPhone and iPad. A focused formatted chapter editor, outline, character and place notes, word goals, spell check, saved revisions, and recoverable trash. Export Word documents, EPUB ebooks, formatted HTML, plain text, or print. Local autosave works offline. Connect a folder in iCloud Drive for optional sync while the app is open. Companion browser app: https://kharrisongit.github.io/Quill/. Desktop Chrome and Edge support shared-folder sync; other browsers can import and export backups. iOS 16 or later. Install with AltStore Classic.",
+      "iconURL": "https://github.com/kharrisongit/Quill/releases/download/quill-1.0.1/quill-icon.png",
+      "tintColor": "705B8B",
+      "category": "productivity",
+      "minOSVersion": "16.0",
+      "appPermissions": {
+        "entitlements": [
+          "application-identifier",
+          "com.apple.developer.team-identifier",
+          "get-task-allow"
+        ],
+        "privacy": {}
+      },
+      "versions": [
+        {
+          "version": "1.0.1",
+          "date": "2026-10-12T22:17:51Z",
+          "localizedDescription": "Quill — your story starts here.\n\n- Novel writing for iPhone and iPad, with a matching GitHub Pages browser app.\n- Formatted chapters, outline and reordering, character/place notes, goals, spell check, and focus mode.\n- Local autosave, saved versions, recoverable trash, optional cloud-folder sync, and complete backups.\n- Export Word documents, EPUB ebooks, formatted HTML, plain text, or print/PDF.\n- Includes the latest fixes for chapter details, concurrent form edits, and backup recovery.\n\nDownload Quill.ipa below and open it in AltStore Classic. Requires iOS 16 or later.\n\nWeb app: https://kharrisongit.github.io/Quill/\n\nThis exact IPA passed device compilation, automated checks, and simulator launch/save/reopen tests in build #2. Physical-device AltStore installation and iCloud delivery still need device verification.",
+          "downloadURL": "https://github.com/kharrisongit/Quill/releases/download/quill-1.0.1/Quill.ipa",
+          "size": 153758,
+          "minOSVersion": "16.0",
+          "buildVersion": "2"
+        },
+        {
+          "version": "1.0.0",
+          "date": "2026-10-12T21:52:48Z",
+          "localizedDescription": "Quill — your story starts here.\n\n- A dedicated novel-writing app for iPhone and iPad, with a matching GitHub Pages browser edition.\n- Books, chapter outlines and reordering, formatted prose, scene breaks, focus mode, native/browser spell check, and dark appearance.\n- Character, place, idea, and research notes; chapter synopses and writing status; manuscript and session word goals.\n- Local autosave, immutable saved revisions, parallel-draft review, and recoverable trash.\n- Word (.docx), EPUB, formatted HTML, plain text, print/PDF, and complete JSON backups.\n- Optional shared-folder sync. Choose the same iCloud Drive folder in the iPhone app and desktop Chrome/Edge. Other browsers use backup import/export. Files handles cloud delivery; sync runs while the app is open.\n\niOS 16+. Install Quill.ipa through AltStore Classic. Physical-device installation and iCloud delivery still need verification on your devices.\n\nWeb app: https://kharrisongit.github.io/Quill/\nSource: https://github.com/kharrisongit/Quill",
+          "downloadURL": "https://github.com/kharrisongit/Quill/releases/download/quill-1.0.0/Quill.ipa",
+          "size": 153390,
+          "minOSVersion": "16.0",
+          "buildVersion": "1"
+        }
+      ],
+      "version": "1.0.1",
+      "versionDate": "2026-10-12T22:17:51Z",
+      "versionDescription": "Quill — your story starts here.\n\n- Novel writing for iPhone and iPad, with a matching GitHub Pages browser app.\n- Formatted chapters, outline and reordering, character/place notes, goals, spell check, and focus mode.\n- Local autosave, saved versions, recoverable trash, optional cloud-folder sync, and complete backups.\n- Export Word documents, EPUB ebooks, formatted HTML, plain text, or print/PDF.\n- Includes the latest fixes for chapter details, concurrent form edits, and backup recovery.\n\nDownload Quill.ipa below and open it in AltStore Classic. Requires iOS 16 or later.\n\nWeb app: https://kharrisongit.github.io/Quill/\n\nThis exact IPA passed device compilation, automated checks, and simulator launch/save/reopen tests in build #2. Physical-device AltStore installation and iCloud delivery still need device verification.",
+      "downloadURL": "https://github.com/kharrisongit/Quill/releases/download/quill-1.0.1/Quill.ipa",
+      "size": 153758
     }
   ],
   "news": [
+    {
+      "title": "Quill 1.0.1",
+      "identifier": "com.kharrison.quill.release-1.0.1",
+      "caption": "Novel writing for iPhone and iPad, with a matching GitHub Pages browser app.",
+      "date": "2026-10-12T22:17:51Z",
+      "tintColor": "705B8B",
+      "appID": "com.kharrison.quill",
+      "url": "https://github.com/kharrisongit/Quill/releases/tag/quill-1.0.1"
+    },
+    {
+      "title": "Quill 1.0.0",
+      "identifier": "com.kharrison.quill.release-1.0.0",
+      "caption": "A dedicated novel-writing app for iPhone and iPad, with a matching GitHub Pages browser edition.",
+      "date": "2026-10-12T21:52:48Z",
+      "tintColor": "705B8B",
+      "appID": "com.kharrison.quill",
+      "url": "https://github.com/kharrisongit/Quill/releases/tag/quill-1.0.0"
+    },
     {
       "title": "Verse 1.0.1",
       "identifier": "com.kharrison.verse.release-1.0.1",
