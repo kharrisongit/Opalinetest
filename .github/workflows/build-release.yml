@@ -8,6 +8,7 @@ on:
     branches: [main]
     paths-ignore:
       - "source/**"
+      - ".github/workflows/last-dragonrider.yml"
       - "**.md"
   workflow_dispatch:
 

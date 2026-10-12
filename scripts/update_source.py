@@ -59,16 +59,18 @@ def news_title(version, release_title, app_name="Opaline"):
 def prepend_news(data, app, args, notes):
     entry = {
         "title": news_title(args.version, args.release_title, app.get("name", "Opaline")),
-        "identifier": f"release-{args.version}",
+        "identifier": f"{app['bundleIdentifier']}.release-{args.version}",
         "caption": news_caption(notes),
         "date": args.date,
-        "tintColor": TINT_COLOR,
+        "tintColor": app.get("tintColor", TINT_COLOR),
         "appID": app["bundleIdentifier"],
         "url": release_url(args.download_url, args.version),
     }
     older = [
         n for n in data.get("news", [])
         if n.get("identifier") != entry["identifier"]
+        and not (n.get("identifier") == f"release-{args.version}"
+                 and n.get("appID") == app["bundleIdentifier"])
     ]
     data["news"] = [entry] + older
 
@@ -119,7 +121,13 @@ def main():
     path = Path(args.file)
     data = json.loads(path.read_text(encoding="utf-8"))
     apps = data.get("apps", [])
-    app = apps[0] if apps else json.loads(Path(args.app_template).read_text(encoding="utf-8"))
+    template = json.loads(Path(args.app_template).read_text(encoding="utf-8"))
+    matches = [app for app in apps if app.get("bundleIdentifier") == template["bundleIdentifier"]]
+    if len(matches) > 1:
+        raise ValueError("Source has duplicate app bundle identifiers")
+    app = matches[0] if matches else template
+    if not matches:
+        apps.append(app)
     if args.size <= 0:
         raise ValueError("IPA size must be positive")
 
@@ -135,7 +143,7 @@ def main():
         entry.update(ipa_metadata(args.ipa, app, args.version, args.size))
     older = [v for v in app.get("versions", []) if v.get("version") != args.version]
     app["versions"] = [entry] + older
-    data["apps"] = [app]
+    data["apps"] = apps
 
     # AltStore reads these root-level duplicates of the latest version entry.
     app["version"] = args.version

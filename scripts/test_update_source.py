@@ -67,6 +67,20 @@ class UpdateSourceTests(unittest.TestCase):
         self.assertEqual(data["news"][0]["title"], "uTube 1.12.1")
         self.assertEqual(data["apps"][0]["iconURL"], template["iconURL"])
 
+    def test_updating_utube_keeps_other_apps_and_news(self):
+        other = {"name": "Dragonrider", "bundleIdentifier": "com.kharrison.lastdragonrider",
+                 "versions": [{"version": "1.12.1", "size": 99}]}
+        data = {"apps": [other], "news": [{"identifier": "com.kharrison.lastdragonrider.release-1.12.1",
+                "appID": "com.kharrison.lastdragonrider", "title": "Game update"}]}
+        self.feed.write_text(json.dumps(data))
+        self.assertEqual(self.publish().returncode, 0)
+        result = json.loads(self.feed.read_text())
+        self.assertEqual(result["apps"][0], other)
+        self.assertEqual(len(result["apps"]), 2)
+        self.assertEqual(result["news"][1], data["news"][0])
+        self.assertEqual(self.publish().returncode, 0)
+        self.assertEqual(len(json.loads(self.feed.read_text())["apps"]), 2)
+
     def test_repeated_publication_has_one_version_and_news_item(self):
         self.assertEqual(self.publish().returncode, 0)
         self.assertEqual(self.publish().returncode, 0)
