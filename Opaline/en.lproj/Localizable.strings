@@ -193,6 +193,8 @@
 
 /* Comments section header */
 "player.comments.title" = "Comments";
+"player.comments.writeOnYouTube" = "Comment on YouTube";
+"player.comments.writeHint" = "Opens YouTube inside Opaline. Open Comments and sign in if asked to write a comment.";
 /* Comments header with count; %1$d = number of comments */
 "player.comments.titleCount" = "Comments (%1$d)";
 /* Shown while comments load */

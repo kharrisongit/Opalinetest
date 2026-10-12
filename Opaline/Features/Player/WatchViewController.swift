@@ -68,10 +68,10 @@ final class WatchViewController: UIViewController {
     /// Raw (un-linkified) description text, kept so the attributed text can
     /// be rebuilt when the theme changes.
     var descriptionText = ""
-    /// `hasLoadedComments` separates "nothing yet" from "nothing at
-    /// all": a load is always coming when the screen opens, so the
-    /// empty message must not flash before the first result lands.
+    /// Don't show the empty message before the first comments result arrives.
     var isLoadingComments = false, hasLoadedComments = false
+    /// A browser refresh or sort change invalidates older page/reply callbacks.
+    var commentsLoadGeneration = 0
     /// The watch page is applied twice (cache, then network) but its
     /// one-shot side effects — RYD/SponsorBlock, playlist prefetch,
     /// comments — must start only once per video. Set to the videoId whose

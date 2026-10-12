@@ -160,7 +160,7 @@ Install the `.ipa` package directly:
 ## Known Issues and Limitations
 
 - Playback speeds above 2x may cause issues
-- Comments are read-only — you can browse and sort them and open replies, but not post, reply or like
+- **Commenting** — open a video's or Short's comments panel and tap **Comment on YouTube**. YouTube opens inside Opaline; open its Comments section to write or reply, and sign in there if asked. This browser sign-in is separate from Opaline's account sign-in. Tap **Done** to return and refresh the native comment list. Posting requires an internet connection and must be enabled by the video's creator; new comments may take time to appear. The native list still supports browsing, sorting and reading replies.
 - Notification delivery is scheduled by iOS, which grants background time at its own discretion — expect news to arrive within hours of publication, not minutes, and not at all while Background App Refresh or Low Power Mode says otherwise
 - **Picture in Picture is limited by the system before iOS 15**, and no app can work around it: the window survives exactly one video, and switching to another one closes it and leaves audio playing — [the full findings are in issue #31](https://github.com/verback2308/Opaline/issues/31#issuecomment-5148224679)
   - Before iOS 14.2 the system only starts PiP by itself from **fullscreen**. Leaving the app while the video plays inline gives background audio instead — the PiP button works in both cases

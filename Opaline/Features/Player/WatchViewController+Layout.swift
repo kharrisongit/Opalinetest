@@ -405,6 +405,7 @@ extension WatchViewController {
 
     private func setupCommentsPanel() {
         makeSheetDraggable(commentsPanel)
+        setupCommentWriting()
         commentsPanel.onSelectSort = { [weak self] index in
             self?.selectCommentSort(at: index)
         }

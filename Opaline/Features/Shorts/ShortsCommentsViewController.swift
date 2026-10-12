@@ -1,3 +1,4 @@
+import SafariServices
 import UIKit
 
 /// The comments sheet a short opens. A flat top-level list — replies and
@@ -11,6 +12,11 @@ final class ShortsCommentsViewController: UIViewController {
     private var comments: [Comment] = []
     private var continuation: String?
     private var isLoading = false
+    private var loadGeneration = 0
+    var onWriteComment: (() -> Void)?
+    private lazy var writeButton = YouTubeCommentsBrowser.makeButton(
+        target: self, action: #selector(writeComment)
+    )
 
     init(videoId: String, watchService: WatchService) {
         self.videoId = videoId
@@ -37,13 +43,17 @@ final class ShortsCommentsViewController: UIViewController {
         }
         isLoading = true
         spinner.startAnimating()
+        let generation = loadGeneration
         watchService.fetchComments(
             videoId: videoId,
             continuation: continuation,
             cancellationToken: nil
         ) { [weak self] result in
             DispatchQueue.main.async {
-                self?.handle(result)
+                guard let self, self.loadGeneration == generation else {
+                    return
+                }
+                self.handle(result)
             }
         }
     }
@@ -75,6 +85,7 @@ final class ShortsCommentsViewController: UIViewController {
         tableView.backgroundColor = theme.background
         titleLabel.textColor = theme.primaryText
         tableView.separatorColor = theme.separator
+        writeButton.tintColor = theme.primaryText
     }
 
     private func setupHeader() {
@@ -85,7 +96,7 @@ final class ShortsCommentsViewController: UIViewController {
         close.addTarget(
             self, action: #selector(closeTapped), for: .touchUpInside
         )
-        for subview in [titleLabel, close, spinner] {
+        for subview in [titleLabel, close, spinner, writeButton] {
             subview.translatesAutoresizingMaskIntoConstraints = false
             view.addSubview(subview)
         }
@@ -101,6 +112,10 @@ final class ShortsCommentsViewController: UIViewController {
                 equalTo: guide.trailingAnchor, constant: -16
             ),
             close.centerYAnchor.constraint(equalTo: titleLabel.centerYAnchor),
+            writeButton.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 12),
+            writeButton.leadingAnchor.constraint(equalTo: guide.leadingAnchor, constant: 16),
+            writeButton.trailingAnchor.constraint(equalTo: guide.trailingAnchor, constant: -16),
+            writeButton.heightAnchor.constraint(greaterThanOrEqualToConstant: 44),
             spinner.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             spinner.centerYAnchor.constraint(equalTo: view.centerYAnchor)
         ])
@@ -117,7 +132,7 @@ final class ShortsCommentsViewController: UIViewController {
         let guide = view.safeAreaLayoutGuide
         NSLayoutConstraint.activate([
             tableView.topAnchor.constraint(
-                equalTo: titleLabel.bottomAnchor, constant: 12
+                equalTo: writeButton.bottomAnchor, constant: 8
             ),
             tableView.leadingAnchor.constraint(equalTo: guide.leadingAnchor),
             tableView.trailingAnchor.constraint(equalTo: guide.trailingAnchor),
@@ -160,3 +175,27 @@ extension ShortsCommentsViewController: UITableViewDataSource, UITableViewDelega
 }
 
 extension ShortsCommentsViewController: UITextViewDelegate {}
+
+extension ShortsCommentsViewController: SFSafariViewControllerDelegate {
+    @objc
+    private func writeComment() {
+        guard presentedViewController == nil,
+              let browser = YouTubeCommentsBrowser.make(
+                  videoId: videoId, delegate: self
+              ) else {
+            return
+        }
+        onWriteComment?()
+        present(browser, animated: true)
+    }
+
+    func safariViewControllerDidFinish(_ controller: SFSafariViewController) {
+        loadGeneration += 1
+        isLoading = false
+        comments = []
+        continuation = nil
+        tableView.reloadData()
+        tableView.setContentOffset(.zero, animated: false)
+        loadNextPage()
+    }
+}
