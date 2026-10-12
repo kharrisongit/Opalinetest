@@ -4,10 +4,19 @@
   "developerName": "kharrison",
   "subtitle": "A dragon-riding pixel RPG",
   "localizedDescription": "Explore Emberfell with Corin and his dragon in this pixel-art adventure. The game is included in the app for offline single-player play, with persistent saves on your device. Existing Google cloud saves and story co-op are available online through the game's sign-in flow. Browser-local saves do not transfer automatically. For AltStore Classic on iPhone and iPad running iOS 15 or newer.",
-  "iconURL": "https://github.com/kharrisongit/Opalinetest/releases/download/ldr-1.0.0/dragonrider-icon.png",
-  "tintColor": "E0913F",
+  "iconURL": "https://github.com/kharrisongit/Opalinetest/releases/download/ldr-1.0.1/dragonrider-icon.png",
+  "tintColor": "426663",
   "category": "games",
   "minOSVersion": "15.0",
-  "screenshots": ["https://github.com/kharrisongit/Opalinetest/releases/download/ldr-1.0.0/dragonrider-screenshot.png"],
-  "appPermissions": {"entitlements": ["application-identifier", "com.apple.developer.team-identifier", "get-task-allow"], "privacy": {}}
+  "screenshots": [
+    "https://github.com/kharrisongit/Opalinetest/releases/download/ldr-1.0.0/dragonrider-screenshot.png"
+  ],
+  "appPermissions": {
+    "entitlements": [
+      "application-identifier",
+      "com.apple.developer.team-identifier",
+      "get-task-allow"
+    ],
+    "privacy": {}
+  }
 }

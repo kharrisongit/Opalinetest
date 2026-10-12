@@ -4,7 +4,7 @@
 >
 > `https://raw.githubusercontent.com/kharrisongit/Opalinetest/main/source/apps.json`
 >
-> Install **uTube** from **uTube by kharrison**. If this source is already installed, refresh Sources and update the app in AltStore. Successful builds publish the release and update the source automatically. AltStore signs the app during installation; AltServer may need to be running for your setup.
+> Install **uTube** and **The Last Dragonrider** from **kharrison Apps**, the shared source for kharrison’s personal projects. If this source is already installed, refresh Sources and update the app in AltStore. Successful builds publish the release and update the source automatically. AltStore signs the app during installation; AltServer may need to be running for your setup.
 >
 > This fork retains Opaline’s original bundle identifier so it can update an existing Opaline installation. It installs as the same app, not a second copy. Original project and credits: [verback2308/Opaline](https://github.com/verback2308/Opaline).
 

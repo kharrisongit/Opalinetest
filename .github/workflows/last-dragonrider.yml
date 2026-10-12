@@ -80,7 +80,9 @@ jobs:
           version,sha=sys.argv[1:]
           notes=f'''The Last Dragonrider {version} by kharrison.
 
-          - Install the full game on iPhone or iPad, with offline single-player and device saves.
+          - New Corin and Aurelius silhouette icon, using the exact raised-wing pose from the game’s title screen.
+          - Matching artwork on your Home Screen and in AltStore.
+          - Offline single-player and device saves remain available.
           - Full-screen native app, with bundled art, music and controls.
           - Browser handoff for the existing Google account; cloud saves and story co-op require internet.
 
@@ -105,6 +107,14 @@ jobs:
             --app-template source/dragonrider/app.json --version "$VERSION" --download-url "$URL" \
             --size "$SIZE" --date "$DATE" --ipa "$IPA" \
             --notes-file game/native/build/release-notes.md --release-title "The Last Dragonrider $VERSION"
+          python3 - "$TAG" <<'PY'
+          import json,pathlib,sys,os
+          p=pathlib.Path('source/apps.json');data=json.loads(p.read_text())
+          app=next(a for a in data['apps'] if a['bundleIdentifier']=='com.kharrison.lastdragonrider')
+          app['iconURL']=f"https://github.com/{os.environ['GITHUB_REPOSITORY']}/releases/download/{sys.argv[1]}/dragonrider-icon.png"
+          app['tintColor']='426663'
+          p.write_text(json.dumps(data,indent=2,ensure_ascii=False)+'\n')
+          PY
           cp game/native/build/game-build.json source/dragonrider/build.json
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'

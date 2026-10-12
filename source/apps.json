@@ -1,11 +1,11 @@
 {
-  "name": "uTube by kharrison",
+  "name": "kharrison Apps",
   "identifier": "com.kharrisongit.opaline-source",
-  "subtitle": "uTube updates for AltStore Classic",
-  "description": "uTube, maintained by kharrison. Based on Opaline by verback2308. Releases from kharrisongit/Opalinetest.",
-  "website": "https://github.com/kharrisongit/Opalinetest",
-  "iconURL": "https://raw.githubusercontent.com/kharrisongit/Opalinetest/main/source/utube-icon.png",
-  "tintColor": "FF0000",
+  "subtitle": "Personal apps, games, and projects",
+  "description": "Personal projects by kharrison. Home to uTube, a custom YouTube client, and The Last Dragonrider, a pixel-art RPG. Discover new projects and get the latest releases here.",
+  "website": "https://github.com/kharrisongit",
+  "iconURL": "https://raw.githubusercontent.com/kharrisongit/Opalinetest/main/source/kharrison-apps-icon-v1.png",
+  "tintColor": "139AAA",
   "apps": [
     {
       "name": "uTube",
