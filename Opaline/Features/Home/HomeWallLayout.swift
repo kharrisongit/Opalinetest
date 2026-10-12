@@ -58,9 +58,10 @@ final class HomeWallLayout: UICollectionViewLayout {
         guard first < last else {
             return []
         }
-        return (first..<last).compactMap {
+        let attributes = (first..<last).compactMap {
             layoutAttributesForItem(at: IndexPath(item: $0, section: 0))
-        }.filter { $0.frame.intersects(rect) }
+        }
+        return attributes.filter { $0.frame.intersects(rect) }
     }
 
     override func shouldInvalidateLayout(forBoundsChange newBounds: CGRect) -> Bool { true }
