@@ -27,7 +27,7 @@ final class SettingsViewController: UIViewController {
         case solverEndpoint
         case mainThreadWatchdog
         case shareLog
-        case feedback, support
+        case playerControls
         case commentingAccount
         case aboutVersion, aboutSystem, aboutModel
     }
@@ -371,14 +371,12 @@ extension SettingsViewController: UITableViewDataSource, UITableViewDelegate {
             )
         case .notificationSettings:
             return makeDisclosureCell("settings.row.notifications".localized)
+        case .playerControls:
+            return makeDisclosureCell("player.controls.title".localized)
         case .commentingAccount:
             return makeDisclosureCell("nativeComments.account".localized)
         case .shareLog:
             return makeDisclosureCell("settings.row.shareLog".localized)
-        case .feedback:
-            return makeDisclosureCell("settings.row.feedback".localized)
-        case .support:
-            return makeDisclosureCell("settings.row.support".localized)
         case .aboutVersion, .aboutSystem, .aboutModel:
             return makeAboutCell(row)
         case .playbackChain:
@@ -463,18 +461,12 @@ extension SettingsViewController: UITableViewDataSource, UITableViewDelegate {
         return true
     }
 
-    private func openExternalLink(_ url: URL?) {
-        if let url { UIApplication.shared.open(url) }
-    }
-
     private func handleDebugSelection(_ row: Row) -> Bool {
         switch row {
         case .shareLog:
             shareDebugLog()
-        case .feedback:
-            openExternalLink(AppURLs.Feedback.issues)
-        case .support:
-            openExternalLink(URL(string: AppURLs.Support.donate))
+        case .playerControls:
+            navigationController?.pushViewController(PlayerControlsViewController(), animated: true)
         case .commentingAccount:
             navigationController?.pushViewController(CommentAccountViewController(), animated: true)
         case .playbackChain, .solverEndpoint:

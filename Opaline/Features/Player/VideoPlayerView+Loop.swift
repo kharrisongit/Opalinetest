@@ -24,16 +24,6 @@ extension VideoPlayerView {
         )
         updateLoopButton()
         controlsView.addSubview(loopButton)
-        NSLayoutConstraint.activate([
-            loopButton.centerYAnchor.constraint(
-                equalTo: settingsButton.centerYAnchor
-            ),
-            loopButton.trailingAnchor.constraint(
-                equalTo: audioOnlyButton.leadingAnchor, constant: -4
-            ),
-            loopButton.widthAnchor.constraint(equalToConstant: 36),
-            loopButton.heightAnchor.constraint(equalToConstant: 36)
-        ])
     }
 
     func updateLoopButton() {

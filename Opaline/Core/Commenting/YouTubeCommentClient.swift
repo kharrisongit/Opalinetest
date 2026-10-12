@@ -42,6 +42,29 @@ final class YouTubeCommentClient {
         NotificationCenter.default.post(name: Self.didChange, object: nil)
     }
 
+    /// Shares the selected website account, with the same cookie isolation as commenting.
+    /// Discard replies from a connection that was replaced or disconnected in flight.
+    func readNotifications(
+        body: [String: Any],
+        countOnly: Bool = false,
+        completion: @escaping (Result<[String: Any], Error>) -> Void
+    ) {
+        guard let session else {
+            completion(.failure(YouTubeInboxError(reason: "signedOut")))
+            return
+        }
+        let expected = generation
+        let endpoint = countOnly
+            ? "notification/get_unseen_count" : "notification/get_notification_menu"
+        send(endpoint, body: body, session: session) { [weak self] result in
+            guard self?.generation == expected else {
+                completion(.failure(CommentAPIError(reason: "cancelled")))
+                return
+            }
+            completion(result)
+        }
+    }
+
     func post(
         _ submission: CommentSubmission,
         completion: @escaping (Result<Comment, Error>) -> Void

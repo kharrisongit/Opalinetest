@@ -1,6 +1,5 @@
 import AVKit
 import UIKit
-
 private func makePortraitRelatedLayout() -> UICollectionViewFlowLayout {
     let layout = UICollectionViewFlowLayout()
     layout.minimumLineSpacing = 12
@@ -72,6 +71,7 @@ final class WatchViewController: UIViewController {
     var isLoadingComments = false, hasLoadedComments = false
     /// A browser refresh or sort change invalidates older page/reply callbacks.
     var commentsLoadGeneration = 0
+    var pendingNotificationComment: (videoID: String, commentID: String?)?
     /// The watch page is applied twice (cache, then network) but its
     /// one-shot side effects — RYD/SponsorBlock, playlist prefetch,
     /// comments — must start only once per video. Set to the videoId whose

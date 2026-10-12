@@ -201,7 +201,7 @@ extension VideoPlayerView {
         configureSpeedButton()
         configureAudioOnlyButton()
         configureLoopButton()
-        activateTopBarConstraints()
+        installTopControls()
     }
 
     private func configurePipButton() {
@@ -339,70 +339,6 @@ extension VideoPlayerView {
             ),
             subtitleLabel.bottomAnchor.constraint(
                 equalTo: bottomAnchor, constant: -56
-            )
-        ])
-    }
-
-    private func activateTopBarConstraints() {
-        activateSettingsConstraints()
-        activatePipConstraints()
-        activateCCConstraints()
-        activateSpeedConstraints()
-    }
-
-    private func activateSettingsConstraints() {
-        let safeArea = controlsView.safeAreaLayoutGuide
-        NSLayoutConstraint.activate([
-            settingsButton.topAnchor.constraint(
-                equalTo: safeArea.topAnchor, constant: 20
-            ),
-            settingsButton.trailingAnchor.constraint(
-                equalTo: safeArea.trailingAnchor, constant: -28
-            ),
-            settingsButton.widthAnchor.constraint(equalToConstant: 36),
-            settingsButton.heightAnchor.constraint(equalToConstant: 36)
-        ])
-    }
-
-    private func activatePipConstraints() {
-        NSLayoutConstraint.activate([
-            pipButton.centerYAnchor.constraint(
-                equalTo: settingsButton.centerYAnchor
-            ),
-            pipButton.trailingAnchor.constraint(
-                equalTo: settingsButton.leadingAnchor, constant: -4
-            ),
-            pipButton.widthAnchor.constraint(equalToConstant: 36),
-            pipButton.heightAnchor.constraint(equalToConstant: 36)
-        ])
-    }
-
-    private func activateCCConstraints() {
-        NSLayoutConstraint.activate([
-            ccButton.centerYAnchor.constraint(
-                equalTo: settingsButton.centerYAnchor
-            ),
-            ccButton.trailingAnchor.constraint(
-                equalTo: pipButton.leadingAnchor, constant: -4
-            ),
-            ccButton.widthAnchor.constraint(equalToConstant: 36),
-            ccButton.heightAnchor.constraint(equalToConstant: 36)
-        ])
-    }
-
-    private func activateSpeedConstraints() {
-        NSLayoutConstraint.activate([
-            speedButton.centerYAnchor.constraint(
-                equalTo: settingsButton.centerYAnchor
-            ),
-            speedButton.trailingAnchor.constraint(
-                equalTo: ccButton.leadingAnchor, constant: -4
-            ),
-            speedButton.widthAnchor.constraint(
-                equalToConstant: 36
-            ),
-            speedButton.heightAnchor.constraint(
-                equalToConstant: 36
             )
         ])
     }

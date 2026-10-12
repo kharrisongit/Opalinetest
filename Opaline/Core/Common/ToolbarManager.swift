@@ -55,7 +55,9 @@ final class ToolbarManager {
             action: #selector(UIViewController.toolbarOpenProfile)
         )
 
-        vc.navigationItem.rightBarButtonItems = [profileBtn, settingsBtn, searchBtn]
+        vc.navigationItem.rightBarButtonItems = [
+            profileBtn, settingsBtn, makeAirPlayButton(), searchBtn
+        ]
         vc.navigationItem.leftBarButtonItem = makeBellButton(
             target: vc,
             action: #selector(UIViewController.toolbarOpenNotifications)
@@ -66,6 +68,16 @@ final class ToolbarManager {
             name: UserProfileStore.didUpdateNotification,
             object: nil
         )
+    }
+
+    private func makeAirPlayButton() -> UIBarButtonItem {
+        let airPlay = AirPlayRouteButton()
+        airPlay.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            airPlay.widthAnchor.constraint(equalToConstant: 30),
+            airPlay.heightAnchor.constraint(equalToConstant: 30)
+        ])
+        return UIBarButtonItem(customView: airPlay)
     }
 
     private func makeProfileButton(target: AnyObject, action: Selector) -> UIBarButtonItem {
@@ -102,7 +114,7 @@ extension UIViewController {
 
     @objc
     func toolbarOpenNotifications() {
-        NotificationsViewController.present(from: self)
+        YouTubeInboxViewController.present(from: self)
     }
 
     @objc

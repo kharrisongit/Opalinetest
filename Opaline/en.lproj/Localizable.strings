@@ -602,7 +602,7 @@
 "nativeComments.reply" = "Reply";
 "nativeComments.post" = "Post";
 "nativeComments.prompt" = "Your comment";
-"nativeComments.account" = "Commenting account";
+"nativeComments.account" = "YouTube account";
 "nativeComments.clientID" = "Google iOS client ID";
 "nativeComments.connect" = "Connect Google account";
 "nativeComments.disconnect" = "Disconnect commenting account";
@@ -645,9 +645,34 @@
 "nativeComments.bundleID" = "Installed bundle ID: %@";
 "nativeComments.send" = "Send";
 "nativeComments.placeholder" = "Add a comment…";
-"nativeComments.webConnect" = "Connect YouTube for commenting";
+"nativeComments.webConnect" = "Connect YouTube";
 "nativeComments.webSignIn" = "YouTube sign-in";
 "nativeComments.useAccount" = "Use account";
 "nativeComments.webSignInHelp" = "Sign in on YouTube, choose your channel, then tap Use account. If Google blocks sign-in here, this connection cannot be used.";
-"nativeComments.webExplanation" = "Sign in to YouTube once to send comments here. No Google project or app registration is needed. Your existing viewing sign-in stays connected.";
+"nativeComments.webExplanation" = "Sign in to YouTube once to send comments and see your notifications here. No Google project or app registration is needed. Your existing viewing sign-in stays connected.";
 "nativeComments.webPrivacy" = "Comments are public and tied to your YouTube account. The YouTube website connection is saved only in this device’s Keychain and sent directly to YouTube. Disconnect removes it. This unofficial connection can stop working when YouTube changes.";
+
+/* uTube settings and YouTube inbox */
+"settings.credits" = "uTube by kharrison. Based on Opaline by verback2308 and its contributors. Open-source licenses and credits are preserved in the project.";
+"youtubeInbox.title" = "YouTube notifications";
+"youtubeInbox.all" = "All";
+"youtubeInbox.replies" = "Replies";
+"youtubeInbox.account" = "Account";
+"youtubeInbox.unseen" = "%d new notifications";
+"youtubeInbox.signIn" = "Connect your YouTube account using Account above. If you already connected it for commenting, your notifications will appear here.";
+"youtubeInbox.loading" = "Loading YouTube notifications…";
+"youtubeInbox.empty" = "No YouTube notifications here yet.";
+"youtubeInbox.more" = "Load more";
+"youtubeInbox.retry" = "Try again";
+"youtubeInbox.openYouTube" = "Open on YouTube";
+"youtubeInbox.error.load" = "Couldn’t load YouTube notifications. Pull to refresh, or reconnect your YouTube account using Account above.";
+"youtubeInbox.error.signedOut" = "Reconnect your YouTube account to see notifications.";
+
+"player.controls.title" = "Video controls";
+"player.controls.airPlay" = "AirPlay";
+"player.controls.speed" = "Playback speed";
+"player.controls.captions" = "Captions";
+"player.controls.pictureInPicture" = "Picture in Picture";
+"player.controls.loop" = "Repeat video";
+"player.controls.audioOnly" = "Audio Only";
+"player.controls.footer" = "Choose the buttons shown at the top of videos. The settings gear always stays available. AirPlay is also available beside the gear on the main screens.";

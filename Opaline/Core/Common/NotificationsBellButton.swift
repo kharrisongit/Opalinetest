@@ -31,7 +31,7 @@ final class NotificationsBellButton: UIButton {
             dotView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -2)
         ])
         for name in [
-            AppNotificationStore.didChangeNotification,
+            YouTubeInboxService.didChange,
             ThemeManager.didChangeNotification
         ] {
             NotificationCenter.default.addObserver(
@@ -39,6 +39,7 @@ final class NotificationsBellButton: UIButton {
             )
         }
         refresh()
+        YouTubeInboxService.shared.refreshCount()
     }
 
     @available(*, unavailable)
@@ -50,6 +51,9 @@ final class NotificationsBellButton: UIButton {
     func refresh() {
         tintColor = ThemeManager.shared.isDark ? .white : .darkGray
         dotView.backgroundColor = ThemeManager.shared.newContentDot
-        dotView.isHidden = AppNotificationStore.shared.unreadCount == 0
+        let count = YouTubeInboxService.shared.unseenCount
+        dotView.isHidden = count == 0
+        accessibilityLabel = "youtubeInbox.title".localized
+        accessibilityValue = count > 0 ? "youtubeInbox.unseen".localized(with: count) : nil
     }
 }

@@ -124,6 +124,16 @@ final class VideoRouter {
         )
     }
 
+    func openNotificationVideo(_ videoID: String, commentID: String?) {
+        // Reopening the current video's comments must not restart its playback or AirPlay route.
+        if currentVideo?.id != videoID {
+            openVideoId(videoID)
+        } else {
+            panel?.expand(animated: true)
+        }
+        panel?.watchVC.showNotificationComments(commentID: commentID)
+    }
+
     func minimize() {
         panel?.collapse(animated: true)
     }

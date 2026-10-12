@@ -41,8 +41,8 @@ class ThemeManager {
         get {
             let raw = UserDefaults.standard.string(
                 forKey: UserDefaultsKeys.Theme.mode
-            ) ?? ThemeMode.dark.rawValue
-            return ThemeMode(rawValue: raw) ?? .dark
+            ) ?? ThemeMode.light.rawValue
+            return ThemeMode(rawValue: raw) ?? .light
         }
         set {
             UserDefaults.standard.set(newValue.rawValue, forKey: UserDefaultsKeys.Theme.mode)

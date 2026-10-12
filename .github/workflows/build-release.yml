@@ -42,6 +42,19 @@ jobs:
             scripts/native_comments_checks.swift -o "$RUNNER_TEMP/native-comments-checks"
           "$RUNNER_TEMP/native-comments-checks"
 
+      - name: Check YouTube notifications
+        run: |
+          swiftc Opaline/Core/API/Models/Comment.swift \
+            Opaline/Core/Commenting/CommentAPIModel.swift \
+            Opaline/Core/Commenting/CommentOAuthRequest.swift \
+            Opaline/Core/Commenting/YouTubeCommentModel.swift \
+            Opaline/Core/Common/YouTubeLinkParser.swift \
+            Opaline/Core/Notifications/YouTubeNotification.swift \
+            Opaline/Core/Notifications/YouTubeNotificationDestination.swift \
+            Opaline/Core/Notifications/YouTubeNotificationModel.swift \
+            scripts/youtube_notifications_checks.swift -o "$RUNNER_TEMP/youtube-notifications-checks"
+          "$RUNNER_TEMP/youtube-notifications-checks"
+
       # The SwiftLint build phase runs --strict, so a newer linter on the image
       # can fail the build with rules the project has never seen; pin the
       # project's version. Xcode stays the image default: non-default Xcodes

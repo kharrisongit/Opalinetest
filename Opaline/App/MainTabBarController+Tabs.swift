@@ -50,7 +50,7 @@ extension MainTabBarController {
             )
         )
         library.tabBarItem = UITabBarItem(
-            title: "library.title".localized,
+            title: "library.history".localized,
             image: TabBarIcons.library(),
             tag: DefaultTab.library.tabTag
         )

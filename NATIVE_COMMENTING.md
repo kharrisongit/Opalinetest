@@ -30,9 +30,20 @@ Automated checks cover draft isolation and duplicate-send prevention, cookie dom
 
 Device checks still required: connect a commenting session; deliberately send a comment and reply; play on the receiver for at least ten minutes while using another app; verify manual pause stays paused, disconnection does not switch unexpectedly to the phone speaker, and an ended interruption resumes only when allowed. These changes address identified gaps but do not establish the cause of the reported delayed TV stop without receiver testing or device logs.
 
+## YouTube notifications
+
+The toolbar bell uses the same explicitly connected website account. All requests go directly to fixed YouTube notification endpoints through the isolated transport, retaining the selected account index and brand-channel identity. Account replacement or disconnection invalidates in-flight responses, clears the unread indicator and local read state, and clears open inbox contents. Notification text is never persisted or logged.
+
+All and Replies select YouTube's inbox and comments menus. Paging follows only the inbox's own continuation items, with the request kind supplied by YouTube, and stops on repeated tokens. Tapping a video notification opens the native player and comments; an `lc` comment link is passed to YouTube's linked-comment continuation. Unsupported YouTube destinations offer an explicit Open on YouTube action. Local read styling is session-only; it does not claim to synchronize read status across devices. The bell checks the unseen count on foregrounding and at most once a minute while active. This does not enable OS push notifications for YouTube replies.
+
+The user confirmed website-session comment posting on October 12, 2026. Notifications require separate signed-in device validation; automated checks use synthetic responses and do not post or retrieve private account content.
+
 ## References
 
 - [YouTube.js website authentication](https://ytjs.dev/guide/authentication)
 - [YouTube.js comment creation](https://github.com/LuanRT/YouTube.js/blob/main/src/parser/youtube/Comments.ts)
 - [Apple AirPlay integration](https://developer.apple.com/documentation/avfoundation/integrating-airplay-for-long-form-video-apps)
 - [Apple audio interruptions](https://developer.apple.com/documentation/avfaudio/handling-audio-interruptions)
+- [YouTube.js notification requests](https://github.com/LuanRT/YouTube.js/blob/main/src/Innertube.ts)
+- [YouTube.js notification continuation requests](https://github.com/LuanRT/YouTube.js/blob/main/src/parser/classes/commands/ContinuationCommand.ts)
+- [Apple AirPlay route picker](https://developer.apple.com/documentation/avkit/avroutepickerview)

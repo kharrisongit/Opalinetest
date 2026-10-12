@@ -86,10 +86,11 @@ final class VideoPlayerView: UIView {
     )
     let settingsButton = UIButton(type: .system)
     let pipButton = UIButton(type: .system)
-    let ccButton = UIButton(type: .system)
-    let speedButton = UIButton(type: .system)
-    let audioOnlyButton = UIButton(type: .system)
-    let loopButton = UIButton(type: .system)
+    let ccButton = UIButton(type: .system), speedButton = UIButton(type: .system)
+    let audioOnlyButton = UIButton(type: .system), loopButton = UIButton(type: .system)
+    let airPlayButton = AirPlayRouteButton(videoStyle: true)
+    let topControls = UIStackView()
+    var audioOnlyAvailable = false
 
     /// Repeat the current video instead of ending it. Per video, not per
     /// app: `resetVideoState()` clears it whenever another video loads.

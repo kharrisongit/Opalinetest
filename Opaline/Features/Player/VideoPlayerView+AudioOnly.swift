@@ -24,23 +24,14 @@ extension VideoPlayerView {
         )
         setAudioOnly(active: false, available: false)
         controlsView.addSubview(audioOnlyButton)
-        NSLayoutConstraint.activate([
-            audioOnlyButton.centerYAnchor.constraint(
-                equalTo: settingsButton.centerYAnchor
-            ),
-            audioOnlyButton.trailingAnchor.constraint(
-                equalTo: speedButton.leadingAnchor, constant: -4
-            ),
-            audioOnlyButton.widthAnchor.constraint(equalToConstant: 36),
-            audioOnlyButton.heightAnchor.constraint(equalToConstant: 36)
-        ])
     }
 
     /// Unavailable hides the button outright rather than greying it: a control
     /// that can never do anything for this video is noise, and the dimmed look
     /// is what "off" already means here.
     func setAudioOnly(active: Bool, available: Bool) {
-        audioOnlyButton.isHidden = !available
+        audioOnlyAvailable = available
+        audioOnlyButton.isHidden = !available || !PlayerControl.audioOnly.isVisible
         audioOnlyButton.tintColor = active ? ThemeManager.shared.accent : .white
         audioPlaceholderView.isHidden = !active
     }

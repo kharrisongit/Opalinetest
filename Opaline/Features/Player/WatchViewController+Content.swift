@@ -140,7 +140,7 @@ extension WatchViewController {
         fetchExternalServiceData(videoId: videoId)
         prefetchPlaylistOptions()
         resetComments()
-        loadComments()
+        loadInitialComments()
     }
 
     func applyChannelInfo(from page: WatchPage) {

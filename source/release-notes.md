@@ -1,8 +1,9 @@
 uTube by kharrison, based on Opaline by verback2308.
 
-- Type comments and replies directly in the comments list, then tap Send. No separate writing window or deliberate playback pause.
-- Replace the Google client-ID setup form with Connect YouTube for commenting. This uses a one-time website sign-in without registering uTube in Google Cloud. The unofficial connection may change or be blocked by YouTube; your existing viewing login is separate.
-- Keep drafts isolated by video and reply, prevent duplicate sends, and preserve text after failures. No automatic retries after an uncertain submission.
-- Use Apple's long-form AirPlay video routing and resume after temporary audio interruptions only when iOS permits and you have not paused or disconnected. Add playback diagnostics for investigating delayed TV stops.
+- AirPlay beside the settings gear on the main screens and at the top of videos, including Shorts.
+- Choose visible player buttons in Settings → Playback → Video controls. Audio Only is hidden by default; the settings gear stays available.
+- The bell now opens your YouTube notifications, with All and Replies tabs, using the account already connected for comments. Pull to refresh and load older notifications. Video notifications open in uTube, with linked comments passed to the comments list.
+- Remove feedback and support-development buttons; keep upstream credits in About.
+- Default to light appearance while preserving any explicitly saved theme. Rename the bottom Library tab to History.
 
-Update through the same AltStore source. The uTube name, custom icon, kharrison attribution and bundle identifier stay in place. Live account sign-in, posting, and a sustained AirPlay session on your receiver still need device testing; no live comment was posted during automated validation.
+The existing commenting connection and AirPlay background-playback behavior remain in place. YouTube notifications refresh in the app, not through a new push service. Notification text stays in memory and is cleared on account changes. The new inbox and AirPlay picker still need confirmation on your signed-in device and receiver.

@@ -7,6 +7,7 @@ import UIKit
 /// clipped by the tab bar or the display's rounded corners.
 final class ShortsOverlayView: UIView {
     let rail = ShortsActionRail()
+    private let airPlayButton = AirPlayRouteButton(videoStyle: true)
 
     private let scrim = GradientView()
     private let titleLabel = UILabel()
@@ -23,11 +24,32 @@ final class ShortsOverlayView: UIView {
         setupScrim()
         setupRail()
         setupText()
+        setupAirPlay()
     }
 
     @available(*, unavailable)
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+
+    private func setupAirPlay() {
+        airPlayButton.translatesAutoresizingMaskIntoConstraints = false
+        addSubview(airPlayButton)
+        NSLayoutConstraint.activate([
+            airPlayButton.topAnchor.constraint(equalTo: topAnchor, constant: 12),
+            airPlayButton.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16),
+            airPlayButton.widthAnchor.constraint(equalToConstant: 44),
+            airPlayButton.heightAnchor.constraint(equalToConstant: 44)
+        ])
+        NotificationCenter.default.addObserver(
+            self, selector: #selector(refreshAirPlay), name: PlayerControl.didChange, object: nil
+        )
+        refreshAirPlay()
+    }
+
+    @objc
+    private func refreshAirPlay() {
+        airPlayButton.isHidden = !PlayerControl.airPlay.isVisible
     }
 
     /// Taps pass through to the player everywhere except on the controls,

@@ -45,7 +45,7 @@ enum DefaultTab: Int, CaseIterable {
         case .shorts:
             return "shorts.shelf.title".localized
         case .library:
-            return "library.title".localized
+            return "library.history".localized
         }
     }
 }

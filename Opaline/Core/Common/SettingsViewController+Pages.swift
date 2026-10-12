@@ -58,8 +58,7 @@ extension SettingsViewController {
         }
     }
 
-    /// Category rows push a child page; `.notificationSettings` and
-    /// `.feedback` keep their existing handlers.
+    /// Category rows push a child page; account and notification rows keep their handlers.
     private var rootSections: [Section] {
         [
             Section(
@@ -73,13 +72,8 @@ extension SettingsViewController {
                 ]
             ),
             Section(
-                header: nil,
-                footer: nil,
-                rows: [.feedback, .support]
-            ),
-            Section(
                 header: "settings.section.about".localized,
-                footer: "settings.footer.about".localized,
+                footer: "settings.footer.about".localized + "\n\n" + "settings.credits".localized,
                 rows: [.aboutVersion, .aboutSystem, .aboutModel]
             )
         ]
@@ -134,7 +128,7 @@ extension SettingsViewController {
             Section(
                 header: "settings.section.videoQuality".localized,
                 footer: nil,
-                rows: [.quality, .qualityCellular]
+                rows: [.quality, .qualityCellular, .playerControls]
             ),
             Section(
                 header: nil,

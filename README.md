@@ -75,7 +75,7 @@ When Google dropped support for the official YouTube app on older devices, there
 - **Search & browse** — live suggestions, recent-search history, filters (sort, upload date, type, duration), channel pages, playlists
 - **Smart home feed** — endless recommendations with category chips read from your feed's shelves
 - **Subscriptions** — follow channels with a local subscription feed
-- **Notifications** — a bell in the top bar collects app news and new-version announcements, with the full release notes in the message; system notifications are optional and everything still collects in-app if you decline
+- **YouTube notifications** — the bell opens your YouTube inbox with All and Replies tabs, using the account connected for commenting. Pull to refresh or load older notifications. Video notifications open inside uTube; linked comments open the comments list. Notifications refresh while the app is active; this is not a YouTube push-notification service.
 - **Watch history** — progress indicators, synced across devices; a video resumes where you left it the moment you reopen it, without waiting for the server to catch up
 - **Autoplay** — automatically play the next related video, with replay, previous and next offered when one ends
 - **Auto theme** — follows system dark mode on iOS 13+, scheduled hours on iOS 12; manual override available
@@ -170,7 +170,7 @@ Install the `.ipa` package directly:
 ## Known Issues and Limitations
 
 - Playback speeds above 2x may cause issues
-- **Native commenting** — tap **Write a comment** above the comments list, or **Reply** below a comment. A native text editor shows the connected YouTube channel before you tap Post. Connect a separate commenting account in Settings after the one-time [Google setup](NATIVE_COMMENTING.md). Reading comments and playback do not need that setup. Comments require internet access and must be enabled by the creator. Drafts remain in memory while the app is running.
+- **Native commenting** — type directly beneath the comments list, or tap **Reply**, then **Send**. Connect YouTube once in Settings; no Google project or app registration is needed. The same connection supplies your YouTube notifications. Drafts remain in memory while the app is running. See [account and privacy details](NATIVE_COMMENTING.md).
 - Notification delivery is scheduled by iOS, which grants background time at its own discretion — expect news to arrive within hours of publication, not minutes, and not at all while Background App Refresh or Low Power Mode says otherwise
 - **Picture in Picture is limited by the system before iOS 15**, and no app can work around it: the window survives exactly one video, and switching to another one closes it and leaves audio playing — [the full findings are in issue #31](https://github.com/verback2308/Opaline/issues/31#issuecomment-5148224679)
   - Before iOS 14.2 the system only starts PiP by itself from **fullscreen**. Leaving the app while the video plays inline gives background audio instead — the PiP button works in both cases
@@ -325,3 +325,7 @@ This project is for educational and personal use. It is not affiliated with, end
 ## License
 
 [GNU General Public License v3.0](LICENSE) — any derivative work must also be released under GPLv3 with its full source code.
+
+### uTube controls
+
+AirPlay is available beside the settings gear on the main screens and at the top of videos, including Shorts. Settings → Playback → Video controls lets you show or hide AirPlay, speed, captions, Picture in Picture, repeat, and Audio Only. Audio Only is hidden by default; hiding a control does not change its playback mode. The player settings gear always remains available. Light is the default appearance; an explicitly saved appearance preference is retained. The bottom Library tab is labeled History, with Downloads and Playlists still inside it.
