@@ -30,7 +30,7 @@ enum BackgroundPlaybackService {
             // Background pause (when isEnabled=false) is handled in appDidEnterBackground.
             if #available(iOS 13.0, *) {
                 try session.setCategory(
-                    .playback, mode: .moviePlayback, routeSharingPolicy: .longFormVideo, options: []
+                    .playback, mode: .moviePlayback, policy: .longFormVideo, options: []
                 )
             } else {
                 try session.setCategory(.playback, mode: .moviePlayback)

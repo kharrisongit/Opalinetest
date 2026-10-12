@@ -43,6 +43,7 @@ extension VideoPlayerView {
         logPlaybackState("audio interruption \(type.rawValue)")
         switch type {
         case .began:
+            multitaskPause.systemPaused = false
             // AVPlayer may already have changed rate to zero before this notification arrives.
             let recentlyPlaying = CACurrentMediaTime() - interruption.lastPlayingAt < 1
                 && interruption.lastPlayingAt > multitaskPause.lastUserPause

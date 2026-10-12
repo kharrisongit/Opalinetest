@@ -77,7 +77,8 @@ extension VideoPlayerView {
     }
 
     private func resumeAfterSystemPause() {
-        guard !interruption.state.active, let player, player.rate == 0,
+        guard multitaskPause.systemPaused, !interruption.state.active,
+              let player, player.rate == 0,
               !isPiPActive, !isAirPlayActive,
               CACurrentMediaTime() - multitaskPause.lastUserPause > 0.5
         else {
