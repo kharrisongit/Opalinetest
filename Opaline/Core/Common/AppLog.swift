@@ -142,7 +142,7 @@ enum AppLog {
         let device = UIDevice.current
         log(
             "App",
-            "Opaline \(version) (\(build)) built \(buildTimestamp()) — \(hardwareModel())"
+            "uTube \(version) (\(build)) built \(buildTimestamp()) — \(hardwareModel())"
                 + ", \(device.systemName) \(device.systemVersion)"
         )
     }

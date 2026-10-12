@@ -28,6 +28,7 @@ final class SettingsViewController: UIViewController {
         case mainThreadWatchdog
         case shareLog
         case feedback, support
+        case commentingAccount
         case aboutVersion, aboutSystem, aboutModel
     }
     enum Page {
@@ -370,6 +371,8 @@ extension SettingsViewController: UITableViewDataSource, UITableViewDelegate {
             )
         case .notificationSettings:
             return makeDisclosureCell("settings.row.notifications".localized)
+        case .commentingAccount:
+            return makeDisclosureCell("nativeComments.account".localized)
         case .shareLog:
             return makeDisclosureCell("settings.row.shareLog".localized)
         case .feedback:
@@ -460,18 +463,20 @@ extension SettingsViewController: UITableViewDataSource, UITableViewDelegate {
         return true
     }
 
+    private func openExternalLink(_ url: URL?) {
+        if let url { UIApplication.shared.open(url) }
+    }
+
     private func handleDebugSelection(_ row: Row) -> Bool {
         switch row {
         case .shareLog:
             shareDebugLog()
         case .feedback:
-            if let url = AppURLs.Feedback.issues {
-                UIApplication.shared.open(url)
-            }
+            openExternalLink(AppURLs.Feedback.issues)
         case .support:
-            if let url = URL(string: AppURLs.Support.donate) {
-                UIApplication.shared.open(url)
-            }
+            openExternalLink(URL(string: AppURLs.Support.donate))
+        case .commentingAccount:
+            navigationController?.pushViewController(CommentAccountViewController(), animated: true)
         case .playbackChain, .solverEndpoint:
             showDebugPicker(for: row)
         case .resetIdentity:

@@ -29,6 +29,15 @@ jobs:
       - name: Check source publisher
         run: python3 -m unittest discover -s scripts -p 'test_update_source.py'
 
+      - name: Check native comments and AirPlay policies
+        run: |
+          swiftc Opaline/Core/API/Models/Comment.swift \
+            Opaline/Core/Commenting/CommentAPIModel.swift \
+            Opaline/Core/Commenting/CommentOAuthRequest.swift \
+            Opaline/Core/Playback/BackgroundPlaybackPolicy.swift \
+            scripts/native_comments_checks.swift -o "$RUNNER_TEMP/native-comments-checks"
+          "$RUNNER_TEMP/native-comments-checks"
+
       # The SwiftLint build phase runs --strict, so a newer linter on the image
       # can fail the build with rules the project has never seen; pin the
       # project's version. Xcode stays the image default: non-default Xcodes
@@ -123,16 +132,16 @@ jobs:
               gh api -X DELETE "repos/${{ github.repository }}/releases/$id"
             done
           gh release create "$VERSION" \
-            "Opaline_${VERSION}.ipa" \
-            "Opaline_${VERSION}_iphoneos-arm.deb" \
-            "Opaline_${VERSION}_iphoneos-arm64.deb" \
+            "uTube_${VERSION}.ipa" \
+            "uTube_${VERSION}_iphoneos-arm.deb" \
+            "uTube_${VERSION}_iphoneos-arm64.deb" \
             --draft \
-            --title "Opaline $VERSION — Kurtis's fork" \
+            --title "uTube $VERSION — kharrison" \
             --notes-file source/release-notes.md \
             --target "$GITHUB_SHA"
           gh release edit "$VERSION" --draft=false --latest
 
-          IPA="Opaline_${VERSION}.ipa"
+          IPA="uTube_${VERSION}.ipa"
           URL="https://github.com/${GITHUB_REPOSITORY}/releases/download/${VERSION}/${IPA}"
           curl --fail --location --head --retry 5 --retry-all-errors --retry-delay 3 "$URL"
           SIZE=$(stat -f%z "$IPA")
@@ -147,7 +156,7 @@ jobs:
             --date "$DATE" \
             --ipa "$IPA" \
             --notes-file source/release-notes.md \
-            --release-title "Kurtis's fork"
+            --release-title "uTube $VERSION — kharrison"
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add source/apps.json

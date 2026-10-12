@@ -13,13 +13,19 @@ extension WatchViewController {
         )
         backgroundEnteredAt = Date()
         // Layer/PiP background handling lives in VideoPlayerView.
-        guard !bgEnabled else {
+        guard !BackgroundPlaybackPolicy.shouldContinue(
+            backgroundEnabled: bgEnabled,
+            airPlayActive: videoPlayerView?.isAirPlayActive == true,
+            pipActive: videoPlayerView?.isPiPActive == true
+        ) else {
             return
         }
         // Auto-PiP may still be starting — pausing now would kill it, so the
         // decision waits a tick for the controller's real state.
         DispatchQueue.main.async { [weak self] in
-            guard self?.videoPlayerView?.isPiPActive != true else {
+            guard self?.videoPlayerView?.isPiPActive != true,
+                  self?.videoPlayerView?.isAirPlayActive != true
+            else {
                 return
             }
             self?.videoPlayerView?.player?.pause()

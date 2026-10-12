@@ -5,6 +5,7 @@ import UIKit
 extension UIViewController {
     private static func performSignOut() {
         OAuthClient.shared.signOut()
+        CommentAPIClient.shared.disconnect()
         UserProfileStore.shared.clear()
         AppCache.shared.clearHomeFeed()
         NotificationCenter.default.post(

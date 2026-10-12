@@ -1,4 +1,3 @@
-import SafariServices
 import UIKit
 
 /// The comments sheet a short opens. A flat top-level list — replies and
@@ -14,7 +13,7 @@ final class ShortsCommentsViewController: UIViewController {
     private var isLoading = false
     private var loadGeneration = 0
     var onWriteComment: (() -> Void)?
-    private lazy var writeButton = YouTubeCommentsBrowser.makeButton(
+    private lazy var writeButton = CommentComposerViewController.makeWriteButton(
         target: self, action: #selector(writeComment)
     )
 
@@ -156,9 +155,10 @@ extension ShortsCommentsViewController: UITableViewDataSource, UITableViewDelega
         let cell = tableView.dequeueReusableCell(
             withIdentifier: CommentCell.reuseId, for: indexPath
         )
-        (cell as? CommentCell)?.configure(
-            comments[indexPath.row], linkDelegate: self
-        )
+        let comment = comments[indexPath.row]
+        (cell as? CommentCell)?.configure(comment, linkDelegate: self) { [weak self] in
+            self?.showComposer(parent: comment)
+        }
         return cell
     }
 
@@ -176,26 +176,45 @@ extension ShortsCommentsViewController: UITableViewDataSource, UITableViewDelega
 
 extension ShortsCommentsViewController: UITextViewDelegate {}
 
-extension ShortsCommentsViewController: SFSafariViewControllerDelegate {
+extension ShortsCommentsViewController {
     @objc
     private func writeComment() {
-        guard presentedViewController == nil,
-              let browser = YouTubeCommentsBrowser.make(
-                  videoId: videoId, delegate: self
-              ) else {
-            return
-        }
-        onWriteComment?()
-        present(browser, animated: true)
+        showComposer(parent: nil)
     }
 
-    func safariViewControllerDidFinish(_ controller: SFSafariViewController) {
+    private func showComposer(parent: Comment?) {
+        guard presentedViewController == nil else {
+            return
+        }
+        let target = CommentPostTarget(
+            videoID: videoId, parentID: parent?.id, parentAuthor: parent?.authorName
+        )
+        let composer = CommentComposerViewController(target: target)
+        composer.onPosted = { [weak self] comment in
+            self?.didPost(comment, isReply: parent != nil)
+        }
+        let navigation = RotatingNavigationController(rootViewController: composer)
+        navigation.modalPresentationStyle = .fullScreen
+        onWriteComment?()
+        present(navigation, animated: true)
+    }
+    private func didPost(_ comment: Comment, isReply: Bool) {
         loadGeneration += 1
         isLoading = false
-        comments = []
-        continuation = nil
-        tableView.reloadData()
-        tableView.setContentOffset(.zero, animated: false)
-        loadNextPage()
+        spinner.stopAnimating()
+        if !isReply {
+            comments.insert(comment, at: 0)
+            tableView.reloadData()
+            tableView.setContentOffset(.zero, animated: false)
+        } else {
+            let alert = UIAlertController(
+                title: "nativeComments.posted".localized, message: nil, preferredStyle: .alert
+            )
+            alert.addAction(UIAlertAction(title: "common.close".localized, style: .default))
+            present(alert, animated: true)
+        }
+        UIAccessibility.post(
+            notification: .announcement, argument: "nativeComments.posted".localized
+        )
     }
 }

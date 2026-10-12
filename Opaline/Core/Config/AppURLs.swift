@@ -110,7 +110,7 @@ enum AppURLs {
     /// blank issue, so reports arrive shaped by the templates in
     /// `.github/ISSUE_TEMPLATE/` instead of as free text.
     enum Feedback {
-        static let issues = URL(string: "https://github.com/verback2308/Opaline/issues/new/choose")
+        static let issues = URL(string: "https://github.com/kharrisongit/Opalinetest/issues/new")
     }
 
     /// Remote GVS proof-of-origin (`pot`) provider — the `solver-server`'s

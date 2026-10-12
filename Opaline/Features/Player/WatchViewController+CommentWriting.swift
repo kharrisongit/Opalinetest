@@ -1,9 +1,8 @@
-import SafariServices
 import UIKit
 
-extension WatchViewController: SFSafariViewControllerDelegate {
+extension WatchViewController {
     func setupCommentWriting() {
-        let button = YouTubeCommentsBrowser.makeButton(
+        let button = CommentComposerViewController.makeWriteButton(
             target: self, action: #selector(writeComment)
         )
         commentsPanel.setHeaderButtons([button])
@@ -11,27 +10,52 @@ extension WatchViewController: SFSafariViewControllerDelegate {
 
     @objc
     private func writeComment() {
-        guard presentedViewController == nil,
-              let browser = YouTubeCommentsBrowser.make(
-                  videoId: initialVideo.id, delegate: self
-              ) else {
-            return
-        }
-        videoPlayerView?.player?.pause()
-        present(browser, animated: true)
+        showCommentComposer(parent: nil)
     }
 
-    func safariViewControllerDidFinish(_ controller: SFSafariViewController) {
-        // Safari cannot tell us whether a comment was submitted. Refresh
-        // without claiming success, and leave playback paused for the user.
-        let sortToken = commentSortOptions.first(where: \.isSelected)?.token
+    func showCommentComposer(parent: Comment?) {
+        guard presentedViewController == nil else {
+            return
+        }
+        let videoID = initialVideo.id
+        let target = CommentPostTarget(
+            videoID: videoID, parentID: parent?.id, parentAuthor: parent?.authorName
+        )
+        let composer = CommentComposerViewController(target: target)
+        composer.onPosted = { [weak self] comment in
+            guard let self, self.initialVideo.id == videoID else {
+                return
+            }
+            self.didPostComment(comment, parentID: parent?.id)
+        }
+        let navigation = RotatingNavigationController(rootViewController: composer)
+        navigation.modalPresentationStyle = .fullScreen
+        videoPlayerView?.multitaskPause.lastUserPause = CACurrentMediaTime()
+        videoPlayerView?.player?.pause()
+        present(navigation, animated: true)
+    }
+
+    private func didPostComment(_ comment: Comment, parentID: String?) {
+        // Insert the server-confirmed resource. A stale read must not replace it.
         commentsLoadGeneration += 1
         isLoadingComments = false
-        commentThreads = []
+        hasLoadedComments = true
         commentHeightCache = [:]
-        commentsContinuation = nil
-        commentsPreview = nil
-        commentsTableView.setContentOffset(.zero, animated: false)
-        loadComments(continuation: sortToken, isReload: true)
+        for index in commentThreads.indices {
+            commentThreads[index].isLoadingReplies = false
+        }
+        if let parentID,
+           let index = commentThreads.firstIndex(where: { $0.comment.id == parentID }) {
+            commentThreads[index].replies.append(comment)
+            commentThreads[index].isExpanded = true
+        } else if parentID == nil {
+            commentThreads.insert(CommentThread(comment: comment), at: 0)
+            commentsPreview = comment
+            commentsTableView.setContentOffset(.zero, animated: false)
+        }
+        renderComments()
+        UIAccessibility.post(
+            notification: .announcement, argument: "nativeComments.posted".localized
+        )
     }
 }

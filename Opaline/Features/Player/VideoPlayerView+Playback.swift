@@ -97,7 +97,6 @@ extension VideoPlayerView {
             }
         seekBar.setSegments(normalized)
     }
-
     // MARK: - Periodic Observer
 
     func addPeriodicObserver() {
@@ -122,7 +121,6 @@ extension VideoPlayerView {
             timeObserver = nil
         }
     }
-
     // MARK: - Player Observers
 
     func addPlayerObservers() {
@@ -132,6 +130,7 @@ extension VideoPlayerView {
         observeRate(on: player)
         observeTimeControl(on: player)
         observeDuration(on: player)
+        observeAirPlay(on: player)
     }
 
     private func observeRate(on player: AVPlayer) {
@@ -179,7 +178,6 @@ extension VideoPlayerView {
             break
         }
     }
-
     // MARK: - Stall Clock Resync
 
     /// A frame-accurate seek to the current position snaps the
@@ -246,11 +244,11 @@ extension VideoPlayerView {
     }
 
     func removePlayerObservers() {
+        airPlayObservation = nil
         rateObservation = nil
         statusObservation = nil
         timeControlObservation = nil
     }
-
     // MARK: - Progress
 
     func updateProgress(time: CMTime) {

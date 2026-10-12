@@ -11,6 +11,13 @@ enum BackgroundPlaybackService {
         }
     }
 
+    static func isAirPlayActive(player: AVPlayer?) -> Bool {
+        let airPlayRoute = AVAudioSession.sharedInstance().currentRoute.outputs.contains {
+            $0.portType == .airPlay
+        }
+        return player?.isExternalPlaybackActive == true || airPlayRoute
+    }
+
     /// Call on app launch and whenever the setting changes.
     static func apply() {
         // Default to enabled — user can disable in Settings.

@@ -257,6 +257,7 @@ final class VideoPlayerView: UIView {
     var pipIsStarting = false, playerNeedsRebuildForPiP = false, pipIsRestoring = false
     var duration: Double = 0
     var rateObservation: NSKeyValueObservation?
+    var airPlayObservation: NSKeyValueObservation?
     var statusObservation: NSKeyValueObservation?
     var timeControlObservation: NSKeyValueObservation?
 

@@ -82,6 +82,12 @@ final class MiniPlayerBar: UIView {
     /// panel is minimized. The main player view does the same.
     @objc
     private func appDidEnterBackground() {
+        guard player?.isExternalPlaybackActive != true else {
+            return
+        }
+        if #available(iOS 15.0, *) {
+            return
+        }
         playerLayer?.player = nil
     }
 

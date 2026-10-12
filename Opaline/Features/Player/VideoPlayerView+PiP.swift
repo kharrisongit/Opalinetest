@@ -4,6 +4,10 @@ import UIKit
 // MARK: - Picture in Picture
 
 extension VideoPlayerView {
+    var isAirPlayActive: Bool {
+        BackgroundPlaybackService.isAirPlayActive(player: player)
+    }
+
     /// Device support. The button is offered whenever the hardware allows it,
     /// regardless of the setting — the setting only governs *automatic* PiP.
     var isPiPAvailable: Bool {
@@ -45,7 +49,7 @@ extension VideoPlayerView {
     /// issued once the app is in the background is swallowed by AVKit without
     /// even a `failedToStart`.
     private var willAutoPiP: Bool {
-        guard isAutoPiPEnabled, isPiPAvailable else {
+        guard isAutoPiPEnabled, isPiPAvailable, !isAirPlayActive else {
             return false
         }
         if #available(iOS 14.2, *) {
@@ -93,12 +97,15 @@ extension VideoPlayerView {
     }
 
     func setupPiP() {
-        let available = isPiPAvailable && isAutoPiPEnabled
+        let available = isPiPAvailable && isAutoPiPEnabled && !isAirPlayActive
         setControlAvailability(
             pipButton,
             available: available
         )
         guard available else {
+            if isAirPlayActive, pipController?.isPictureInPictureActive == true {
+                pipController?.stopPictureInPicture()
+            }
             pipController = nil
             return
         }
@@ -134,7 +141,11 @@ extension VideoPlayerView {
     /// layer revives it, only a new player (i.e. another video).
     @objc
     func appDidEnterBackground() {
-        guard BackgroundPlaybackService.isEnabled else {
+        guard BackgroundPlaybackPolicy.shouldContinue(
+            backgroundEnabled: BackgroundPlaybackService.isEnabled,
+            airPlayActive: isAirPlayActive,
+            pipActive: isPiPActive
+        ) else {
             return
         }
         DispatchQueue.main.async { [weak self] in
@@ -143,6 +154,10 @@ extension VideoPlayerView {
     }
 
     private func enterBackgroundAudioMode(force: Bool = false) {
+        // AirPlay video owns this player; detaching its layer can disrupt the route.
+        guard player?.isExternalPlaybackActive != true else {
+            return
+        }
         // iOS 15+ keeps background audio alive through
         // `audiovisualBackgroundPlaybackPolicy`, so the layer never has to
         // give up its player — and PiP survives, lock screen included.
@@ -185,7 +200,7 @@ extension VideoPlayerView {
             playerLayer.player = player
         }
         // We are the frontmost app again: undo the multitasking pause.
-        if multitaskPause.systemPaused, !isPiPActive {
+        if multitaskPause.systemPaused, !isPiPActive, !isAirPlayActive {
             multitaskPause.systemPaused = false
             if player.rate == 0 {
                 player.play()
@@ -244,4 +259,15 @@ extension VideoPlayerView {
         }
         pip.startPictureInPicture()
     }
+}
+
+extension VideoPlayerView {
+    func observeAirPlay(on player: AVPlayer) {
+        airPlayObservation = player.observe(
+            \.isExternalPlaybackActive, options: [.new]
+        ) { [weak self] _, _ in
+            DispatchQueue.main.async { self?.setupPiP() }
+        }
+    }
+
 }

@@ -1,16 +1,16 @@
-> **Kurtis’s fork — AltStore Classic**
+> **kharrison’s fork — AltStore Classic**
 >
 > Add this source in **AltStore → Sources → +**:
 >
 > `https://raw.githubusercontent.com/kharrisongit/Opalinetest/main/source/apps.json`
 >
-> Install **Opaline** from **Kurtis’s Opaline**. The source lists only this fork’s published builds. It stays empty until the first successful build publishes an IPA. To create that first build, open [Build IPA](https://github.com/kharrisongit/Opalinetest/actions/workflows/build-release.yml), enable workflows if GitHub asks, and choose **Run workflow → main**. Successful builds publish the release and update the source automatically. AltStore performs signing during installation; AltServer may need to be running for your AltStore setup.
+> Install **uTube** from **uTube by kharrison**. If this source is already installed, refresh Sources and update the app in AltStore. Successful builds publish the release and update the source automatically. AltStore signs the app during installation; AltServer may need to be running for your setup.
 >
 > This fork retains Opaline’s original bundle identifier so it can update an existing Opaline installation. It installs as the same app, not a second copy. Original project and credits: [verback2308/Opaline](https://github.com/verback2308/Opaline).
 
 <div align="center">
 
-# Opaline
+# uTube
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="source/logo-dark.png">
@@ -19,14 +19,14 @@
 
 **A lightweight, native YouTube client for iOS 12+. No ads, no tracking, no dependencies.**
 
-[![Latest release](https://img.shields.io/github/v/release/verback2308/Opaline?label=release&color=blue)](https://github.com/kharrisongit/Opalinetest/releases/latest)
-[![Downloads](https://img.shields.io/github/downloads/verback2308/Opaline/total?color=brightgreen)](https://github.com/verback2308/Opaline/releases)
+[![Latest release](https://img.shields.io/github/v/release/kharrisongit/Opalinetest?label=release&color=blue)](https://github.com/kharrisongit/Opalinetest/releases/latest)
+[![Downloads](https://img.shields.io/github/downloads/kharrisongit/Opalinetest/total?color=brightgreen)](https://github.com/kharrisongit/Opalinetest/releases)
 ![iOS 12+](https://img.shields.io/badge/iOS-12%2B-lightgrey?logo=apple)
 [![License: GPL v3](https://img.shields.io/badge/license-GPLv3-blue)](LICENSE)
 
 </div>
 
-<sub>Opaline was released as YTLite until August. It was renamed to avoid confusion with an unrelated tweak of the same name and is not related to it.</sub>
+<sub>uTube is maintained by kharrison and based on [Opaline by verback2308](https://github.com/verback2308/Opaline). Original GPL license and credits are retained.</sub>
 
 <div align="center">
 
@@ -64,7 +64,7 @@ When Google dropped support for the official YouTube app on older devices, there
 - **Kids content** — plays videos the standard API sources refuse, via a dedicated playback source
 - **Offline downloads** — save a video to the device and watch it with no network. Its page comes along: thumbnail, description, like counts and the comments as of the moment you saved it. Settings → Downloads picks the quality, how many comments and which subtitle languages travel with it, and a video that plays dubbed in your language is saved dubbed
 - **Pinch to zoom** — fill the screen in fullscreen with a pinch, or turn on Zoom to Fill to do it automatically
-- **Background audio** — continue listening with the screen off
+- **Background audio and AirPlay** — continue playback when leaving the app or locking the screen; active AirPlay is kept separate from automatic PiP
 - **Media controls** — play/pause and next/previous video from Control Center, the lock screen and headphones
 - **Picture-in-Picture** — watch while using other apps
 - **SponsorBlock** — skip sponsored segments automatically
@@ -122,7 +122,7 @@ When Google dropped support for the official YouTube app on older devices, there
 
 ## Installation
 
-Opaline runs on devices with **iOS 12 and above**.
+uTube runs on devices with **iOS 12 and above**.
 
 For older hardware — armv7 devices on iOS 9.3, such as the iPad 2, iPad 3, iPad mini and iPhone 4S — [Joeviocoe/Opaline](https://github.com/Joeviocoe/Opaline) is a downport by another developer, with hardware-keyboard support and account-free local subscriptions and history. It is a separate project: we do not build, test or support it.
 
@@ -130,7 +130,7 @@ For older hardware — armv7 devices on iOS 9.3, such as the iPad 2, iPad 3, iPa
 
 **Option 1 — Add source (recommended)**
 
-Add the Opaline source to your sideloading app to receive automatic updates:
+Add the uTube source to your sideloading app to receive automatic updates:
 
 <a href="https://stikstore.app/altdirect/?url=https://raw.githubusercontent.com/kharrisongit/Opalinetest/main/source/apps.json"><img src="https://github.com/StikStore/altdirect/raw/main/assets/png/AltSource_Blue.png" height="55" alt="Add Source"></a>
 
@@ -151,7 +151,7 @@ cp Config/Local.xcconfig.example Config/Local.xcconfig
 
 **Option 1 — Cydia/Sileo repo (recommended)**
 
-Add the repo to your package manager to install Opaline and receive automatic updates:
+The upstream repository installs the original Opaline. For this uTube fork, download its `.deb` files from this repository’s releases. The upstream package repository is:
 
 ```
 https://verback2308.github.io/repo/
@@ -170,7 +170,7 @@ Install the `.ipa` package directly:
 ## Known Issues and Limitations
 
 - Playback speeds above 2x may cause issues
-- **Commenting** — open a video's or Short's comments panel and tap **Comment on YouTube**. YouTube opens inside Opaline; open its Comments section to write or reply, and sign in there if asked. This browser sign-in is separate from Opaline's account sign-in. Tap **Done** to return and refresh the native comment list. Posting requires an internet connection and must be enabled by the video's creator; new comments may take time to appear. The native list still supports browsing, sorting and reading replies.
+- **Native commenting** — tap **Write a comment** above the comments list, or **Reply** below a comment. A native text editor shows the connected YouTube channel before you tap Post. Connect a separate commenting account in Settings after the one-time [Google setup](NATIVE_COMMENTING.md). Reading comments and playback do not need that setup. Comments require internet access and must be enabled by the creator. Drafts remain in memory while the app is running.
 - Notification delivery is scheduled by iOS, which grants background time at its own discretion — expect news to arrive within hours of publication, not minutes, and not at all while Background App Refresh or Low Power Mode says otherwise
 - **Picture in Picture is limited by the system before iOS 15**, and no app can work around it: the window survives exactly one video, and switching to another one closes it and leaves audio playing — [the full findings are in issue #31](https://github.com/verback2308/Opaline/issues/31#issuecomment-5148224679)
   - Before iOS 14.2 the system only starts PiP by itself from **fullscreen**. Leaving the app while the video plays inline gives background audio instead — the PiP button works in both cases
@@ -307,7 +307,7 @@ Please follow the existing code style. SwiftLint is configured and runs as a bui
 
 ## Support
 
-If Opaline keeps your old device alive, you can support development:
+To support the original Opaline developer, you can support development:
 
 <a href="https://buymeacoffee.com/verback2308" target="_blank" rel="noopener noreferrer"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-violet.png" alt="Buy me a coffee" height="45"></a>
 

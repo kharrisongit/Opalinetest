@@ -130,7 +130,10 @@ final class PlayerSheetView: UIView {
             buttonStack.bottomAnchor.constraint(
                 equalTo: buttonRow.bottomAnchor, constant: -12
             ),
-            buttonStack.heightAnchor.constraint(equalToConstant: 36)
+            buttonStack.trailingAnchor.constraint(
+                lessThanOrEqualTo: buttonRow.trailingAnchor, constant: -16
+            ),
+            buttonStack.heightAnchor.constraint(greaterThanOrEqualToConstant: 44)
         ])
     }
 

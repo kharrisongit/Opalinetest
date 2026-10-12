@@ -13,7 +13,7 @@ struct CommentThread {
     var isLoadingReplies = false
 
     var hasReplies: Bool {
-        comment.replyContinuation != nil
+        comment.replyContinuation != nil || !replies.isEmpty
     }
 
     /// Label of the row that expands or collapses this thread.

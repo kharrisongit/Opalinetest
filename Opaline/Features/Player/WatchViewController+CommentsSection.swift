@@ -137,7 +137,15 @@ private extension WatchViewController {
             for: indexPath
         ) as? CommentCell
             ?? CommentCell(style: .default, reuseIdentifier: CommentCell.reuseId)
-        cell.configure(comment, linkDelegate: self, isReply: isReply)
+        let parent = isReply
+            ? commentThreads.first { $0.replies.contains { $0.id == comment.id } }?.comment
+            : comment
+        cell.configure(comment, linkDelegate: self, isReply: isReply) { [weak self] in
+            guard let parent else {
+                return
+            }
+            self?.showCommentComposer(parent: parent)
+        }
         return cell
     }
 

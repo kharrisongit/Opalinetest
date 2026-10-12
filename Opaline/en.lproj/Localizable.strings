@@ -193,8 +193,6 @@
 
 /* Comments section header */
 "player.comments.title" = "Comments";
-"player.comments.writeOnYouTube" = "Comment on YouTube";
-"player.comments.writeHint" = "Opens YouTube inside Opaline. Open Comments and sign in if asked to write a comment.";
 /* Comments header with count; %1$d = number of comments */
 "player.comments.titleCount" = "Comments (%1$d)";
 /* Shown while comments load */
@@ -598,3 +596,50 @@
 "settings.thumbnailQuality.maximum" = "Maximum (1280×720)";
 "settings.footer.thumbnailQuality" = "Auto picks a level from the amount of memory your device has. Higher quality means larger downloads and more memory per thumbnail, which can slow scrolling on devices with little RAM.";
 "player.error.noSources" = "No playback sources are enabled. Turn one on in Settings → Debug → Playback sources.";
+
+// Native commenting
+"nativeComments.write" = "Write a comment";
+"nativeComments.reply" = "Reply";
+"nativeComments.post" = "Post";
+"nativeComments.prompt" = "Your comment";
+"nativeComments.account" = "Commenting account";
+"nativeComments.clientID" = "Google iOS client ID";
+"nativeComments.connect" = "Connect Google account";
+"nativeComments.disconnect" = "Disconnect commenting account";
+"nativeComments.connecting" = "Connecting…";
+"nativeComments.notConnected" = "Connect an account to post comments.";
+"nativeComments.connectToPost" = "Connect your commenting account";
+"nativeComments.postingAs" = "Posting as %@ · Manage account";
+"nativeComments.replyingTo" = "Reply to %@";
+"nativeComments.posting" = "Posting…";
+"nativeComments.posted" = "Comment posted.";
+"nativeComments.justNow" = "Just now";
+"nativeComments.publicNotice" = "Your comment will be public on YouTube.";
+"nativeComments.privacy" = "Google handles sign-in. uTube stores posting tokens in the device Keychain. Your playback account is separate. Disconnect removes the tokens from this device.";
+"nativeComments.setupHelp" = "This personal build needs a Google iOS client ID once. Enable YouTube Data API v3 in your Google project, add your Google account as a test user, and create an iOS OAuth client using the installed bundle ID shown below. Paste its client ID below, then connect. Full instructions are in the repository’s NATIVE_COMMENTING.md. No client secret is needed.";
+"nativeComments.error.setup" = "Enter a valid Google iOS client ID ending in .apps.googleusercontent.com.";
+"nativeComments.error.signedOut" = "Connect your commenting account again, then tap Post. Your draft is still here.";
+"nativeComments.error.noChannel" = "This Google account has no YouTube channel. Create a channel on YouTube or connect a different account.";
+"nativeComments.error.callback" = "Google sign-in could not be verified. Please connect again.";
+"nativeComments.error.scope" = "Google did not grant permission to post comments. Connect again and allow the requested YouTube permission.";
+"nativeComments.error.response" = "Google returned an incomplete response. Please try again.";
+"nativeComments.error.storage" = "The account could not be saved securely. Unlock your device and connect again.";
+"nativeComments.error.cancelled" = "Sign-in was cancelled.";
+"nativeComments.error.busy" = "Sign-in is already open or could not start. Please try again.";
+"nativeComments.error.uncertain" = "Could not confirm whether YouTube received your comment. Your draft is saved. Check the comments before posting again to avoid a duplicate.";
+"nativeComments.error.network" = "Could not reach Google. Check your connection; your draft is still here.";
+"nativeComments.error.commentsDisabled" = "Comments are disabled for this video.";
+"nativeComments.error.commentTextTooLong" = "YouTube says this comment is too long. Shorten it and try again.";
+"nativeComments.error.commentTextRequired" = "Write something before posting.";
+"nativeComments.error.videoNotFound" = "This video is unavailable to the connected account.";
+"nativeComments.error.parentCommentNotFound" = "That comment is no longer available.";
+"nativeComments.error.operationNotSupported" = "YouTube does not allow a reply to this comment.";
+"nativeComments.error.quotaExceeded" = "This Google project has reached its YouTube API quota. Try later. Your draft is saved.";
+"nativeComments.error.dailyLimitExceeded" = "This Google project has reached its daily API limit. Your draft is saved.";
+"nativeComments.error.accessNotConfigured" = "Enable YouTube Data API v3 in the Google project for this client ID.";
+"nativeComments.error.ineligibleAccount" = "This Google account cannot post comments. Connect an account with a YouTube channel.";
+"nativeComments.error.forbidden" = "YouTube did not allow this comment. Check your account permissions and whether replies are enabled.";
+"nativeComments.error.invalid_grant" = "Google authorization expired or was revoked. Connect your commenting account again.";
+"nativeComments.error.generic" = "YouTube could not complete the request. Your draft is saved. Check your Google setup and try again.";
+
+"nativeComments.bundleID" = "Installed bundle ID: %@";

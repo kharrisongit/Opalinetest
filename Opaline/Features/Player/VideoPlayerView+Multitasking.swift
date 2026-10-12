@@ -36,6 +36,7 @@ extension VideoPlayerView {
         }
         let now = CACurrentMediaTime()
         guard !isPiPActive,
+              !isAirPlayActive,
               !hasPlayedToEnd,
               UIApplication.shared.applicationState == .active,
               now - multitaskPause.lastUserPause > 0.5
@@ -64,6 +65,7 @@ extension VideoPlayerView {
     /// the delay, so the order of the two notifications does not matter.
     @objc
     func audioRouteChanged(_ note: Notification) {
+        DispatchQueue.main.async { [weak self] in self?.setupPiP() }
         let raw = note.userInfo?[AVAudioSessionRouteChangeReasonKey] as? UInt
         guard raw == AVAudioSession.RouteChangeReason.oldDeviceUnavailable.rawValue
         else {
@@ -73,7 +75,7 @@ extension VideoPlayerView {
     }
 
     private func resumeAfterSystemPause() {
-        guard let player, player.rate == 0, !isPiPActive,
+        guard let player, player.rate == 0, !isPiPActive, !isAirPlayActive,
               CACurrentMediaTime() - multitaskPause.lastUserPause > 0.5
         else {
             return

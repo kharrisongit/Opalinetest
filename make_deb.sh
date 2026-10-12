@@ -18,8 +18,8 @@ APP_NAME="Opaline"
 PROJECT="Opaline.xcodeproj"
 SCHEME="Opaline"
 PACKAGE_ID="com.verback.ytlite"
-HOMEPAGE="https://github.com/verback2308/ytlite"
-ICON_URL="https://raw.githubusercontent.com/verback2308/ytlite/main/source/icon.png"
+HOMEPAGE="https://github.com/kharrisongit/Opalinetest"
+ICON_URL="https://raw.githubusercontent.com/kharrisongit/Opalinetest/main/source/icon.png"
 
 if [ -z "${APP_PATH:-}" ]; then
   BUILD_DIR=$(xcodebuild \
@@ -47,7 +47,7 @@ build_deb() {
   # offering upgrades, and putting that on the releases page under a project
   # called Opaline confuses far more people than the broken convention does.
   # Nothing resolves packages by filename -- APT follows Filename: in the index.
-  local OUTPUT="${APP_NAME}_${VERSION}_${ARCH}.deb"
+  local OUTPUT="uTube_${VERSION}_${ARCH}.deb"
   local STAGE
   STAGE=$(mktemp -d)
   local DATA="$STAGE/data" CTRL="$STAGE/control"
@@ -60,14 +60,14 @@ build_deb() {
 
   cat > "$CTRL/control" <<EOF
 Package: $PACKAGE_ID
-Name: $APP_NAME
+Name: uTube
 Version: $VERSION
 Architecture: $ARCH
 Section: Applications
 Priority: optional
 Depends: firmware (>= $MIN_FW)
 Installed-Size: $SIZE_KB
-Maintainer: verback2308
+Maintainer: kharrison
 Author: verback2308
 Homepage: $HOMEPAGE
 Icon: $ICON_URL

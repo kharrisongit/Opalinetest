@@ -47,7 +47,7 @@ BUILD_SETTINGS=$(xcodebuild \
 
 BUILD_DIR=$(echo "$BUILD_SETTINGS" | grep "^ *BUILT_PRODUCTS_DIR" | head -1 | awk -F' = ' '{print $2}')
 VERSION="${IPA_VERSION:-$(echo "$BUILD_SETTINGS" | grep "^ *MARKETING_VERSION" | head -1 | awk -F' = ' '{print $2}')}"
-OUTPUT="${APP_NAME}_${VERSION}.ipa"
+OUTPUT="uTube_${VERSION}.ipa"
 
 APP_PATH="$BUILD_DIR/$APP_NAME.app"
 

@@ -10,7 +10,9 @@ final class CommentCell: UITableViewCell {
     static let replyIndent: CGFloat = 44
 
     private let content = CommentContentView()
+    private let replyButton = UIButton(type: .system)
     private var leading: NSLayoutConstraint?
+    private var onReply: (() -> Void)?
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -20,16 +22,20 @@ final class CommentCell: UITableViewCell {
         // text on white.
         backgroundColor = .clear
         contentView.backgroundColor = .clear
-        contentView.addSubview(content)
-        let leading = content.leadingAnchor.constraint(
+        let stack = UIStackView(arrangedSubviews: [content, replyButton])
+        stack.axis = .vertical
+        stack.translatesAutoresizingMaskIntoConstraints = false
+        contentView.addSubview(stack)
+        setupReplyButton()
+        let leading = stack.leadingAnchor.constraint(
             equalTo: contentView.leadingAnchor, constant: 16
         )
         self.leading = leading
         NSLayoutConstraint.activate([
-            content.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 12),
+            stack.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 12),
             leading,
-            content.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
-            content.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -6)
+            stack.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
+            stack.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -6)
         ])
     }
 
@@ -41,10 +47,37 @@ final class CommentCell: UITableViewCell {
     func configure(
         _ comment: Comment,
         linkDelegate: UITextViewDelegate,
-        isReply: Bool = false
+        isReply: Bool = false,
+        onReply: (() -> Void)? = nil
     ) {
         leading?.constant = isReply ? 16 + Self.replyIndent : 16
         content.configure(comment, linkDelegate: linkDelegate, isReply: isReply)
+        self.onReply = onReply
+        replyButton.isHidden = onReply == nil
+        replyButton.tintColor = ThemeManager.shared.accent
+        replyButton.accessibilityLabel = "nativeComments.replyingTo".localized(
+            with: comment.authorName
+        )
+    }
+
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        onReply = nil
+        replyButton.isHidden = true
+    }
+
+    private func setupReplyButton() {
+        replyButton.setTitle("nativeComments.reply".localized, for: .normal)
+        replyButton.contentHorizontalAlignment = .leading
+        replyButton.titleLabel?.font = .systemFont(ofSize: 14, weight: .semibold)
+        replyButton.contentEdgeInsets = UIEdgeInsets(top: 12, left: 44, bottom: 12, right: 12)
+        replyButton.addTarget(self, action: #selector(reply), for: .touchUpInside)
+        replyButton.isHidden = true
+    }
+
+    @objc
+    private func reply() {
+        onReply?()
     }
 }
 
