@@ -71,10 +71,9 @@ final class CommentAPIClient: NSObject {
                 guard case .success(let response) = result else {
                     throw CommentAPIError(reason: isCommentWrite ? "uncertain" : "network")
                 }
-                if isCommentWrite, response.status >= 500 {
-                    throw CommentAPIError(reason: "uncertain")
-                }
-                return try CommentAPIModel.json(data: response.data, status: response.status)
+                return try CommentAPIModel.json(
+                    data: response.data, status: response.status, isCommentWrite: isCommentWrite
+                )
             }
             DispatchQueue.main.async { completion(parsed) }
         }

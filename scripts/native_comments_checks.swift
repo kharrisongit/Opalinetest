@@ -88,6 +88,12 @@ enum NativeCommentsChecks {
         try expect(try CommentAPIModel.createdComment(returned, isReply: true).id == "confirmed", "Reply response")
         try rejects("uncertain") { _ = try CommentAPIModel.createdComment(["id": "missing-text"], isReply: true) }
         try rejects("response") { _ = try CommentAPIModel.json(data: Data("not JSON".utf8), status: 200) }
+        try rejects("uncertain") {
+            _ = try CommentAPIModel.json(data: Data("not JSON".utf8), status: 200, isCommentWrite: true)
+        }
+        try rejects("uncertain") {
+            _ = try CommentAPIModel.json(data: Data(), status: 503, isCommentWrite: true)
+        }
         try rejects("signedOut") { _ = try CommentAPIModel.json(data: Data(), status: 401) }
         let failure = Data(#"{"error":{"errors":[{"reason":"commentsDisabled"}]}}"#.utf8)
         try rejects("commentsDisabled") { _ = try CommentAPIModel.json(data: failure, status: 403) }

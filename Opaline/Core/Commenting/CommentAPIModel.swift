@@ -87,7 +87,12 @@ enum CommentAPIModel {
         )
     }
 
-    static func json(data: Data, status: Int) throws -> [String: Any] {
+    static func json(
+        data: Data, status: Int, isCommentWrite: Bool = false
+    ) throws -> [String: Any] {
+        if isCommentWrite, status >= 500 {
+            throw CommentAPIError(reason: "uncertain")
+        }
         let json = (try? JSONSerialization.jsonObject(with: data)) as? [String: Any] ?? [:]
         guard (200 ... 299).contains(status) else {
             if status == 401 {
@@ -100,7 +105,7 @@ enum CommentAPIModel {
             throw CommentAPIError(reason: reason)
         }
         guard !json.isEmpty else {
-            throw CommentAPIError(reason: "response")
+            throw CommentAPIError(reason: isCommentWrite ? "uncertain" : "response")
         }
         return json
     }
