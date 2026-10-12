@@ -17,6 +17,7 @@ concurrency:
 
 jobs:
   update-source:
+    if: ${{ !startsWith(github.event.release.tag_name, 'ldr-') }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
@@ -53,6 +54,7 @@ jobs:
             --size "$SIZE" \
             --date "$PUBLISHED_AT" \
             --ipa "$IPA" \
+            --replace-bundle-id com.verback.YTLite \
             --notes-file "$NOTES_FILE" \
             --release-title "$RELEASE_TITLE"
 

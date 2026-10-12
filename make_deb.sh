@@ -1,8 +1,8 @@
 #!/bin/bash
 # make_deb.sh — packages the app built by make_ipa.sh into Cydia/Sileo .deb files
 # Usage: ./make_ipa.sh && ./make_deb.sh
-# Output: Opaline_<version>_iphoneos-arm.deb   (rootful,  /Applications)
-#         Opaline_<version>_iphoneos-arm64.deb (rootless, /var/jb/Applications)
+# Output: uTube_<version>_iphoneos-arm.deb   (rootful,  /Applications)
+#         uTube_<version>_iphoneos-arm64.deb (rootless, /var/jb/Applications)
 #
 # Requires only stock macOS tools (bsdtar + ar) — no dpkg needed. The app is
 # taken as-is from the build products, so it carries the fixed ad-hoc
@@ -17,9 +17,10 @@ set -e
 APP_NAME="Opaline"
 PROJECT="Opaline.xcodeproj"
 SCHEME="Opaline"
-PACKAGE_ID="com.verback.ytlite"
-HOMEPAGE="https://github.com/kharrisongit/Opalinetest"
-ICON_URL="https://raw.githubusercontent.com/kharrisongit/Opalinetest/main/source/icon.png"
+PACKAGE_ID="com.kharrison.utube"
+INSTALL_APP_NAME="uTube"
+HOMEPAGE="https://github.com/kharrisongit/utube"
+ICON_URL="https://raw.githubusercontent.com/kharrisongit/utube/main/source/utube-icon.png"
 
 if [ -z "${APP_PATH:-}" ]; then
   BUILD_DIR=$(xcodebuild \
@@ -42,18 +43,13 @@ VERSION="${DEB_VERSION:-$(plutil -extract CFBundleShortVersionString raw -o - "$
 # $1 = architecture, $2 = install prefix ("" rootful, /var/jb rootless), $3 = min firmware
 build_deb() {
   local ARCH="$1" PREFIX="$2" MIN_FW="$3"
-  # Named after the app rather than after PACKAGE_ID, which Debian convention
-  # would use: the id is frozen at the pre-rename com.verback.ytlite so APT keeps
-  # offering upgrades, and putting that on the releases page under a project
-  # called Opaline confuses far more people than the broken convention does.
-  # Nothing resolves packages by filename -- APT follows Filename: in the index.
   local OUTPUT="uTube_${VERSION}_${ARCH}.deb"
   local STAGE
   STAGE=$(mktemp -d)
   local DATA="$STAGE/data" CTRL="$STAGE/control"
 
   mkdir -p "$DATA$PREFIX/Applications" "$CTRL"
-  cp -R "$APP_PATH" "$DATA$PREFIX/Applications/"
+  cp -R "$APP_PATH" "$DATA$PREFIX/Applications/$INSTALL_APP_NAME.app"
 
   local SIZE_KB
   SIZE_KB=$(du -sk "$DATA" | cut -f1)
@@ -68,17 +64,17 @@ Priority: optional
 Depends: firmware (>= $MIN_FW)
 Installed-Size: $SIZE_KB
 Maintainer: kharrison
-Author: verback2308
+Author: kharrison
 Homepage: $HOMEPAGE
 Icon: $ICON_URL
-Description: Lightweight YouTube client for iOS 12+
- SponsorBlock, Return YouTube Dislike, up to 1080p playback, background
- audio, PiP, subtitles. No ads, no tracking, no dependencies.
+Description: uTube, a personal YouTube client for iOS 12+
+ Inline comments, YouTube notifications, custom Home layouts, AirPlay,
+ downloads, and background audio. Based on Opaline by verback2308.
 EOF
 
   cat > "$CTRL/postinst" <<EOF
 #!/bin/sh
-uicache -p "$PREFIX/Applications/$APP_NAME.app" 2>/dev/null || uicache -a || true
+uicache -p "$PREFIX/Applications/$INSTALL_APP_NAME.app" 2>/dev/null || uicache -a || true
 exit 0
 EOF
 

@@ -77,7 +77,7 @@ final class VideoRouter {
         tabBar.installPlayerPanel(newPanel)
     }
 
-    /// Opens a video known only by id — e.g. a `ytlite://` deep link or a
+    /// Opens a video known only by id — e.g. a `utube://` deep link or a
     /// tapped youtube.com link. `seconds` is the link's own timecode
     /// (`?t=87`), which outranks stored watch progress, and `isShort` sends
     /// it to the vertical feed instead of the watch screen. Presents on the

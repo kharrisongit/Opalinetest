@@ -40,10 +40,10 @@ def release_url(download_url, version):
     return download_url
 
 
-def news_title(version, release_title, app_name="Opaline"):
+def news_title(version, release_title, app_name="uTube"):
     """The GitHub release title, prefixed with the app name (and the
     version, when the author included neither); bare/empty titles fall
-    back to 'Opaline <version>'."""
+    back to '<app name> <version>'."""
     title = (release_title or "").strip()
     if not title or title == version:
         return f"{app_name} {version}"
@@ -58,7 +58,7 @@ def news_title(version, release_title, app_name="Opaline"):
 
 def prepend_news(data, app, args, notes):
     entry = {
-        "title": news_title(args.version, args.release_title, app.get("name", "Opaline")),
+        "title": news_title(args.version, args.release_title, app.get("name", "uTube")),
         "identifier": f"{app['bundleIdentifier']}.release-{args.version}",
         "caption": news_caption(notes),
         "date": args.date,
@@ -110,6 +110,7 @@ def main():
     parser.add_argument("--file", default="source/apps.json")
     parser.add_argument("--app-template", default="source/app.json")
     parser.add_argument("--ipa", help="Validate identity and read build metadata from this IPA")
+    parser.add_argument("--replace-bundle-id", help="Retire a previous app identity after validating the new IPA")
     args = parser.parse_args()
 
     notes = DEFAULT_NOTES
@@ -126,8 +127,6 @@ def main():
     if len(matches) > 1:
         raise ValueError("Source has duplicate app bundle identifiers")
     app = matches[0] if matches else template
-    if not matches:
-        apps.append(app)
     if args.size <= 0:
         raise ValueError("IPA size must be positive")
 
@@ -141,6 +140,20 @@ def main():
     }
     if args.ipa:
         entry.update(ipa_metadata(args.ipa, app, args.version, args.size))
+    if args.replace_bundle_id:
+        if not args.ipa or args.replace_bundle_id == template["bundleIdentifier"]:
+            raise ValueError("Replacing an identity requires a validated IPA with a different identifier")
+        # Never relabel old binaries as the new app: their bundle IDs would
+        # fail AltStore validation and they could overwrite the upstream app.
+        retired_index = next((i for i, item in enumerate(apps)
+                              if item.get("bundleIdentifier") == args.replace_bundle_id), len(apps))
+        apps = [item for item in apps if item.get("bundleIdentifier") != args.replace_bundle_id]
+        data["news"] = [item for item in data.get("news", [])
+                        if item.get("appID") != args.replace_bundle_id]
+        if not matches:
+            apps.insert(min(retired_index, len(apps)), app)
+    elif not matches:
+        apps.append(app)
     older = [v for v in app.get("versions", []) if v.get("version") != args.version]
     app["versions"] = [entry] + older
     data["apps"] = apps

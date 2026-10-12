@@ -12,8 +12,8 @@ enum YouTubeLinkParser {
         guard let host = url.host?.lowercased() else {
             return nil
         }
-        if url.scheme?.lowercased() == "ytlite" {
-            // ytlite://watch?v=VIDEOID — host is "watch" for this shape.
+        if url.scheme?.lowercased() == "utube" {
+            // utube://watch?v=VIDEOID — host is "watch" for this shape.
             return queryValue(url, name: "v")
         }
         guard isYouTubeHost(host) else {
@@ -53,7 +53,7 @@ enum YouTubeLinkParser {
     /// The playlist a link points at — the `list` of a `/playlist` page, or
     /// the one a watch link carries alongside the video.
     static func playlistId(from url: URL) -> String? {
-        guard url.scheme?.lowercased() == "ytlite"
+        guard url.scheme?.lowercased() == "utube"
             || (url.host.map { isYouTubeHost($0.lowercased()) } ?? false)
         else {
             return nil
@@ -62,7 +62,7 @@ enum YouTubeLinkParser {
     }
 
     /// Whether the link points at a short — `/shorts/ID`, or the `shorts=1`
-    /// a `ytlite://` link carries it over with. The watch screen and the
+    /// a `utube://` link carries it over with. The watch screen and the
     /// vertical feed are different destinations, so the shape of the original
     /// link has to survive the trip through the deep link.
     static func isShort(_ url: URL) -> Bool {

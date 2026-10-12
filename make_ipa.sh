@@ -1,7 +1,7 @@
 #!/bin/bash
 # make_ipa.sh — builds a distributable IPA for jailbroken devices (AppSync + Filza)
 # Usage: ./make_ipa.sh
-# Output: Opaline_<version>.ipa in the project root
+# Output: uTube_<version>.ipa in the project root
 #
 # Env overrides (all optional; used by .github/workflows/build-release.yml):
 #   IPA_VERSION            version for the filename + CFBundleShortVersionString
@@ -16,7 +16,7 @@ set -e
 APP_NAME="Opaline"
 PROJECT="Opaline.xcodeproj"
 SCHEME="Opaline"
-RELEASE_BUNDLE_ID="com.verback.YTLite"
+RELEASE_BUNDLE_ID="com.kharrison.utube"
 SOURCE_JSON="source/apps.json"
 BUILD_LOG=$(mktemp)
 
@@ -83,12 +83,9 @@ for dylib in "$APP_PATH/Frameworks/"*.dylib; do
   xcrun bitcode_strip -r "$dylib" -o "$dylib"
 done
 
-# Sign with a FIXED application-identifier: keychain items on jailbroken
-# installs are keyed to it, so it must never change between releases (changing
-# it logs every AppSync user out once). It is an arbitrary string for ad-hoc
-# signing — no Apple registration involved — and is intentionally independent
-# of the dev bundle id in Local.xcconfig. Normalized from the accidental
-# "WD55N799QB.…YTLite.test" of 1.4.0/1.4.1 to the main team; frozen since.
+# A stable ad-hoc identifier isolates uTube's Keychain from Opaline.
+# UTUBE00000 is a packaging placeholder, not an Apple development team.
+# AltStore replaces these signing identifiers with the installing user's team.
 # A local (signed) build embeds the dev provisioning profile; CI builds with
 # CODE_SIGNING_ALLOWED=NO do not. It names the dev certificate while the
 # signature below is ad-hoc, and installd rejects that pair with 0xe800801c.
@@ -102,9 +99,9 @@ cat > "$ENTITLEMENTS" <<'EOF'
 <plist version="1.0">
 <dict>
 	<key>application-identifier</key>
-	<string>4RAT6786W6.com.verback.YTLite</string>
+	<string>UTUBE00000.com.kharrison.utube</string>
 	<key>com.apple.developer.team-identifier</key>
-	<string>4RAT6786W6</string>
+	<string>UTUBE00000</string>
 	<key>get-task-allow</key>
 	<true/>
 </dict>
@@ -122,7 +119,7 @@ done
 if [ -d "$APPEX_PATH" ]; then
   rm -f "$APPEX_PATH/embedded.mobileprovision"
   APPEX_ENTITLEMENTS=$(mktemp).plist
-  sed 's|com.verback.YTLite<|com.verback.YTLite.OpenIn<|' "$ENTITLEMENTS" \
+  sed 's|com.kharrison.utube<|com.kharrison.utube.OpenIn<|' "$ENTITLEMENTS" \
     > "$APPEX_ENTITLEMENTS"
   codesign -f -s - --entitlements "$APPEX_ENTITLEMENTS" "$APPEX_PATH" 2>/dev/null \
     && echo "  codesign (extension): ok" \
@@ -168,7 +165,7 @@ rm -rf "$TMP"
 
 IPA_SIZE=$(stat -f%z "$OUTPUT" 2>/dev/null || stat -c%s "$OUTPUT" 2>/dev/null)
 DATE=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
-REPO_URL="https://github.com/${GITHUB_REPOSITORY:-kharrisongit/Opalinetest}"
+REPO_URL="https://github.com/${GITHUB_REPOSITORY:-kharrisongit/utube}"
 DOWNLOAD_URL="$REPO_URL/releases/download/${VERSION}/${OUTPUT}"
 
 if [ "${UPDATE_SOURCE:-1}" = "1" ]; then
@@ -179,6 +176,7 @@ if [ "${UPDATE_SOURCE:-1}" = "1" ]; then
     --size "$IPA_SIZE" \
     --date "$DATE" \
     --ipa "$OUTPUT" \
+    --replace-bundle-id com.verback.YTLite \
     --file "$SOURCE_JSON"
 fi
 

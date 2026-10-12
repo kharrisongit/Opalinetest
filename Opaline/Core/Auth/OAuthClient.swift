@@ -21,7 +21,7 @@ final class OAuthClient {
     private let scope =
         "http://gdata.youtube.com " +
         "https://www.googleapis.com/auth/youtube-paid-content"
-    let keychainService = "com.ytvlite.oauth"
+    let keychainService = "com.kharrison.utube.oauth"
     let keychainAccount = "youtube"
     var tokens: OAuthTokens?
     var isSignedIn: Bool { tokens != nil }

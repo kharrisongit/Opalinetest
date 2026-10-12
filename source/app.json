@@ -1,20 +1,13 @@
 {
   "name": "uTube",
-  "bundleIdentifier": "com.verback.YTLite",
-  "developerName": "kharrison · Based on Opaline by verback2308",
+  "bundleIdentifier": "com.kharrison.utube",
+  "developerName": "kharrison",
   "subtitle": "Native YouTube viewing and commenting",
-  "localizedDescription": "Watch YouTube with AirPlay, background playback, downloads, and custom Home layouts. Read and write comments and replies inline using your connected YouTube account, and view your YouTube notifications. Maintained by kharrison, based on Opaline by verback2308. For AltStore Classic.",
+  "localizedDescription": "A personal YouTube client with inline comments and replies, a YouTube inbox, Wall and Carousel Home layouts, AirPlay, background playback, downloads, and customizable controls. Light mode by default. Installs alongside Opaline as its own app; existing Opaline settings and sign-in do not transfer. Maintained by kharrison, based on Opaline by verback2308. For AltStore Classic.",
   "iconURL": "https://raw.githubusercontent.com/kharrisongit/utube/main/source/utube-icon.png",
   "tintColor": "FF0000",
   "category": "entertainment",
   "minOSVersion": "12.0",
-  "screenshots": [
-    "https://raw.githubusercontent.com/kharrisongit/utube/main/screenshots/app/iphone/dark/recommendations.jpeg",
-    "https://raw.githubusercontent.com/kharrisongit/utube/main/screenshots/app/iphone/dark/player.jpeg",
-    "https://raw.githubusercontent.com/kharrisongit/utube/main/screenshots/app/iphone/dark/channel.jpeg",
-    "https://raw.githubusercontent.com/kharrisongit/utube/main/screenshots/app/iphone/dark/subscriptions.jpeg",
-    "https://raw.githubusercontent.com/kharrisongit/utube/main/screenshots/app/iphone/dark/settings.jpeg"
-  ],
   "appPermissions": {
     "entitlements": [
       "application-identifier",

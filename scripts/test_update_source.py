@@ -21,12 +21,12 @@ class UpdateSourceTests(unittest.TestCase):
         self.ipa = self.root / "Opaline.ipa"
         self.feed.write_text(json.dumps({"name": "Test source", "apps": [], "news": []}))
         self.template.write_text(json.dumps({
-            "name": "Opaline", "bundleIdentifier": "com.verback.YTLite",
+            "name": "uTube", "bundleIdentifier": "com.kharrison.utube",
             "developerName": "Test", "iconURL": "https://example.com/icon.png",
         }))
         self.write_ipa()
 
-    def write_ipa(self, bundle="com.verback.YTLite", version="1.12.1"):
+    def write_ipa(self, bundle="com.kharrison.utube", version="1.12.1"):
         with zipfile.ZipFile(self.ipa, "w") as archive:
             archive.writestr("Payload/Opaline.app/Info.plist", plistlib.dumps({
                 "CFBundleIdentifier": bundle,
@@ -34,14 +34,14 @@ class UpdateSourceTests(unittest.TestCase):
                 "CFBundleVersion": "123", "MinimumOSVersion": "12.0",
             }))
 
-    def publish(self, size=None):
+    def publish(self, size=None, extra=()):
         return subprocess.run([
             sys.executable, str(SCRIPT), "--file", str(self.feed),
             "--app-template", str(self.template), "--ipa", str(self.ipa),
             "--version", "1.12.1", "--size", str(size or self.ipa.stat().st_size),
             "--date", "2026-10-12T06:30:00Z", "--download-url",
-            "https://github.com/kharrisongit/Opalinetest/releases/download/1.12.1/Opaline.ipa",
-        ], capture_output=True, text=True, check=False)
+            "https://github.com/kharrisongit/utube/releases/download/1.12.1/Opaline.ipa",
+        ] + list(extra), capture_output=True, text=True, check=False)
 
     def test_first_release_populates_empty_source(self):
         result = self.publish()
@@ -55,7 +55,7 @@ class UpdateSourceTests(unittest.TestCase):
         self.assertEqual(latest["downloadURL"], app["downloadURL"])
         self.assertEqual(data["news"][0]["appID"], app["bundleIdentifier"])
         self.assertEqual(data["news"][0]["url"],
-                         "https://github.com/kharrisongit/Opalinetest/releases/tag/1.12.1")
+                         "https://github.com/kharrisongit/utube/releases/tag/1.12.1")
 
     def test_fork_name_and_icon_are_preserved(self):
         template = json.loads(self.template.read_text())
@@ -87,6 +87,39 @@ class UpdateSourceTests(unittest.TestCase):
         data = json.loads(self.feed.read_text())
         self.assertEqual(len(data["apps"][0]["versions"]), 1)
         self.assertEqual(len(data["news"]), 1)
+
+    def legacy_source(self):
+        legacy = {"name": "uTube", "bundleIdentifier": "com.verback.YTLite",
+                  "versions": [{"version": "1.12.0", "downloadURL": "https://example.com/old.ipa"}]}
+        other = {"name": "Dragonrider", "bundleIdentifier": "com.kharrison.lastdragonrider",
+                 "versions": [{"version": "1.0.1", "size": 99}]}
+        game_news = {"identifier": "game-update", "appID": other["bundleIdentifier"]}
+        self.feed.write_text(json.dumps({"name": "kharrison Apps", "apps": [legacy, other],
+                             "news": [{"identifier": "old", "appID": legacy["bundleIdentifier"]}, game_news]}))
+        return other, game_news
+
+    def test_new_identity_retires_old_binaries_and_preserves_game(self):
+        other, game_news = self.legacy_source()
+        extra = ["--replace-bundle-id", "com.verback.YTLite"]
+        result = self.publish(extra=extra)
+        self.assertEqual(result.returncode, 0, result.stderr)
+        data = json.loads(self.feed.read_text())
+        self.assertEqual(data["name"], "kharrison Apps")
+        self.assertEqual(len(data["apps"]), 2)
+        self.assertEqual(data["apps"][1], other)
+        self.assertEqual(data["apps"][0]["bundleIdentifier"], "com.kharrison.utube")
+        self.assertEqual([v["version"] for v in data["apps"][0]["versions"]], ["1.12.1"])
+        self.assertEqual(data["news"][1:], [game_news])
+        self.assertEqual(self.publish(extra=extra).returncode, 0)
+        self.assertEqual(json.loads(self.feed.read_text()), data)
+
+    def test_old_identity_is_not_retired_if_new_binary_is_wrong(self):
+        self.legacy_source()
+        original = self.feed.read_bytes()
+        self.write_ipa(bundle="com.verback.YTLite")
+        result = self.publish(extra=["--replace-bundle-id", "com.verback.YTLite"])
+        self.assertNotEqual(result.returncode, 0)
+        self.assertEqual(self.feed.read_bytes(), original)
 
     def test_rejects_wrong_app_without_changing_source(self):
         original = self.feed.read_bytes()

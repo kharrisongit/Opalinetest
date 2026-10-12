@@ -28,7 +28,7 @@ check("https://www.youtube.com/shorts/dQw4w9WgXcQ", expect: "dQw4w9WgXcQ")
 check("https://www.youtube.com/live/dQw4w9WgXcQ?feature=share", expect: "dQw4w9WgXcQ")
 check("https://www.youtube.com/embed/dQw4w9WgXcQ", expect: "dQw4w9WgXcQ")
 check("https://m.youtube.com/watch?v=dQw4w9WgXcQ", expect: "dQw4w9WgXcQ")
-check("ytlite://watch?v=dQw4w9WgXcQ", expect: "dQw4w9WgXcQ")
+check("utube://watch?v=dQw4w9WgXcQ", expect: "dQw4w9WgXcQ")
 check("https://www.youtube.com/watch?v=dQw4w9WgXcQ&t=1m30s", expect: "dQw4w9WgXcQ")
 check("https://youtu.be/UsPIfGgwZYw?si=pb1j5tEy7zsTPi8W&t=87", expect: "UsPIfGgwZYw")
 check("https://youtube.com/shorts/LdGE7FOnE8o?is=kKCMiXDHg8UqtTb8", expect: "LdGE7FOnE8o")
@@ -39,7 +39,8 @@ check("https://www.youtube.com/watch", expect: nil)
 check("https://example.com/watch?v=dQw4w9WgXcQ", expect: nil)
 check("https://example.com/shorts/dQw4w9WgXcQ", expect: nil)
 check("not a url at all", expect: nil)
-check("ytlite://watch", expect: nil)
+check("ytlite://watch?v=dQw4w9WgXcQ", expect: nil)
+check("utube://watch", expect: nil)
 check("https://www.youtube.com/", expect: nil)
 
 // Timecodes
@@ -48,7 +49,7 @@ checkStart("https://youtu.be/dQw4w9WgXcQ?t=87s", expect: 87)
 checkStart("https://www.youtube.com/watch?v=dQw4w9WgXcQ&t=1m30s", expect: 90)
 checkStart("https://www.youtube.com/watch?v=dQw4w9WgXcQ&t=1h2m3s", expect: 3723)
 checkStart("https://www.youtube.com/embed/dQw4w9WgXcQ?start=15", expect: 15)
-checkStart("ytlite://watch?v=dQw4w9WgXcQ&t=87", expect: 87)
+checkStart("utube://watch?v=dQw4w9WgXcQ&t=87", expect: 87)
 checkStart("https://youtu.be/dQw4w9WgXcQ", expect: nil)
 checkStart("https://youtu.be/dQw4w9WgXcQ?t=0", expect: nil)
 checkStart("https://youtu.be/dQw4w9WgXcQ?t=abc", expect: nil)
@@ -64,10 +65,10 @@ func checkShort(_ urlString: String, expect: Bool, line: UInt = #line) {
 checkShort("https://www.youtube.com/shorts/dQw4w9WgXcQ", expect: true)
 checkShort("https://www.youtube.com/shorts/dQw4w9WgXcQ?si=abc", expect: true)
 checkShort("https://youtube.com/shorts/LdGE7FOnE8o?is=kKCMiXDHg8UqtTb8", expect: true)
-checkShort("ytlite://watch?v=dQw4w9WgXcQ&shorts=1", expect: true)
+checkShort("utube://watch?v=dQw4w9WgXcQ&shorts=1", expect: true)
 checkShort("https://www.youtube.com/watch?v=dQw4w9WgXcQ", expect: false)
 checkShort("https://youtu.be/dQw4w9WgXcQ", expect: false)
-checkShort("ytlite://watch?v=dQw4w9WgXcQ", expect: false)
+checkShort("utube://watch?v=dQw4w9WgXcQ", expect: false)
 
 func checkList(_ urlString: String, expect: String?, line: UInt = #line) {
     let url = URL(string: urlString)
@@ -84,9 +85,10 @@ checkList(
     expect: "PL2VOasSfo6Yu"
 )
 checkList("https://www.youtube.com/watch?v=dQw4w9WgXcQ&list=PL123", expect: "PL123")
-checkList("ytlite://playlist?list=PL123", expect: "PL123")
+checkList("utube://playlist?list=PL123", expect: "PL123")
 checkList("https://youtu.be/dQw4w9WgXcQ", expect: nil)
 checkList("https://example.com/playlist?list=PL123", expect: nil)
+checkList("ytlite://playlist?list=PL123", expect: nil)
 
 func checkMix(_ urlString: String, expect: String?, line: UInt = #line) {
     let url = URL(string: urlString)
@@ -99,7 +101,7 @@ func checkMix(_ urlString: String, expect: String?, line: UInt = #line) {
 
 // Mixes play, they have no page
 checkMix("https://youtube.com/playlist?list=RDtB9TKsU22wU", expect: "tB9TKsU22wU")
-checkMix("ytlite://playlist?list=RDtB9TKsU22wU", expect: "tB9TKsU22wU")
+checkMix("utube://playlist?list=RDtB9TKsU22wU", expect: "tB9TKsU22wU")
 checkMix("https://youtube.com/playlist?list=RDMMdQw4w9WgXcQ", expect: nil)
 checkMix("https://youtube.com/playlist?list=PL2VOasSfo6Yu", expect: nil)
 

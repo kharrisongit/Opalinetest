@@ -10,6 +10,6 @@
 //                      so the scheme's slashes are split with `$()`, which
 //                      expands to nothing.
 
-PRODUCT_BUNDLE_IDENTIFIER = com.example.YourApp
+PRODUCT_BUNDLE_IDENTIFIER = com.kharrison.utube
 DEVELOPMENT_TEAM =
-APP_MANIFEST_URL = https:/$()/raw.githubusercontent.com/kharrisongit/Opalinetest/main/source/apps.json
+APP_MANIFEST_URL = https:/$()/raw.githubusercontent.com/kharrisongit/utube/main/source/apps.json

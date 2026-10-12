@@ -4,7 +4,7 @@ import UIKit
 /// The extension runs in its own process with no console of its own, so what
 /// it did is only ever visible in the device log.
 private let shareLog = OSLog(
-    subsystem: "com.verback.YTLite.OpenIn", category: "share"
+    subsystem: "com.kharrison.utube.OpenIn", category: "share"
 )
 
 /// `UIApplication.open(_:options:completionHandler:)` is hidden from
@@ -21,8 +21,8 @@ private protocol URLOpening {
     )
 }
 
-/// Share-sheet entry: rewrites the shared youtube.com link to `ytlite://`
-/// and hands it to Opaline. No UI — it opens the app and dismisses itself.
+/// Share-sheet entry: rewrites the shared youtube.com link to `utube://`
+/// and hands it to uTube. No UI — it opens the app and dismisses itself.
 final class ShareViewController: UIViewController {
     private var didFinish = false
 
@@ -41,7 +41,7 @@ final class ShareViewController: UIViewController {
             }
             guard let url, let deepLink = self.deepLink(for: url) else {
                 os_log(
-                    "Opaline share: no video id in %{public}@",
+                    "uTube share: no video id in %{public}@",
                     log: shareLog,
                     type: .error,
                     url?.absoluteString ?? "nothing shared"
@@ -58,14 +58,14 @@ final class ShareViewController: UIViewController {
     private func deepLink(for url: URL) -> URL? {
         let list = YouTubeLinkParser.playlistId(from: url)
         guard let videoId = YouTubeLinkParser.videoId(from: url) else {
-            return list.flatMap { URL(string: "ytlite://playlist?list=\($0)") }
+            return list.flatMap { URL(string: "utube://playlist?list=\($0)") }
         }
         let playlist = list.map { "&list=\($0)" } ?? ""
         let seconds = YouTubeLinkParser.startSeconds(from: url)
         let timecode = seconds.map { "&t=\(Int($0))" } ?? ""
         let shorts = YouTubeLinkParser.isShort(url) ? "&shorts=1" : ""
         return URL(
-            string: "ytlite://watch?v=\(videoId)" + timecode + shorts + playlist
+            string: "utube://watch?v=\(videoId)" + timecode + shorts + playlist
         )
     }
 
@@ -76,7 +76,7 @@ final class ShareViewController: UIViewController {
         let attachments = (extensionContext?.inputItems as? [NSExtensionItem] ?? [])
             .flatMap { $0.attachments ?? [] }
         os_log(
-            "Opaline share: %{public}d attachment(s): %{public}@",
+            "uTube share: %{public}d attachment(s): %{public}@",
             log: shareLog,
             type: .info,
             attachments.count,
@@ -88,7 +88,7 @@ final class ShareViewController: UIViewController {
         }
         match.0.loadItem(forTypeIdentifier: match.1, options: nil) { item, error in
             os_log(
-                "Opaline share: loaded %{public}@ as %{public}@, error %{public}@",
+                "uTube share: loaded %{public}@ as %{public}@, error %{public}@",
                 log: shareLog,
                 type: .info,
                 match.1,
@@ -107,7 +107,7 @@ final class ShareViewController: UIViewController {
     private func open(_ url: URL) {
         extensionContext?.open(url) { [weak self] opened in
             os_log(
-                "Opaline share: context open %{public}@ -> %{public}d",
+                "uTube share: context open %{public}@ -> %{public}d",
                 log: shareLog,
                 type: .info,
                 url.absoluteString,
@@ -147,7 +147,7 @@ final class ShareViewController: UIViewController {
             if current.isKind(of: UIApplication.self),
                current.responds(to: selector) {
                 os_log(
-                    "Opaline share: opened via responder chain",
+                    "uTube share: opened via responder chain",
                     log: shareLog,
                     type: .info
                 )
@@ -158,7 +158,7 @@ final class ShareViewController: UIViewController {
             responder = current.next
         }
         os_log(
-            "Opaline share: no way to open the app",
+            "uTube share: no way to open the app",
             log: shareLog,
             type: .error
         )

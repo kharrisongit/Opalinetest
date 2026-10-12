@@ -30,6 +30,9 @@ jobs:
       - name: Check source publisher
         run: python3 -m unittest discover -s scripts -p 'test_update_source.py'
 
+      - name: Check uTube links
+        run: bash scripts/check_youtube_link_parser.sh
+
       - name: Check native comments and AirPlay policies
         run: |
           swiftc Opaline/Core/API/Models/Comment.swift \
@@ -138,6 +141,11 @@ jobs:
       - name: Build Cydia/Sileo debs
         run: ./make_deb.sh
 
+      - name: Check standalone app identity
+        env:
+          VERSION: ${{ steps.version.outputs.version }}
+        run: python3 scripts/check_utube_identity.py --check-signatures "uTube_${VERSION}.ipa" "uTube_${VERSION}_iphoneos-arm.deb" "uTube_${VERSION}_iphoneos-arm64.deb"
+
       - name: Publish release and AltStore source
         env:
           GH_TOKEN: ${{ github.token }}
@@ -175,6 +183,7 @@ jobs:
             --size "$SIZE" \
             --date "$DATE" \
             --ipa "$IPA" \
+            --replace-bundle-id com.verback.YTLite \
             --notes-file source/release-notes.md \
             --release-title "uTube $VERSION — kharrison"
           git config user.name "github-actions[bot]"

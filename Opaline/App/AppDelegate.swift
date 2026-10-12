@@ -10,7 +10,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     private let dependencies = AppDependencies.live()
     /// Built during the splash, handed over by `showMain`.
     private var preloadedMain: UIViewController?
-    /// A `ytlite://` or youtube.com link that arrived while the splash or
+    /// A `utube://` or youtube.com link that arrived while the splash or
     /// auth screen was still up — replayed once `showMain` puts the tab
     /// bar on screen. See `AppDelegate+DeepLink.swift`.
     var pendingDeepLink: URL?

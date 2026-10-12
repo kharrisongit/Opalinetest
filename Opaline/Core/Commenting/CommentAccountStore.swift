@@ -5,7 +5,7 @@ enum CommentAccountStore {
     private static var query: [String: Any] {
         [
             kSecClass as String: kSecClassGenericPassword,
-            kSecAttrService as String: "com.kharrisongit.opaline.native-comments",
+            kSecAttrService as String: "com.kharrison.utube.native-comments",
             kSecAttrAccount as String: "google-oauth"
         ]
     }

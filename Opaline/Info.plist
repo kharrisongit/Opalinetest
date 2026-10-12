@@ -110,10 +110,10 @@
 	<array>
 		<dict>
 			<key>CFBundleURLName</key>
-			<string>com.verback.YTLite.deeplink</string>
+			<string>com.kharrison.utube.deeplink</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>ytlite</string>
+				<string>utube</string>
 			</array>
 		</dict>
 	</array>
