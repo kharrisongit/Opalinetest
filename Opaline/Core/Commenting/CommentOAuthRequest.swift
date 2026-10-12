@@ -39,10 +39,11 @@ struct CommentOAuthRequest {
         let allowed = CharacterSet(
             charactersIn: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-._~"
         )
-        let body = fields.sorted { $0.key < $1.key }.map { key, value in
+        let sorted = fields.sorted { $0.key < $1.key }
+        let components = sorted.map { key, value in
             "\(key)=\(value.addingPercentEncoding(withAllowedCharacters: allowed) ?? "")"
-        }.joined(separator: "&")
-        return Data(body.utf8)
+        }
+        return Data(components.joined(separator: "&").utf8)
     }
 
     private static func randomValue() throws -> String {
@@ -101,5 +102,4 @@ struct CommentOAuthRequest {
             "grant_type": "authorization_code", "redirect_uri": redirect
         ]
     }
-
 }

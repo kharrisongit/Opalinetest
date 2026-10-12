@@ -269,5 +269,4 @@ extension VideoPlayerView {
             DispatchQueue.main.async { self?.setupPiP() }
         }
     }
-
 }
