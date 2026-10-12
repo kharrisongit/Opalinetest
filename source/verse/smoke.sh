@@ -6,7 +6,7 @@ DEVICE=$(xcrun simctl list devices available -j | python3 -c 'import json,sys; d
 xcrun simctl boot "$DEVICE" || true
 xcrun simctl bootstatus "$DEVICE" -b
 xcrun simctl install "$DEVICE" build/simulator/Verse.app
-xcrun simctl launch "$DEVICE" com.kharrison.verse
+xcrun simctl launch "$DEVICE" com.kharrison.verse --smoke-test
 sleep 4
 xcrun simctl spawn "$DEVICE" launchctl list | grep com.kharrison.verse
 xcrun simctl io "$DEVICE" screenshot build/verse-screenshot.png

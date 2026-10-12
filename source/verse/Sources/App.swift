@@ -68,7 +68,7 @@ final class LibraryController: UITableViewController, UISearchResultsUpdating {
     }
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        if !UserDefaults.standard.bool(forKey: "welcomed") {
+        if !UserDefaults.standard.bool(forKey: "welcomed") && !ProcessInfo.processInfo.arguments.contains("--smoke-test") {
             UserDefaults.standard.set(true, forKey: "welcomed")
             message("A home for your next song", "Create a lyric with the compose button. Use Notebooks to organize songs and ideas. Select a word in the editor, then tap Rhyme. Connect an iCloud Drive folder in Settings to sync across devices.")
         } else if let error = store.loadError { message("Storage needs attention", error) }

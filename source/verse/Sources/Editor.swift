@@ -25,7 +25,7 @@ final class EditorController: UIViewController, UITextViewDelegate, UITextFieldD
         text.spellCheckingType = .yes; text.autocorrectionType = UserDefaults.standard.bool(forKey: "autocorrect") ? .yes : .no
         text.smartQuotesType = .yes; text.smartDashesType = .yes; text.backgroundColor = .clear
         let bar = UIToolbar(); bar.sizeToFit()
-        bar.items = [UIBarButtonItem(title: "+ Section", style: .plain, target: self, action: #selector(section)), UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil), UIBarButtonItem(image: UIImage(systemName: "checkmark.abc"), style: .plain, target: self, action: #selector(spelling)), UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil), UIBarButtonItem(image: UIImage(systemName: "keyboard.chevron.compact.down"), style: .plain, target: self, action: #selector(closeKeyboard))]
+        bar.items = [UIBarButtonItem(title: "+ Section", style: .plain, target: self, action: #selector(section)), UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil), UIBarButtonItem(title: "Spelling", style: .plain, target: self, action: #selector(spelling)), UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil), UIBarButtonItem(image: UIImage(systemName: "keyboard.chevron.compact.down"), style: .plain, target: self, action: #selector(closeKeyboard))]
         bar.items?[2].accessibilityLabel = "Check spelling"; bar.items?.last?.accessibilityLabel = "Dismiss keyboard"
         text.inputAccessoryView = bar
         meta.font = .preferredFont(forTextStyle: .caption1); meta.textColor = .secondaryLabel; meta.numberOfLines = 2
@@ -37,7 +37,7 @@ final class EditorController: UIViewController, UITextViewDelegate, UITextFieldD
         ])
         updateMeta()
         observers.append(NotificationCenter.default.addObserver(forName: Notification.Name("verseFlush"), object: nil, queue: .main) { [weak self] _ in self?.flush() })
-        observers.append(NotificationCenter.default.addObserver(forName: .verseChanged, object: nil, queue: .main) { [weak self] _ in self?.updateMeta() })
+        observers.append(NotificationCenter.default.addObserver(forName: .verseChanged, object: nil, queue: .main) { [weak self] _ in self?.receiveSyncedChanges() })
     }
     deinit { pending?.cancel(); observers.forEach(NotificationCenter.default.removeObserver) }
     override func viewWillDisappear(_ animated: Bool) { super.viewWillDisappear(animated); flush() }
@@ -53,6 +53,18 @@ final class EditorController: UIViewController, UITextViewDelegate, UITextFieldD
         var next = note.edited(); next.title = String((titleField.text ?? "").prefix(1000)); next.body = text.text ?? ""
         do { try VerseStore.shared.save(next); note = next; dirty = false; updateMeta(); return true }
         catch { meta.text = "Couldn’t save. Your text is still here: \(error.localizedDescription)"; return false }
+    }
+    private func receiveSyncedChanges() {
+        let heads = VerseStore.shared.heads.filter { $0.noteID == note.noteID }
+        // Refresh an unedited open lyric, while leaving simultaneous branches intact.
+        if !dirty, heads.count == 1, let current = heads.first, !current.deleted, current.id != note.id {
+            let selection = text.selectedRange
+            note = current; titleField.text = current.title; text.text = current.body
+            let length = (current.body as NSString).length
+            let start = min(selection.location, length)
+            text.selectedRange = NSRange(location: start, length: min(selection.length, length - start))
+        }
+        updateMeta()
     }
     private func updateMeta() {
         title = note.notebook
