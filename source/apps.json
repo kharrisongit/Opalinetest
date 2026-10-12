@@ -34,6 +34,15 @@
       },
       "versions": [
         {
+          "version": "1.12.5",
+          "date": "2026-10-12T08:42:51Z",
+          "localizedDescription": "uTube by kharrison, based on Opaline by verback2308.\n\n- AirPlay beside the settings gear on the main screens and at the top of videos, including Shorts.\n- Choose visible player buttons in Settings → Playback → Video controls. Audio Only is hidden by default; the settings gear stays available.\n- The bell now opens your YouTube notifications, with All and Replies tabs, using the account already connected for comments. Pull to refresh and load older notifications. Video notifications open in uTube, with linked comments passed to the comments list.\n- Remove feedback and support-development buttons; keep upstream credits in About.\n- Default to light appearance while preserving any explicitly saved theme. Rename the bottom Library tab to History.\n\nThe existing commenting connection and AirPlay background-playback behavior remain in place. YouTube notifications refresh in the app, not through a new push service. Notification text stays in memory and is cleared on account changes. The new inbox and AirPlay picker still need confirmation on your signed-in device and receiver.",
+          "downloadURL": "https://github.com/kharrisongit/Opalinetest/releases/download/1.12.5/uTube_1.12.5.ipa",
+          "size": 10972469,
+          "minOSVersion": "12.0",
+          "buildVersion": "616"
+        },
+        {
           "version": "1.12.4",
           "date": "2026-10-12T08:14:34Z",
           "localizedDescription": "uTube by kharrison, based on Opaline by verback2308.\n\n- Type comments and replies directly in the comments list, then tap Send. No separate writing window or deliberate playback pause.\n- Replace the Google client-ID setup form with Connect YouTube for commenting. This uses a one-time website sign-in without registering uTube in Google Cloud. The unofficial connection may change or be blocked by YouTube; your existing viewing login is separate.\n- Keep drafts isolated by video and reply, prevent duplicate sends, and preserve text after failures. No automatic retries after an uncertain submission.\n- Use Apple's long-form AirPlay video routing and resume after temporary audio interruptions only when iOS permits and you have not paused or disconnected. Add playback diagnostics for investigating delayed TV stops.\n\nUpdate through the same AltStore source. The uTube name, custom icon, kharrison attribution and bundle identifier stay in place. Live account sign-in, posting, and a sustained AirPlay session on your receiver still need device testing; no live comment was posted during automated validation.",
@@ -79,14 +88,23 @@
           "buildVersion": "603"
         }
       ],
-      "version": "1.12.4",
-      "versionDate": "2026-10-12T08:14:34Z",
-      "versionDescription": "uTube by kharrison, based on Opaline by verback2308.\n\n- Type comments and replies directly in the comments list, then tap Send. No separate writing window or deliberate playback pause.\n- Replace the Google client-ID setup form with Connect YouTube for commenting. This uses a one-time website sign-in without registering uTube in Google Cloud. The unofficial connection may change or be blocked by YouTube; your existing viewing login is separate.\n- Keep drafts isolated by video and reply, prevent duplicate sends, and preserve text after failures. No automatic retries after an uncertain submission.\n- Use Apple's long-form AirPlay video routing and resume after temporary audio interruptions only when iOS permits and you have not paused or disconnected. Add playback diagnostics for investigating delayed TV stops.\n\nUpdate through the same AltStore source. The uTube name, custom icon, kharrison attribution and bundle identifier stay in place. Live account sign-in, posting, and a sustained AirPlay session on your receiver still need device testing; no live comment was posted during automated validation.",
-      "downloadURL": "https://github.com/kharrisongit/Opalinetest/releases/download/1.12.4/uTube_1.12.4.ipa",
-      "size": 10930000
+      "version": "1.12.5",
+      "versionDate": "2026-10-12T08:42:51Z",
+      "versionDescription": "uTube by kharrison, based on Opaline by verback2308.\n\n- AirPlay beside the settings gear on the main screens and at the top of videos, including Shorts.\n- Choose visible player buttons in Settings → Playback → Video controls. Audio Only is hidden by default; the settings gear stays available.\n- The bell now opens your YouTube notifications, with All and Replies tabs, using the account already connected for comments. Pull to refresh and load older notifications. Video notifications open in uTube, with linked comments passed to the comments list.\n- Remove feedback and support-development buttons; keep upstream credits in About.\n- Default to light appearance while preserving any explicitly saved theme. Rename the bottom Library tab to History.\n\nThe existing commenting connection and AirPlay background-playback behavior remain in place. YouTube notifications refresh in the app, not through a new push service. Notification text stays in memory and is cleared on account changes. The new inbox and AirPlay picker still need confirmation on your signed-in device and receiver.",
+      "downloadURL": "https://github.com/kharrisongit/Opalinetest/releases/download/1.12.5/uTube_1.12.5.ipa",
+      "size": 10972469
     }
   ],
   "news": [
+    {
+      "title": "Opaline 1.12.5 — uTube 1.12.5 — kharrison",
+      "identifier": "release-1.12.5",
+      "caption": "AirPlay beside the settings gear on the main screens and at the top of videos, including Shorts.",
+      "date": "2026-10-12T08:42:51Z",
+      "tintColor": "FF0000",
+      "appID": "com.verback.YTLite",
+      "url": "https://github.com/kharrisongit/Opalinetest/releases/tag/1.12.5"
+    },
     {
       "title": "Opaline 1.12.4 — uTube 1.12.4 — kharrison",
       "identifier": "release-1.12.4",
