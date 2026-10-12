@@ -20,6 +20,36 @@ final class WebPlaybackLoader {
         scriptURL = nil
     }
 
+    func resolveManifest(
+        _ url: URL, completion: @escaping (Result<URL, Error>) -> Void
+    ) {
+        guard let challenge = WebStreamURL.manifestChallenge(in: url) else {
+            completion(.success(url))
+            return
+        }
+        guard let scriptURL else {
+            completion(.failure(WebPlaybackError.solveFailed))
+            return
+        }
+        let expected = generation
+        HLSStreamResolver.shared.solveN(
+            unsolved: challenge, jsPath: scriptURL.absoluteString
+        ) { [weak self] solved in
+            DispatchQueue.main.async {
+                guard self?.generation == expected else {
+                    return
+                }
+                guard let solved, let resolved = WebStreamURL.replacingManifestN(
+                    with: solved, in: url
+                ) else {
+                    completion(.failure(WebPlaybackError.solveFailed))
+                    return
+                }
+                completion(.success(resolved))
+            }
+        }
+    }
+
     func load(
         videoID: String,
         cancellation: CancellationToken?,

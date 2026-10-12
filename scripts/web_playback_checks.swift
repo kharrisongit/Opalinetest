@@ -128,6 +128,13 @@ final class TestSource: VideoSource {
         try expect(final.absoluteString.contains("signature=a%2Bb%2Fc%3D"), "Encode plus and slash in new signatures")
         try expect(WebStreamURL.replacing("expire", with: "100", in: url) == nil, "Cannot modify unrelated fields")
         try expect(WebStreamURL.replacing("n", with: "", in: url) == nil, "Reject empty solve")
+        let manifest = URL(string: "https://manifest.googlevideo.com/api/manifest/hls_playlist/expire/99/n/a%2Bb/pot/token%2Bvalue/file/index.m3u8?keep=x%2By")!
+        try expect(WebStreamURL.manifestChallenge(in: manifest) == "a+b", "Read HLS path challenge")
+        let resolved = WebStreamURL.replacingManifestN(with: "answer+1", in: manifest)!
+        try expect(resolved.absoluteString == "https://manifest.googlevideo.com/api/manifest/hls_playlist/expire/99/n/answer%2B1/pot/token%2Bvalue/file/index.m3u8?keep=x%2By", "Change only HLS challenge, preserving signed path and suffix")
+        try expect(WebStreamURL.manifestChallenge(in: url) == "abc", "HLS query challenge fallback")
+        try expect(WebStreamURL.manifestChallenge(in: URL(string: "https://manifest.googlevideo.com/master.m3u8")!) == nil, "Unchallenged HLS needs no solver")
+        try expect(WebStreamURL.replacingManifestN(with: "", in: manifest) == nil, "Reject empty manifest solve")
     }
     static func chainRaces() throws {
         let first = TestSource("first"), second = TestSource("second")

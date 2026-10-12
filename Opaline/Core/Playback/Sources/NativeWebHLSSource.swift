@@ -36,6 +36,27 @@ final class NativeWebHLSSource: VideoSource {
             completion(.failure(WebPlaybackError.unavailable))
             return
         }
+        loader.resolveManifest(url) { [weak self] result in
+            guard let self, cancellation?.isCancelled != true else {
+                return
+            }
+            switch result {
+            case .failure(let error):
+                completion(.failure(error))
+            case .success(let resolved):
+                fetchManifest(
+                    resolved, info: info, cancellation: cancellation, completion: completion
+                )
+            }
+        }
+    }
+
+    private func fetchManifest(
+        _ url: URL,
+        info: DirectPlaybackInfo,
+        cancellation: CancellationToken?,
+        completion: @escaping (Result<PreparedPlayback, Error>) -> Void
+    ) {
         // Cookies and Authorization are deliberately absent from CDN requests and the item.
         loader.fetchText(url) { result in
             guard cancellation?.isCancelled != true else {
