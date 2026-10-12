@@ -1,0 +1,113 @@
+name: Build Last Dragonrider IPA
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/last-dragonrider.yml'
+      - 'source/dragonrider/app.json'
+permissions:
+  contents: write
+# Serialize both apps' source publication so one cannot overwrite the other's update.
+concurrency:
+  group: opaline-release
+  cancel-in-progress: false
+jobs:
+  build:
+    runs-on: macos-15
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+      - uses: actions/checkout@v5
+        with:
+          repository: kharrisongit/ember
+          ref: main
+          path: game
+      - name: Check game revision and choose version
+        id: release
+        shell: bash
+        run: |
+          GAME_SHA=$(git -C game rev-parse HEAD)
+          PREVIOUS=$(python3 -c 'import json,pathlib; p=pathlib.Path("source/dragonrider/build.json"); print(json.loads(p.read_text()).get("gameCommit", "") if p.exists() else "")')
+          if [ "$GAME_SHA" = "$PREVIOUS" ] && [ "${{ github.event_name }}" = schedule ]; then
+            echo 'needed=false' >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          PATCH=0
+          while git rev-parse -q --verify "refs/tags/ldr-1.0.$PATCH" >/dev/null; do PATCH=$((PATCH+1)); done
+          echo "version=1.0.$PATCH" >> "$GITHUB_OUTPUT"
+          echo "game_sha=$GAME_SHA" >> "$GITHUB_OUTPUT"
+          echo 'needed=true' >> "$GITHUB_OUTPUT"
+      - uses: actions/setup-node@v4
+        if: steps.release.outputs.needed == 'true'
+        with:
+          node-version: '22'
+      - name: Check source publisher and native policies
+        if: steps.release.outputs.needed == 'true'
+        run: |
+          python3 -m unittest discover -s scripts -p 'test_update_source.py'
+          swiftc game/native/Sources/LocalResponse.swift game/native/Sources/SignInEnvelope.swift \
+            game/native/tests/NativeChecks.swift -o "$RUNNER_TEMP/native-checks"
+          "$RUNNER_TEMP/native-checks" "$RUNNER_TEMP/auth-fixture.json" --create
+          node game/native/tests/encrypt-fixture.mjs "$RUNNER_TEMP/auth-fixture.json"
+          "$RUNNER_TEMP/native-checks" "$RUNNER_TEMP/auth-fixture.json"
+          rm "$RUNNER_TEMP/auth-fixture.json"
+      - name: Build installable IPA
+        if: steps.release.outputs.needed == 'true'
+        env:
+          LDR_VERSION: ${{ steps.release.outputs.version }}
+          LDR_BUILD: ${{ github.run_number }}
+        run: game/native/build.sh
+      - name: Verify game in iOS simulator
+        if: steps.release.outputs.needed == 'true'
+        env:
+          LDR_VERSION: ${{ steps.release.outputs.version }}
+          LDR_BUILD: ${{ github.run_number }}
+        run: game/native/smoke.sh
+      - name: Publish game and update shared AltStore source
+        if: steps.release.outputs.needed == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          VERSION: ${{ steps.release.outputs.version }}
+          GAME_SHA: ${{ steps.release.outputs.game_sha }}
+        run: |
+          TAG="ldr-$VERSION"
+          IPA=game/native/build/LastDragonrider.ipa
+          python3 - "$VERSION" "$GAME_SHA" <<'PY'
+          import json,pathlib,sys
+          version,sha=sys.argv[1:]
+          notes=f'''The Last Dragonrider {version} by kharrison.
+
+          - Install the full game on iPhone or iPad, with offline single-player and device saves.
+          - Full-screen native app, with bundled art, music and controls.
+          - Browser handoff for the existing Google account; cloud saves and story co-op require internet.
+
+          Existing browser-local saves are separate. Sync them with your Google account before moving to the app. Native Google sign-in and co-op still require confirmation on your device. Updating preserves app saves; removing the app removes device-only saves.
+
+          Game revision: {sha}
+          '''
+          pathlib.Path('game/native/build/release-notes.md').write_text(notes)
+          pathlib.Path('game/native/build/game-build.json').write_text(json.dumps({'gameCommit':sha,'version':version})+'\n')
+          PY
+          gh release create "$TAG" "$IPA" game/native/build/dragonrider-icon.png \
+            game/native/build/dragonrider-screenshot.png game/native/build/game-build.json \
+            --draft --title "The Last Dragonrider $VERSION" \
+            --notes-file game/native/build/release-notes.md --target "$GITHUB_SHA"
+          gh release edit "$TAG" --draft=false --latest=false
+          URL="https://github.com/${GITHUB_REPOSITORY}/releases/download/${TAG}/LastDragonrider.ipa"
+          curl --fail --location --head --retry 5 --retry-all-errors --retry-delay 3 "$URL"
+          SIZE=$(stat -f%z "$IPA")
+          DATE=$(gh release view "$TAG" --json publishedAt --jq .publishedAt)
+          git pull --rebase origin main
+          python3 scripts/update_source.py --file source/apps.json \
+            --app-template source/dragonrider/app.json --version "$VERSION" --download-url "$URL" \
+            --size "$SIZE" --date "$DATE" --ipa "$IPA" \
+            --notes-file game/native/build/release-notes.md --release-title "The Last Dragonrider $VERSION"
+          cp game/native/build/game-build.json source/dragonrider/build.json
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add source/apps.json source/dragonrider/build.json
+          git commit -m "Update AltStore with Last Dragonrider $VERSION [skip ci]"
+          git push origin HEAD:main
