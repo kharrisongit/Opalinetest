@@ -8,6 +8,7 @@ struct CommentSubmission {
 /// Main-thread owned. An in-flight send belongs to its captured video and thread.
 final class CommentDraftStore {
     static let shared = CommentDraftStore()
+    static let didChange = Notification.Name("inlineCommentDraftDidChange")
     private var drafts: [String: String] = [:]
     private var sending: Set<String> = []
 
@@ -33,6 +34,7 @@ final class CommentDraftStore {
             return nil
         }
         sending.insert(target.draftKey)
+        NotificationCenter.default.post(name: Self.didChange, object: nil)
         return CommentSubmission(target: target, text: text)
     }
 
@@ -41,6 +43,7 @@ final class CommentDraftStore {
         if succeeded {
             drafts.removeValue(forKey: submission.target.draftKey)
         }
+        NotificationCenter.default.post(name: Self.didChange, object: nil)
     }
 }
 

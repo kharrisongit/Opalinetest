@@ -22,7 +22,10 @@ final class InlineCommentComposer: UIView {
         sendButton.addTarget(self, action: #selector(sendComment), for: .touchUpInside)
         accountButton.addTarget(self, action: #selector(connect), for: .touchUpInside)
         cancelReplyButton.addTarget(self, action: #selector(cancelReply), for: .touchUpInside)
-        for name in [CommentAPIClient.didChange, YouTubeCommentClient.didChange] {
+        let changes = [
+            CommentAPIClient.didChange, YouTubeCommentClient.didChange, CommentDraftStore.didChange
+        ]
+        for name in changes {
             NotificationCenter.default.addObserver(
                 self, selector: #selector(refreshAccount), name: name, object: nil
             )
@@ -63,6 +66,11 @@ final class InlineCommentComposer: UIView {
 
     @objc
     func refreshAccount() {
+        let draft = CommentDraftStore.shared.text(for: target)
+        if editor.text != draft {
+            editor.text = draft
+            resizeEditor()
+        }
         let channel = CommentPostingService.channel
         accountButton.setTitle(
             channel.map { "nativeComments.postingAs".localized(with: $0.title) }
