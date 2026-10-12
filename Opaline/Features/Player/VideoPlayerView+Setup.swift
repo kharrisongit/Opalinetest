@@ -202,6 +202,7 @@ extension VideoPlayerView {
         configureAudioOnlyButton()
         configureLoopButton()
         installTopControls()
+        setupSpeedOverlay()
     }
 
     private func configurePipButton() {
@@ -250,7 +251,6 @@ extension VideoPlayerView {
             for: .touchUpInside
         )
         controlsView.addSubview(speedButton)
-        setupSpeedOverlay()
         updateSpeedButtonTitle()
     }
 
