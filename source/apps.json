@@ -27,6 +27,15 @@
       },
       "versions": [
         {
+          "version": "1.12.13",
+          "date": "2026-10-13T21:34:48Z",
+          "localizedDescription": "uTube by kharrison, based on Opaline by verback2308.\n\n- AirPlay now selects an available H.264 stream up to 1080p60 instead of sending the phone's AV1/high-resolution choice to the receiver. Lower quality selections stay lower.\n- The same compatibility selection runs when AirPlay connects after a video starts. Switching keeps the existing player/receiver connection, playback position, speed and a deliberate pause.\n- Quality choices while AirPlay is connected use the compatible formats. Your saved higher-quality default for watching on the phone is unchanged.\n- Works through the existing Opaline playback sources and solver. No experimental source needs to be enabled.\n- SABR now checks the returned segment number before serving media. Earlier segments are skipped instead of being served under a later segment's URL, preventing repeated overlapping chunks during playback.\n- New videos clear the previous video's recovery position. SponsorBlock waits for a ready player and pending recovery/resume work before skipping.\n- Added regression checks covering both reported video format ladders, lower quality selections, and codec alternatives at the same resolution.\n\nThis update also targets the repeated segment requests and stale recovery seeks found in the Ryan George playback log.",
+          "downloadURL": "https://github.com/kharrisongit/utube/releases/download/1.12.13/uTube_1.12.13.ipa",
+          "size": 11100995,
+          "minOSVersion": "12.0",
+          "buildVersion": "656"
+        },
+        {
           "version": "1.12.12",
           "date": "2026-10-12T13:53:16Z",
           "localizedDescription": "uTube by kharrison, based on Opaline by verback2308.\n\n- Added three more experimental playback methods after the previous six: Mobile web · native HLS, Embedded web · native HLS, and TV compatibility · byte ranges.\n- Mobile and embedded HLS use the standard native player with automatic quality. The embedded route stays anonymous and requires an embeddable video with a usable playlist.\n- TV compatibility uses the YouTube account already connected for comments and notifications. It tries compatible separate video/audio streams with the existing solver and native delivery. No new Google project or account setup is required when that account is connected.\n- New methods are off by default. Enable them in Settings → Debug → Playback sources. Your existing order, enabled choices, and working solver are preserved.\n- Improved embedded request configuration and added regression checks for delivery selection, account requirements and settings migration.\n\nAll five experimental alternatives depend on the video and session. Live playback and sustained AirPlay still need device testing; these are not guaranteed fixes for YouTube restrictions. The original four methods remain the defaults. See EXPERIMENTAL_PLAYBACK.md for the comparison and test guide.",
@@ -72,11 +81,11 @@
           "buildVersion": "630"
         }
       ],
-      "version": "1.12.12",
-      "versionDate": "2026-10-12T13:53:16Z",
-      "versionDescription": "uTube by kharrison, based on Opaline by verback2308.\n\n- Added three more experimental playback methods after the previous six: Mobile web · native HLS, Embedded web · native HLS, and TV compatibility · byte ranges.\n- Mobile and embedded HLS use the standard native player with automatic quality. The embedded route stays anonymous and requires an embeddable video with a usable playlist.\n- TV compatibility uses the YouTube account already connected for comments and notifications. It tries compatible separate video/audio streams with the existing solver and native delivery. No new Google project or account setup is required when that account is connected.\n- New methods are off by default. Enable them in Settings → Debug → Playback sources. Your existing order, enabled choices, and working solver are preserved.\n- Improved embedded request configuration and added regression checks for delivery selection, account requirements and settings migration.\n\nAll five experimental alternatives depend on the video and session. Live playback and sustained AirPlay still need device testing; these are not guaranteed fixes for YouTube restrictions. The original four methods remain the defaults. See EXPERIMENTAL_PLAYBACK.md for the comparison and test guide.",
-      "downloadURL": "https://github.com/kharrisongit/utube/releases/download/1.12.12/uTube_1.12.12.ipa",
-      "size": 11090956
+      "version": "1.12.13",
+      "versionDate": "2026-10-13T21:34:48Z",
+      "versionDescription": "uTube by kharrison, based on Opaline by verback2308.\n\n- AirPlay now selects an available H.264 stream up to 1080p60 instead of sending the phone's AV1/high-resolution choice to the receiver. Lower quality selections stay lower.\n- The same compatibility selection runs when AirPlay connects after a video starts. Switching keeps the existing player/receiver connection, playback position, speed and a deliberate pause.\n- Quality choices while AirPlay is connected use the compatible formats. Your saved higher-quality default for watching on the phone is unchanged.\n- Works through the existing Opaline playback sources and solver. No experimental source needs to be enabled.\n- SABR now checks the returned segment number before serving media. Earlier segments are skipped instead of being served under a later segment's URL, preventing repeated overlapping chunks during playback.\n- New videos clear the previous video's recovery position. SponsorBlock waits for a ready player and pending recovery/resume work before skipping.\n- Added regression checks covering both reported video format ladders, lower quality selections, and codec alternatives at the same resolution.\n\nThis update also targets the repeated segment requests and stale recovery seeks found in the Ryan George playback log.",
+      "downloadURL": "https://github.com/kharrisongit/utube/releases/download/1.12.13/uTube_1.12.13.ipa",
+      "size": 11100995
     },
     {
       "name": "The Last Dragonrider",
@@ -233,6 +242,15 @@
     }
   ],
   "news": [
+    {
+      "title": "uTube 1.12.13 — kharrison",
+      "identifier": "com.kharrison.utube.release-1.12.13",
+      "caption": "AirPlay now selects an available H.264 stream up to 1080p60 instead of sending the phone's AV1/high-resolution choice…",
+      "date": "2026-10-13T21:34:48Z",
+      "tintColor": "FF0000",
+      "appID": "com.kharrison.utube",
+      "url": "https://github.com/kharrisongit/utube/releases/tag/1.12.13"
+    },
     {
       "title": "Quill 1.0.3",
       "identifier": "com.kharrison.quill.release-1.0.3",
