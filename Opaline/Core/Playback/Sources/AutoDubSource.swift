@@ -25,6 +25,7 @@ final class AutoDubSource: VideoSource {
     var supportsQualitySelection: Bool { (active ?? wrapped).supportsQualitySelection }
     var availableQualities: [VideoQuality] { (active ?? wrapped).availableQualities }
     var currentQuality: VideoQuality? { (active ?? wrapped).currentQuality }
+    var airPlayQuality: VideoQuality? { (active ?? wrapped).airPlayQuality }
     var currentCodecs: String? { (active ?? wrapped).currentCodecs }
 
     /// The playing source's tracks, or the probed ones while a source that

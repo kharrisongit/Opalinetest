@@ -76,6 +76,8 @@ protocol VideoSource: AnyObject {
     var availableQualities: [VideoQuality] { get }
     /// The active quality, if any.
     var currentQuality: VideoQuality? { get }
+    /// A compatible replacement when the current video cannot be sent as-is.
+    var airPlayQuality: VideoQuality? { get }
     /// Active codec/itag pair for the stats overlay, when the source knows it.
     var currentCodecs: String? { get }
     /// Whether this source can list dubs at all — asked before a video is
@@ -140,6 +142,7 @@ protocol VideoSource: AnyObject {
 }
 
 extension VideoSource {
+    var airPlayQuality: VideoQuality? { nil }
     var currentCodecs: String? { nil }
     var listsAudioTracks: Bool { false }
 

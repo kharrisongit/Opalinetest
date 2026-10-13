@@ -37,6 +37,7 @@ final class DownloadedSource: VideoSource {
     }
 
     var currentCodecs: String? { isStreaming ? network?.currentCodecs : nil }
+    var airPlayQuality: VideoQuality? { isStreaming ? network?.airPlayQuality : nil }
 
     let network: VideoSource?
     private var localQuality: VideoQuality?

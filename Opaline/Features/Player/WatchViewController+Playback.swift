@@ -29,7 +29,7 @@ extension WatchViewController {
         guard !pageLoadToken.isCancelled else {
             return
         }
-        if let saved = savedPlayerForBackground {
+        if let saved = savedPlayerForBackground ?? airPlayPlayer {
             savedPlayerForBackground = nil
             attachToExistingPlayer(
                 player: saved, item: item
@@ -59,15 +59,17 @@ extension WatchViewController {
         player: AVPlayer,
         item: AVPlayerItem
     ) {
+        playerSpinner.stopAnimating()
+        playerStatusLabel.isHidden = true
         if let old = player.currentItem {
             stopObservingPlayerItem(old)
         }
         PlaybackBufferPolicy.configure(item: item)
-        startObservingPlayerItem(item)
         player.replaceCurrentItem(with: item)
         // The duration KVO binds player.currentItem — rebind after the swap.
         videoPlayerView?.rebind(player: player)
-        player.play()
+        startObservingPlayerItem(item)
+        player.playImmediately(atRate: videoPlayerView?.playbackSpeed ?? 1)
     }
 
     /// Moves the playing item onto a brand-new `AVPlayer`. The old one is
@@ -128,6 +130,9 @@ extension WatchViewController {
         }
         playerView.onNeedsFreshPlayer = { [weak self] in
             self?.replacePlayerPreservingPlayback()
+        }
+        playerView.onAirPlayRouteChange = { [weak self] in
+            self?.prepareAirPlayPlayback()
         }
         // Same semantics as the Control Center transport controls.
         playerView.onPrevious = { [weak self] in

@@ -63,6 +63,7 @@ final class WatchViewController: UIViewController {
     /// e.g. a source's HLS proxy.
     var activeResourceLoader: AVAssetResourceLoaderDelegate?
     var statusObservation: NSKeyValueObservation?
+    let airPlayHandoffState = AirPlayHandoffState()
     var descriptionExpanded = false
     /// Raw (un-linkified) description text, kept so the attributed text can
     /// be rebuilt when the theme changes.
@@ -96,7 +97,6 @@ final class WatchViewController: UIViewController {
     /// overwrite where the user actually was.
     var lastPlaybackPosition = 0.0, pendingRecoverySeek = false, pendingResumeSeek: CMTime?
     let queue = PlaybackQueue.shared
-
     // MARK: - UI Elements
 
     let scrollView = UIScrollView()

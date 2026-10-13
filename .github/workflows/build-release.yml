@@ -33,6 +33,9 @@ jobs:
       - name: Check uTube links
         run: bash scripts/check_youtube_link_parser.sh
 
+      - name: Check AirPlay format selection
+        run: bash scripts/check_airplay_playback.sh
+
       - name: Check experimental playback and fallback races
         run: |
           swiftc Opaline/Core/Playback/WebPlaybackProfile.swift \

@@ -266,9 +266,14 @@ extension VideoPlayerView {
 extension VideoPlayerView {
     func observeAirPlay(on player: AVPlayer) {
         airPlayObservation = player.observe(
-            \.isExternalPlaybackActive, options: [.new]
+            \.isExternalPlaybackActive, options: [.initial, .new]
         ) { [weak self] _, _ in
-            DispatchQueue.main.async { self?.setupPiP() }
+            DispatchQueue.main.async { self?.refreshAirPlayRoute() }
         }
+    }
+
+    func refreshAirPlayRoute() {
+        setupPiP()
+        onAirPlayRouteChange?()
     }
 }

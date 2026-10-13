@@ -43,6 +43,8 @@ extension WatchViewController {
         if !prepared.captions.isEmpty {
             setCaptionTracks(prepared.captions)
         }
+        // Install the seek before an already-ready replacement can fire KVO.
+        pendingResumeSeek = resumeAt.flatMap { CMTimeGetSeconds($0) > 1 ? $0 : nil }
         // After `attachPlayer` — it is what creates the player view on a
         // first load, so an earlier call would land on nothing.
         attachPlayer(item: prepared.item)
@@ -51,9 +53,7 @@ extension WatchViewController {
             available: playbackFacade.activeVideoSource?.availableQualities
                 .contains { $0.id == AudioOnlyMode.qualityID } ?? false
         )
-        if let resumeAt, CMTimeGetSeconds(resumeAt) > 1 {
-            pendingResumeSeek = resumeAt
-        }
+        DispatchQueue.main.async { [weak self] in self?.prepareAirPlayPlayback() }
     }
 
     /// Seeks a freshly attached stream back to where the user was. Called from

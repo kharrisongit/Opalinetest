@@ -26,18 +26,7 @@ final class InnertubeVideoSource: VideoSource {
 
     let name: String
     var supportsQualitySelection: Bool { !availableQualities.isEmpty }
-    var currentCodecs: String? {
-        guard let line = Self.codecsLine(
-            info: info, quality: currentQuality, audio: currentAudioFormat
-        ) else {
-            return nil
-        }
-        guard let delivery, delivery.label != "range" else {
-            return line
-        }
-        return "\(line) [\(delivery.label)]"
-    }
-    private(set) var availableQualities: [VideoQuality] = []
+    private(set) var resolvedQualities: [VideoQuality] = []
     private(set) var currentQuality: VideoQuality?
     // Written by the audio-track extension; see InnertubeVideoSource+AudioTracks.
     var availableAudioTracks: [AudioTrack] = []
@@ -156,7 +145,6 @@ final class InnertubeVideoSource: VideoSource {
             completion(.failure(Self.noStreamError))
             return
         }
-        currentQuality = quality
         buildGeneratedHLS(
             info: info,
             video: format,
@@ -192,7 +180,7 @@ final class InnertubeVideoSource: VideoSource {
         self.info = info
         liveHLS.reset()
         updateAudioTrackState(from: info)
-        availableQualities = Self.qualities(from: info)
+        resolvedQualities = Self.qualities(from: info)
         let defaultQuality = info.dashVideoFormat.flatMap { selected in
             availableQualities.first { $0.id == "\(selected.itag)" }
         }
@@ -231,14 +219,19 @@ final class InnertubeVideoSource: VideoSource {
         resumeAt: Double? = nil,
         completion: @escaping (Result<PreparedPlayback, Error>) -> Void
     ) {
+        let video = airPlayFormat(video, info: info)
+        let quality = AudioOnlyMode.isEnabled ? AudioOnlyMode.quality : Self.quality(for: video)
         AppLog.player(
             "\(name): building with audio \(audio.audioTrackId ?? "default")"
                 + " itag \(audio.itag) xtags \(audio.xtags ?? "-")"
         )
-        deliver(
-            DeliveryRequest(info: info, video: video, audio: audio, resumeAt: resumeAt),
-            completion: completion
-        )
+        deliver(DeliveryRequest(info: info, video: video, audio: audio, resumeAt: resumeAt)) {
+            [weak self] result in
+            if case .success = result {
+                self?.currentQuality = quality
+            }
+            completion(result)
+        }
     }
 }
 
@@ -276,7 +269,7 @@ private extension InnertubeVideoSource {
                 return
             }
             if !liveHLS.qualities.isEmpty {
-                availableQualities = liveHLS.qualities
+                resolvedQualities = liveHLS.qualities
                 currentQuality = liveHLS.startQuality
             }
             completion(.success(prepared))

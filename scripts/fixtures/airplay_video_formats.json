@@ -1,0 +1,250 @@
+[
+  {
+    "videoId": "F7_n4XxrT1o",
+    "captured": "2026-10-13",
+    "expectedAirPlayItag": 299,
+    "formats": [
+      {
+        "itag": 400,
+        "mimeType": "video/mp4; codecs=\"av01.0.12M.08\"",
+        "width": 2560,
+        "height": 1440,
+        "fps": 60,
+        "bitrate": 12169402,
+        "qualityLabel": "1440p60"
+      },
+      {
+        "itag": 299,
+        "mimeType": "video/mp4; codecs=\"avc1.64002A\"",
+        "width": 1920,
+        "height": 1080,
+        "fps": 60,
+        "bitrate": 5779457,
+        "qualityLabel": "1080p60"
+      },
+      {
+        "itag": 399,
+        "mimeType": "video/mp4; codecs=\"av01.0.09M.08\"",
+        "width": 1920,
+        "height": 1080,
+        "fps": 60,
+        "bitrate": 5268839,
+        "qualityLabel": "1080p60"
+      },
+      {
+        "itag": 136,
+        "mimeType": "video/mp4; codecs=\"avc1.4D401F\"",
+        "width": 1280,
+        "height": 720,
+        "fps": 30,
+        "bitrate": 2327606,
+        "qualityLabel": "720p"
+      },
+      {
+        "itag": 298,
+        "mimeType": "video/mp4; codecs=\"avc1.4D4020\"",
+        "width": 1280,
+        "height": 720,
+        "fps": 60,
+        "bitrate": 3479302,
+        "qualityLabel": "720p60"
+      },
+      {
+        "itag": 398,
+        "mimeType": "video/mp4; codecs=\"av01.0.08M.08\"",
+        "width": 1280,
+        "height": 720,
+        "fps": 60,
+        "bitrate": 2693829,
+        "qualityLabel": "720p60"
+      },
+      {
+        "itag": 135,
+        "mimeType": "video/mp4; codecs=\"avc1.4D401F\"",
+        "width": 854,
+        "height": 480,
+        "fps": 30,
+        "bitrate": 1161138,
+        "qualityLabel": "480p"
+      },
+      {
+        "itag": 397,
+        "mimeType": "video/mp4; codecs=\"av01.0.04M.08\"",
+        "width": 854,
+        "height": 480,
+        "fps": 30,
+        "bitrate": 1085986,
+        "qualityLabel": "480p"
+      },
+      {
+        "itag": 134,
+        "mimeType": "video/mp4; codecs=\"avc1.4D401E\"",
+        "width": 640,
+        "height": 360,
+        "fps": 30,
+        "bitrate": 634770,
+        "qualityLabel": "360p"
+      },
+      {
+        "itag": 396,
+        "mimeType": "video/mp4; codecs=\"av01.0.01M.08\"",
+        "width": 640,
+        "height": 360,
+        "fps": 30,
+        "bitrate": 655819,
+        "qualityLabel": "360p"
+      },
+      {
+        "itag": 133,
+        "mimeType": "video/mp4; codecs=\"avc1.4D4015\"",
+        "width": 426,
+        "height": 240,
+        "fps": 30,
+        "bitrate": 246278,
+        "qualityLabel": "240p"
+      },
+      {
+        "itag": 395,
+        "mimeType": "video/mp4; codecs=\"av01.0.00M.08\"",
+        "width": 426,
+        "height": 240,
+        "fps": 30,
+        "bitrate": 308721,
+        "qualityLabel": "240p"
+      },
+      {
+        "itag": 160,
+        "mimeType": "video/mp4; codecs=\"avc1.4D400C\"",
+        "width": 256,
+        "height": 144,
+        "fps": 30,
+        "bitrate": 111502,
+        "qualityLabel": "144p"
+      },
+      {
+        "itag": 394,
+        "mimeType": "video/mp4; codecs=\"av01.0.00M.08\"",
+        "width": 256,
+        "height": 144,
+        "fps": 30,
+        "bitrate": 140578,
+        "qualityLabel": "144p"
+      }
+    ]
+  },
+  {
+    "videoId": "rR0cMUxeCCk",
+    "captured": "2026-10-13",
+    "expectedAirPlayItag": 137,
+    "formats": [
+      {
+        "itag": 137,
+        "mimeType": "video/mp4; codecs=\"avc1.640028\"",
+        "width": 1920,
+        "height": 1080,
+        "fps": 30,
+        "bitrate": 4330970,
+        "qualityLabel": "1080p"
+      },
+      {
+        "itag": 399,
+        "mimeType": "video/mp4; codecs=\"av01.0.08M.08\"",
+        "width": 1920,
+        "height": 1080,
+        "fps": 30,
+        "bitrate": 3215502,
+        "qualityLabel": "1080p"
+      },
+      {
+        "itag": 136,
+        "mimeType": "video/mp4; codecs=\"avc1.4D401F\"",
+        "width": 1280,
+        "height": 720,
+        "fps": 30,
+        "bitrate": 1773395,
+        "qualityLabel": "720p"
+      },
+      {
+        "itag": 398,
+        "mimeType": "video/mp4; codecs=\"av01.0.05M.08\"",
+        "width": 1280,
+        "height": 720,
+        "fps": 30,
+        "bitrate": 1782433,
+        "qualityLabel": "720p"
+      },
+      {
+        "itag": 135,
+        "mimeType": "video/mp4; codecs=\"avc1.4D401F\"",
+        "width": 854,
+        "height": 480,
+        "fps": 30,
+        "bitrate": 1156917,
+        "qualityLabel": "480p"
+      },
+      {
+        "itag": 397,
+        "mimeType": "video/mp4; codecs=\"av01.0.04M.08\"",
+        "width": 854,
+        "height": 480,
+        "fps": 30,
+        "bitrate": 896870,
+        "qualityLabel": "480p"
+      },
+      {
+        "itag": 134,
+        "mimeType": "video/mp4; codecs=\"avc1.4D401E\"",
+        "width": 640,
+        "height": 360,
+        "fps": 30,
+        "bitrate": 632606,
+        "qualityLabel": "360p"
+      },
+      {
+        "itag": 396,
+        "mimeType": "video/mp4; codecs=\"av01.0.01M.08\"",
+        "width": 640,
+        "height": 360,
+        "fps": 30,
+        "bitrate": 448575,
+        "qualityLabel": "360p"
+      },
+      {
+        "itag": 133,
+        "mimeType": "video/mp4; codecs=\"avc1.4D4015\"",
+        "width": 426,
+        "height": 240,
+        "fps": 30,
+        "bitrate": 245560,
+        "qualityLabel": "240p"
+      },
+      {
+        "itag": 395,
+        "mimeType": "video/mp4; codecs=\"av01.0.00M.08\"",
+        "width": 426,
+        "height": 240,
+        "fps": 30,
+        "bitrate": 214360,
+        "qualityLabel": "240p"
+      },
+      {
+        "itag": 160,
+        "mimeType": "video/mp4; codecs=\"avc1.4D400C\"",
+        "width": 256,
+        "height": 144,
+        "fps": 30,
+        "bitrate": 112615,
+        "qualityLabel": "144p"
+      },
+      {
+        "itag": 394,
+        "mimeType": "video/mp4; codecs=\"av01.0.00M.08\"",
+        "width": 256,
+        "height": 144,
+        "fps": 30,
+        "bitrate": 97626,
+        "qualityLabel": "144p"
+      }
+    ]
+  }
+]

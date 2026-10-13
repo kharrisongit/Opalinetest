@@ -1,9 +1,9 @@
 uTube by kharrison, based on Opaline by verback2308.
 
-- Added three more experimental playback methods after the previous six: Mobile web · native HLS, Embedded web · native HLS, and TV compatibility · byte ranges.
-- Mobile and embedded HLS use the standard native player with automatic quality. The embedded route stays anonymous and requires an embeddable video with a usable playlist.
-- TV compatibility uses the YouTube account already connected for comments and notifications. It tries compatible separate video/audio streams with the existing solver and native delivery. No new Google project or account setup is required when that account is connected.
-- New methods are off by default. Enable them in Settings → Debug → Playback sources. Your existing order, enabled choices, and working solver are preserved.
-- Improved embedded request configuration and added regression checks for delivery selection, account requirements and settings migration.
+- AirPlay now selects an available H.264 stream up to 1080p60 instead of sending the phone's AV1/high-resolution choice to the receiver. Lower quality selections stay lower.
+- The same compatibility selection runs when AirPlay connects after a video starts. Switching keeps the existing player/receiver connection, playback position, speed and a deliberate pause.
+- Quality choices while AirPlay is connected use the compatible formats. Your saved higher-quality default for watching on the phone is unchanged.
+- Works through the existing Opaline playback sources and solver. No experimental source needs to be enabled.
+- Added regression checks covering both reported video format ladders, lower quality selections, and codec alternatives at the same resolution.
 
-All five experimental alternatives depend on the video and session. Live playback and sustained AirPlay still need device testing; these are not guaranteed fixes for YouTube restrictions. The original four methods remain the defaults. See EXPERIMENTAL_PLAYBACK.md for the comparison and test guide.
+This update automates the working 1080p selection for AirPlay. Higher resolutions remain available when watching on the phone.

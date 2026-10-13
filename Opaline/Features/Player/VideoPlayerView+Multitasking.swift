@@ -66,7 +66,7 @@ extension VideoPlayerView {
     /// the delay, so the order of the two notifications does not matter.
     @objc
     func audioRouteChanged(_ note: Notification) {
-        DispatchQueue.main.async { [weak self] in self?.setupPiP() }
+        DispatchQueue.main.async { [weak self] in self?.refreshAirPlayRoute() }
         let raw = note.userInfo?[AVAudioSessionRouteChangeReasonKey] as? UInt
         guard raw == AVAudioSession.RouteChangeReason.oldDeviceUnavailable.rawValue
         else {

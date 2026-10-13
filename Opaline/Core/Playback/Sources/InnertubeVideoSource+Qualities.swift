@@ -3,6 +3,18 @@ import Foundation
 // MARK: - The quality ladder a /player response describes
 
 extension InnertubeVideoSource {
+    var currentCodecs: String? {
+        guard let line = Self.codecsLine(
+            info: info, quality: currentQuality, audio: currentAudioFormat
+        ) else {
+            return nil
+        }
+        guard let delivery, delivery.label != "range" else {
+            return line
+        }
+        return "\(line) [\(delivery.label)]"
+    }
+
     /// "vCodec (itag) / aCodec (itag)" for the stats overlay; nil when the
     /// active quality is not a DASH format (live variants). `audio` overrides
     /// the default audio format (mweb after an audio-track switch).
@@ -29,17 +41,23 @@ extension InnertubeVideoSource {
     ///
     /// Audio-only leads the list. It needs a DASH pair to strip the video from,
     /// so live and progressive videos never offer it.
-    static func qualities(from info: DirectPlaybackInfo) -> [VideoQuality] {
-        let tiers = videoTiers(from: info)
+    static func qualities(
+        from info: DirectPlaybackInfo, forAirPlay: Bool = false
+    ) -> [VideoQuality] {
+        let tiers = videoTiers(from: info, forAirPlay: forAirPlay)
         guard !tiers.isEmpty, info.dashAudioFormat != nil else {
             return tiers
         }
         return [AudioOnlyMode.quality] + tiers
     }
 
-    private static func videoTiers(from info: DirectPlaybackInfo) -> [VideoQuality] {
+    private static func videoTiers(
+        from info: DirectPlaybackInfo, forAirPlay: Bool
+    ) -> [VideoQuality] {
         var seenLabels = Set<String>()
-        return info.allDashVideoFormats.map { format in
+        let compatible = info.allDashVideoFormats.filter(AirPlayVideoPolicy.isCompatible)
+        let formats = forAirPlay && !compatible.isEmpty ? compatible : info.allDashVideoFormats
+        return formats.map { format in
             let fps = format.fps ?? 0
             let height = format.height ?? 0
             // YouTube's tier name when present — non-16:9 heights are

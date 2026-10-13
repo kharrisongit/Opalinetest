@@ -5,6 +5,9 @@ import UIKit
 
 extension WatchViewController {
     func recoverPlayback() {
+        if prepareAirPlayPlayback() {
+            return
+        }
         guard !isRecoveringPlayback,
               videoPlayerView?.player != nil
         else {
