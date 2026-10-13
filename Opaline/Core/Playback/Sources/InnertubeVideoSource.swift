@@ -225,8 +225,8 @@ final class InnertubeVideoSource: VideoSource {
             "\(name): building with audio \(audio.audioTrackId ?? "default")"
                 + " itag \(audio.itag) xtags \(audio.xtags ?? "-")"
         )
-        deliver(DeliveryRequest(info: info, video: video, audio: audio, resumeAt: resumeAt)) {
-            [weak self] result in
+        let request = DeliveryRequest(info: info, video: video, audio: audio, resumeAt: resumeAt)
+        deliver(request) { [weak self] result in
             if case .success = result {
                 self?.currentQuality = quality
             }

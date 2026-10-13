@@ -134,7 +134,7 @@ extension SABRDelivery {
                 initRange: track.format.indexRangeEnd + 1
             )
         }
-        guard let index = Int(name), index < track.segments.count else {
+        guard let index = Int(name), index >= 0, index < track.segments.count else {
             return nil
         }
         return SABRSegmentRequest(
@@ -149,7 +149,8 @@ extension SABRDelivery {
     /// Where a segment starts on the timeline, from the sidx durations.
     static func startMs(of index: Int, in track: Track) -> Int {
         let elapsed = track.segments.prefix(index).reduce(0.0) { $0 + $1.duration }
-        return Int(elapsed * 1_000)
+        // Never request a fraction of a millisecond before the segment starts.
+        return SABRSegmentRequest.milliseconds(at: elapsed)
     }
 
     /// Byte offset of a segment: the media data starts after the index, and

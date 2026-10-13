@@ -31,8 +31,7 @@ final class VideoPlayerView: UIView {
 
     var onTimeUpdate: ((Double) -> Void)?
     var onSkipTapped: (() -> Void)?
-    var onNeedsFreshPlayer: (() -> Void)?
-    var onAirPlayRouteChange: (() -> Void)?
+    var onNeedsFreshPlayer: (() -> Void)?, onAirPlayRouteChange: (() -> Void)?
     var onPrevious: (() -> Void)?
     var onNext: (() -> Void)?
 

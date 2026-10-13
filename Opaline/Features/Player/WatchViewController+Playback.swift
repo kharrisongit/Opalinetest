@@ -40,7 +40,6 @@ extension WatchViewController {
         playerSpinner.stopAnimating()
         playerStatusLabel.isHidden = true
         PlaybackBufferPolicy.configure(item: item)
-        startObservingPlayerItem(item)
         let player = AVPlayer(playerItem: item)
         PlaybackBufferPolicy.configure(
             player: player,
@@ -50,6 +49,7 @@ extension WatchViewController {
         configureSponsorBlock(on: pv)
         playerContainer.bringSubviewToFront(pv)
         pv.attach(player: player)
+        startObservingPlayerItem(item)
         // Start as soon as the first frames are decodable instead of
         // waiting for the stall-minimizing buffer to fill.
         player.playImmediately(atRate: pv.playbackSpeed)
@@ -157,7 +157,10 @@ extension WatchViewController {
             if self?.pendingRecoverySeek == false {
                 self?.lastPlaybackPosition = time
             }
-            self?.sponsorBlock.checkTime(time)
+            if self?.pendingRecoverySeek == false, self?.pendingResumeSeek == nil,
+               self?.didSeekToSavedPosition == true {
+                self?.sponsorBlock.checkTime(time)
+            }
             NowPlayingService.shared.updatePosition(time)
             self?.videoPlayerView?.updateSubtitle(at: time)
         }

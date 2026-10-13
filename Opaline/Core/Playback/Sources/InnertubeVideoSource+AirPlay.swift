@@ -24,6 +24,17 @@ extension InnertubeVideoSource {
         return Self.quality(for: compatible)
     }
 
+    static func quality(for format: DashFormatInfo) -> VideoQuality {
+        let height = format.height ?? 0
+        let fps = format.fps ?? 0
+        return VideoQuality(
+            id: String(format.itag),
+            label: format.qualityLabel ?? (fps > 30 ? "\(height)p\(fps)" : "\(height)p"),
+            height: format.height,
+            fps: format.fps
+        )
+    }
+
     func airPlayFormat(_ requested: DashFormatInfo, info: DirectPlaybackInfo) -> DashFormatInfo {
         guard BackgroundPlaybackService.isAirPlayActive(player: nil),
               let compatible = AirPlayVideoPolicy.replacement(
@@ -39,16 +50,5 @@ extension InnertubeVideoSource {
             )
         }
         return compatible
-    }
-
-    static func quality(for format: DashFormatInfo) -> VideoQuality {
-        let height = format.height ?? 0
-        let fps = format.fps ?? 0
-        return VideoQuality(
-            id: String(format.itag),
-            label: format.qualityLabel ?? (fps > 30 ? "\(height)p\(fps)" : "\(height)p"),
-            height: format.height,
-            fps: format.fps
-        )
     }
 }

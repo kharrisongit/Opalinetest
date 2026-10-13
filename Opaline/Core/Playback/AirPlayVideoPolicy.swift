@@ -25,9 +25,10 @@ enum AirPlayVideoPolicy {
         guard !isCompatible(requested) else {
             return requested
         }
-        return formats.filter {
+        let compatible = formats.filter {
             isCompatible($0) && ($0.height ?? 0) <= (requested.height ?? 1_080)
-        }.max { left, right in
+        }
+        return compatible.max { left, right in
             if left.height != right.height {
                 return (left.height ?? 0) < (right.height ?? 0)
             }

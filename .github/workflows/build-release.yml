@@ -36,6 +36,9 @@ jobs:
       - name: Check AirPlay format selection
         run: bash scripts/check_airplay_playback.sh
 
+      - name: Check SABR segment identity
+        run: bash scripts/check_sabr_segments.sh
+
       - name: Check experimental playback and fallback races
         run: |
           swiftc Opaline/Core/Playback/WebPlaybackProfile.swift \

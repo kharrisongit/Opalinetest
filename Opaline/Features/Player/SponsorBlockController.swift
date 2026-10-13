@@ -15,7 +15,8 @@ final class SponsorBlockController {
     }
 
     func checkTime(_ time: Double) {
-        guard SponsorBlockService.enabled, !segments.isEmpty
+        guard SponsorBlockService.enabled, !segments.isEmpty,
+              playerView?.player?.currentItem?.status == .readyToPlay
         else { return }
 
         let active = findActiveSegment(at: time)

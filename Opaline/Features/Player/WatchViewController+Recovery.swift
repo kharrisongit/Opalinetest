@@ -4,6 +4,17 @@ import UIKit
 // MARK: - Stream URL Expiration Recovery
 
 extension WatchViewController {
+    func resetPlaybackRecovery() {
+        isRecoveringPlayback = false
+        pendingRecoverySeek = false
+        pendingResumeSeek = nil
+        lastPlaybackPosition = 0
+        hasSeenPlaybackError = false
+        didSeekToSavedPosition = false
+        preparedDuration = nil
+        itemStartsAt = nil
+    }
+
     func recoverPlayback() {
         if prepareAirPlayPlayback() {
             return
@@ -18,13 +29,15 @@ extension WatchViewController {
         )
         let token = CancellationToken()
         pageLoadToken = token
-        guard playbackFacade.recover(cancellationToken: token) else {
-            showPlaybackError("player.error.playback".localized)
-            return
-        }
         isRecoveringPlayback = true
         hasSeenPlaybackError = false
         pendingRecoverySeek = true
+        guard playbackFacade.recover(cancellationToken: token) else {
+            isRecoveringPlayback = false
+            pendingRecoverySeek = false
+            showPlaybackError("player.error.playback".localized)
+            return
+        }
     }
 
     func applyRecoverySeekIfNeeded(
@@ -49,19 +62,29 @@ extension WatchViewController {
                 + " duration=\(CMTimeGetSeconds(item.duration))s"
                 + " seekTo=\(target)s"
         )
-        videoPlayerView?.player?.seek(
+        seekAfterRecovery(item, target: target)
+        return true
+    }
+
+    private func seekAfterRecovery(_ item: AVPlayerItem, target: Double) {
+        guard let player = videoPlayerView?.player, player.currentItem === item else {
+            return
+        }
+        player.seek(
             to: CMTime(seconds: target, preferredTimescale: 1_000),
             toleranceBefore: .zero,
             toleranceAfter: .zero
-        ) { [weak self] finished in
-            // An unfinished seek means another item took over mid-flight —
-            // keep the gate closed so the next recovery still knows where
-            // the user was.
-            if finished {
-                self?.pendingRecoverySeek = false
+        ) { [weak self, weak player] finished in
+            DispatchQueue.main.async {
+                guard let self, let player, player.currentItem === item,
+                      self.videoPlayerView?.player === player else {
+                    return
+                }
+                if finished {
+                    self.pendingRecoverySeek = false
+                }
+                player.play()
             }
-            self?.videoPlayerView?.player?.play()
         }
-        return true
     }
 }

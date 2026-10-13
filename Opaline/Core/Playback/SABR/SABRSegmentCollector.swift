@@ -10,11 +10,9 @@ struct SABRPolicy {
 
 /// Reads one response and keeps the one segment it was asked for.
 ///
-/// The first media header for the requested format claims the response: its
-/// `MEDIA` parts are collected and everything else the server sends — the
-/// other track, the segments after this one — is dropped on the floor. That is
-/// how googlevideo's player adapter does it, and it is what makes a request
-/// mean one segment rather than "some of the stream, from around here".
+/// Match both the track and the segment number. A response can begin with
+/// earlier media around a seek boundary; serving that under the requested
+/// segment's URL makes the player repeatedly fetch overlapping timestamps.
 final class SABRSegmentCollector {
     let request: SABRSegmentRequest
     private let reader = UMPReader()
@@ -120,8 +118,7 @@ final class SABRSegmentCollector {
         }
     }
 
-    /// Records a header, and claims the response for the first one that is the
-    /// format this request is about.
+    /// Records a header and claims only the requested segment.
     private func noteHeader(_ payload: Data) {
         let fields = Protobuf.parse(payload)
         guard let header = MediaHeader(payload) else {
@@ -133,14 +130,13 @@ final class SABRSegmentCollector {
         // the same one, and only `xtags` tells them apart. A response can hold
         // several of them, so claiming the first matching itag is how a
         // request for a dub ends up playing the original.
-        guard wantedHeaderId == nil, header.itag == request.format.itag,
-              header.isInit == request.isInit,
-              Self.sameTrack(header.xtags, request.format.xtags) else {
+        guard wantedHeaderId == nil, matches(header) else {
             return
         }
         wantedHeaderId = id
         AppLog.hls(
-            "sabr \(label) served itag \(header.itag) xtags \(header.xtags ?? "-")"
+            "sabr \(label) served sequence \(header.sequence) at \(header.startMs)ms"
+                + " itag \(header.itag) xtags \(header.xtags ?? "-")"
         )
         // An init segment is not a position in the stream, so it must not be
         // acknowledged as one: a buffered range starting at 0 alongside a
@@ -158,6 +154,18 @@ final class SABRSegmentCollector {
             endSequence: header.sequence,
             timescale: header.timescale
         )
+    }
+
+    private func matches(_ header: MediaHeader) -> Bool {
+        guard header.itag == request.format.itag, header.isInit == request.isInit,
+              Self.sameTrack(header.xtags, request.format.xtags) else {
+            return false
+        }
+        guard !request.isInit, header.sequence != request.sequence else {
+            return true
+        }
+        AppLog.hls("sabr \(label) skipped sequence \(header.sequence) at \(header.startMs)ms")
+        return false
     }
 
     /// A `MEDIA` payload leads with the varint id of the header it belongs to.
