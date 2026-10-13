@@ -147,10 +147,7 @@ enum SABRRequest {
         range += Protobuf.int(3, delivery.durationMs)      // durationMs
         range += Protobuf.int(4, delivery.startSequence)   // startSegmentIndex
         range += Protobuf.int(5, delivery.endSequence)     // endSegmentIndex
-        var timeRange = Protobuf.int(1, delivery.startMs)  // startTicks
-        timeRange += Protobuf.int(2, delivery.durationMs)  // durationTicks
-        timeRange += Protobuf.int(3, delivery.timescale)
-        return range + Protobuf.bytes(6, timeRange)
+        return range + Protobuf.bytes(6, delivery.timeRange)
     }
 
     private static func streamerContext(

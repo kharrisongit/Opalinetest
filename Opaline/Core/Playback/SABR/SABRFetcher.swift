@@ -180,7 +180,9 @@ final class SABRFetcher {
         }
         lastRequestedMs[itag] = request.timeMs
         return RequestState(
-            number: requestNumber, held: lastSegment[itag], cookie: playbackCookie
+            number: requestNumber,
+            held: lastSegment[itag]?.acknowledged(for: request),
+            cookie: playbackCookie
         )
     }
 

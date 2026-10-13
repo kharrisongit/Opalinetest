@@ -15,5 +15,15 @@ struct SABRBufferedRange {
     let startSequence: Int
     let endSequence: Int
     let timescale: Int
-}
 
+    /// MediaHeader normalizes timestamps to milliseconds. Sending the original
+    /// timescale alongside those values would describe a different interval.
+    var timeRange: Data {
+        Protobuf.int(1, startMs) + Protobuf.int(2, durationMs) + Protobuf.int(3, 1_000)
+    }
+
+    /// A retry needs those bytes again, even if an earlier request got them.
+    func acknowledged(for request: SABRSegmentRequest) -> SABRBufferedRange? {
+        request.isInit || endSequence >= request.sequence ? nil : self
+    }
+}

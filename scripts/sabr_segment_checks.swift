@@ -84,6 +84,19 @@ enum CheckError: Error { case failed(String) }
                    "Sub-millisecond boundaries must round forward")
         try expect(SABRSegmentRequest.milliseconds(at: 0) == 0,
                    "The first segment still starts at zero")
+        let held = SABRBufferedRange(format: format(137), startMs: 127933, durationMs: 3466,
+                                     startSequence: 26, endSequence: 26, timescale: 90000)
+        try expect(held.acknowledged(for: collector(26).request) == nil,
+                   "A repeated request must not tell the server the wanted bytes are held")
+        try expect(held.acknowledged(for: collector(25).request) == nil,
+                   "Out-of-order requests must not acknowledge media ahead of the target")
+        try expect(held.acknowledged(for: collector(27).request)?.endSequence == 26,
+                   "Sequential playback acknowledges the preceding segment")
+        try expect(held.acknowledged(for: collector(27, initRange: 4).request) == nil,
+                   "Initialization requests must not acknowledge media")
+        let time = Protobuf.parse(held.timeRange)
+        try expect(time.number(1) == 127933 && time.number(2) == 3466 && time.number(3) == 1000,
+                   "Buffered tick values and timescale must use the same time unit")
         print("Passed \(count) SABR segment checks")
     }
 }

@@ -22,4 +22,3 @@ struct SABRSegmentRequest {
         Int((seconds * 1_000).rounded(.up))
     }
 }
-
