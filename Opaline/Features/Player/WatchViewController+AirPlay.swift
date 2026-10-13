@@ -42,8 +42,12 @@ extension WatchViewController {
             return false
         }
         let handoff = AirPlayHandoff(
-            player: player, item: item, source: source, token: pageLoadToken,
-            resumeAt: rebuildPlayhead, userPauseTime: view.multitaskPause.lastUserPause,
+            player: player,
+            item: item,
+            source: source,
+            token: pageLoadToken,
+            resumeAt: rebuildPlayhead,
+            userPauseTime: view.multitaskPause.lastUserPause,
             wasPlaying: !view.isAtEnd && (player.rate > 0 || view.interruption.lastPlayingAt
                 > view.multitaskPause.lastUserPause)
         )

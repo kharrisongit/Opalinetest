@@ -57,21 +57,9 @@ extension InnertubeVideoSource {
         var seenLabels = Set<String>()
         let compatible = info.allDashVideoFormats.filter(AirPlayVideoPolicy.isCompatible)
         let formats = forAirPlay && !compatible.isEmpty ? compatible : info.allDashVideoFormats
-        return formats.map { format in
-            let fps = format.fps ?? 0
-            let height = format.height ?? 0
-            // YouTube's tier name when present — non-16:9 heights are
-            // off-ladder (1920x1012 is the "1080p" tier, not "1012p").
-            let fallback = fps > 30 ? "\(height)p\(fps)" : "\(height)p"
-            return VideoQuality(
-                id: "\(format.itag)",
-                label: format.qualityLabel ?? fallback,
-                height: format.height,
-                fps: format.fps
-            )
-        }
-        .sorted { ($0.height ?? 0) > ($1.height ?? 0) }
-        .filter { seenLabels.insert($0.label).inserted }
+        return formats.map(Self.quality(for:))
+            .sorted { ($0.height ?? 0) > ($1.height ?? 0) }
+            .filter { seenLabels.insert($0.label).inserted }
     }
 
     /// One `/player` fetch, formats only — no delivery is opened and no state

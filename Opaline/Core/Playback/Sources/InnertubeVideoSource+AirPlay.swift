@@ -16,7 +16,8 @@ extension InnertubeVideoSource {
                   String($0.itag) == currentQuality?.id
               }),
               let compatible = AirPlayVideoPolicy.replacement(
-                  for: current, in: info.allDashVideoFormats
+                  for: current,
+                  in: info.allDashVideoFormats
               ), compatible.itag != current.itag else {
             return nil
         }
@@ -26,7 +27,8 @@ extension InnertubeVideoSource {
     func airPlayFormat(_ requested: DashFormatInfo, info: DirectPlaybackInfo) -> DashFormatInfo {
         guard BackgroundPlaybackService.isAirPlayActive(player: nil),
               let compatible = AirPlayVideoPolicy.replacement(
-                  for: requested, in: info.allDashVideoFormats
+                  for: requested,
+                  in: info.allDashVideoFormats
               ) else {
             return requested
         }

@@ -33,6 +33,7 @@ xcodebuild \
 grep -E "error:|warning:" "$BUILD_LOG" | tail -5 || true
 if ! grep -q "BUILD SUCCEEDED" "$BUILD_LOG"; then
   echo "❌ Build failed — full log: $BUILD_LOG"
+  grep -E "error:|warning:" "$BUILD_LOG" || true
   tail -30 "$BUILD_LOG"
   exit 1
 fi
