@@ -1,7 +1,10 @@
 import Foundation
 
 // Only logging is replaced; the collector, UMP reader and protobuf parser are production code.
-enum AppLog { static func hls(_ line: String) {} }
+enum AppLog {
+    static func hls(_ line: String) {}
+    static func player(_ line: String) {}
+}
 enum CheckError: Error { case failed(String) }
 
 @main enum SABRSegmentChecks {
@@ -43,6 +46,8 @@ enum CheckError: Error { case failed(String) }
     }
 
     static func main() throws {
+        try redirects()
+        try throttleFailures()
         // The reported adjacent-segment failure: segment 26 arrives before 27.
         let ordered = collector(27)
         ordered.append(segment(26, bytes: "previous-segment"))

@@ -160,8 +160,22 @@ final class SABRDelivery: StreamDelivery {
         let signed = Self.televisionParams(
             client.directURL(baseURL: url, poToken: nil), cpn: nonce
         )
-        Self.solvingThrottle(signed) { [weak self] solved in
-            self?.openSession(request, url: solved, config: config, completion: completion)
+        Self.solvingThrottle(signed) { [weak self] result in
+            self?.openSolvedSession(result, request: request, config: config, completion: completion)
+        }
+    }
+
+    private func openSolvedSession(
+        _ result: Result<URL, Error>,
+        request: DeliveryRequest,
+        config: Data,
+        completion: @escaping (Result<PreparedPlayback, Error>) -> Void
+    ) {
+        switch result {
+        case .success(let solved):
+            openSession(request, url: solved, config: config, completion: completion)
+        case .failure(let error):
+            completion(.failure(error))
         }
     }
 

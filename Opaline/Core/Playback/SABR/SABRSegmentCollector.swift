@@ -22,6 +22,7 @@ final class SABRSegmentCollector {
     private(set) var received = 0
     private(set) var isDone = false
     private(set) var failure: Error?
+    private(set) var redirectURL: URL?
     private(set) var policy: SABRPolicy?
     /// What was collected, for the next request to acknowledge.
     private(set) var deliveredRange: SABRBufferedRange?
@@ -40,7 +41,7 @@ final class SABRSegmentCollector {
     /// normally known, but a response that simply stops after delivering one
     /// has still delivered it.
     var segment: Data? {
-        guard !chunks.isEmpty else {
+        guard failure == nil, redirectURL == nil, !chunks.isEmpty else {
             return nil
         }
         var data = chunks.count == 1 ? chunks[0] : chunks.reduce(into: Data()) { $0 += $1 }
@@ -99,6 +100,8 @@ final class SABRSegmentCollector {
     /// The parts that say something about the session rather than the media.
     private func handleDirective(_ part: UMPPart) {
         switch UMPPartType(rawValue: part.type) {
+        case .sabrRedirect:
+            noteRedirect(part.payload)
         case .streamProtectionStatus:
             // 1 = OK, 2 = attestation pending, 3 = attestation required.
             let status = Protobuf.parse(part.payload).number(1) ?? 0
@@ -116,6 +119,18 @@ final class SABRSegmentCollector {
         default:
             break
         }
+    }
+
+    private func noteRedirect(_ payload: Data) {
+        redirectURL = SABRRedirect.url(from: payload)
+        if redirectURL == nil {
+            failure = SABRError.server("invalid streaming redirect")
+        }
+        // The new endpoint must serve the entire requested segment before
+        // any of it can be acknowledged as buffered media.
+        deliveredRange = nil
+        chunks.removeAll()
+        isDone = true
     }
 
     /// Records a header and claims only the requested segment.

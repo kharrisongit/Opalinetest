@@ -18,18 +18,24 @@ final class SABRFetcher {
     /// lock: its number, what is held of this format, and the cookie.
     private struct RequestState {
         let number: Int
+        let url: URL
         let held: SABRBufferedRange?
         let cookie: Data?
     }
 
+    private struct Attempt {
+        let request: SABRSegmentRequest
+        var redirects: Set<URL> = []
+    }
+
     private let transport: HTTPTransport
-    let url: URL
     let ustreamerConfig: Data
     let identity: SABRIdentity
 
     /// Guards everything below; requests run concurrently, one per segment,
     /// and audio and video are routinely in flight together.
     private let lock = NSLock()
+    private var url: URL
     private var lastSegment: [Int: SABRBufferedRange] = [:]
     private var lastRequestedMs: [Int: Int] = [:]
     private var playbackCookie: Data?
@@ -56,9 +62,16 @@ final class SABRFetcher {
     }
 
     /// The bytes of one segment, or an error. Runs one POST; the response is
-    /// abandoned as soon as the segment is complete.
+    /// abandoned as soon as the segment is complete. Redirects retry the same request.
     func fetch(
         _ request: SABRSegmentRequest,
+        completion: @escaping (Result<Data, Error>) -> Void
+    ) {
+        fetch(Attempt(request: request), completion: completion)
+    }
+
+    private func fetch(
+        _ attempt: Attempt,
         completion: @escaping (Result<Data, Error>) -> Void
     ) {
         lock.lock()
@@ -73,28 +86,60 @@ final class SABRFetcher {
             // The server asked for a pause; honouring it is cheaper than being
             // told again.
             DispatchQueue.global(qos: .userInitiated)
-                .asyncAfter(deadline: .now() + wait) { [weak self] in
-                    self?.fetch(request, completion: completion)
+                .asyncAfter(deadline: .now() + wait) {
+                    self.fetch(attempt, completion: completion)
                 }
             return
         }
-        send(request, completion: completion)
+        send(attempt, completion: completion)
     }
 
     private func send(
-        _ request: SABRSegmentRequest,
+        _ attempt: Attempt,
         completion: @escaping (Result<Data, Error>) -> Void
     ) {
-        let collector = SABRSegmentCollector(request: request)
+        let collector = SABRSegmentCollector(request: attempt.request)
+        let state = stateFor(attempt.request)
         let started = Date()
-        transport.stream(httpRequest(for: request), cancellationToken: nil) { [weak self] chunk in
-            self?.consume(chunk, with: collector)
+        let request = httpRequest(for: attempt.request, state: state)
+        transport.stream(request, cancellationToken: nil) { chunk in
+            collector.append(chunk)
             // Stop the moment the segment is whole: the rest of the response is
             // the stream running on past what this request was about.
             return !collector.isDone
-        } completion: { [weak self] result in
-            self?.finish(result, collector: collector, started: started, completion: completion)
+        } completion: { result in
+            self.apply(collector.policy)
+            if case .success(let response) = result, response.status == 200,
+               let target = collector.redirectURL {
+                self.followRedirect(target, attempt: attempt, sent: state, completion: completion)
+                return
+            }
+            self.finish(result, collector: collector, started: started, completion: completion)
         }
+    }
+
+    private func followRedirect(
+        _ target: URL,
+        attempt: Attempt,
+        sent: RequestState,
+        completion: @escaping (Result<Data, Error>) -> Void
+    ) {
+        guard attempt.redirects.count < SABRRedirect.maximumHops,
+              !attempt.redirects.contains(target), target != sent.url else {
+            completion(.failure(SABRError.server("streaming redirect limit or loop")))
+            return
+        }
+        lock.lock()
+        // Another track may already have moved this session forward. A late
+        // response from the old endpoint must not overwrite its newer URL.
+        if url == sent.url {
+            url = target
+        }
+        lock.unlock()
+        var next = attempt
+        next.redirects.insert(target)
+        AppLog.hls("sabr redirect \(next.redirects.count)/\(SABRRedirect.maximumHops)")
+        fetch(next, completion: completion)
     }
 
     /// A refusal never reaches the SABR protocol: googlevideo rejected the URL
@@ -109,35 +154,14 @@ final class SABRFetcher {
         return SABRError.server("HTTP \(response.status)")
     }
 
-    private func consume(_ chunk: Data, with collector: SABRSegmentCollector) {
-        guard !collector.isDone else {
-            return
-        }
-        collector.append(chunk)
-    }
-
     private func finish(
         _ result: Result<HTTPResponse, Error>,
         collector: SABRSegmentCollector,
         started: Date,
         completion: @escaping (Result<Data, Error>) -> Void
     ) {
-        apply(collector.policy)
-        if let range = collector.deliveredRange {
-            lock.lock()
-            lastSegment[collector.request.format.itag] = range
-            lock.unlock()
-        }
-        if case .failure(let error) = result, !collector.isDone {
+        if let error = failure(in: result, collector: collector) {
             completion(.failure(error))
-            return
-        }
-        if case .success(let response) = result, response.status != 200, !collector.isDone {
-            completion(.failure(refusal(response, label: collector.label)))
-            return
-        }
-        if let failure = collector.failure {
-            completion(.failure(failure))
             return
         }
         guard let data = collector.segment else {
@@ -145,11 +169,34 @@ final class SABRFetcher {
             completion(.failure(SABRError.stalled))
             return
         }
+        if let range = collector.deliveredRange {
+            lock.lock()
+            lastSegment[collector.request.format.itag] = range
+            lock.unlock()
+        }
         let ms = Int(Date().timeIntervalSince(started) * 1_000)
         AppLog.hls(
             "sabr \(collector.label) -> \(data.count)B of \(collector.received)B in \(ms)ms"
         )
         completion(.success(data))
+    }
+
+    private func failure(
+        in result: Result<HTTPResponse, Error>, collector: SABRSegmentCollector
+    ) -> Error? {
+        lock.lock()
+        let stopped = self.stopped
+        lock.unlock()
+        if stopped {
+            return SABRError.stalled
+        }
+        if case .failure(let error) = result, !collector.isDone {
+            return error
+        }
+        if case .success(let response) = result, response.status != 200 {
+            return refusal(response, label: collector.label)
+        }
+        return collector.failure
     }
 
     private func apply(_ policy: SABRPolicy?) {
@@ -167,7 +214,10 @@ final class SABRFetcher {
         lock.unlock()
     }
 
-    private func stateFor(_ request: SABRSegmentRequest) -> RequestState {
+}
+
+private extension SABRFetcher {
+    func stateFor(_ request: SABRSegmentRequest) -> RequestState {
         lock.lock()
         defer { lock.unlock() }
         requestNumber += 1
@@ -181,19 +231,18 @@ final class SABRFetcher {
         lastRequestedMs[itag] = request.timeMs
         return RequestState(
             number: requestNumber,
+            url: url,
             held: lastSegment[itag]?.acknowledged(for: request),
             cookie: playbackCookie
         )
     }
 
-    private func httpRequest(for request: SABRSegmentRequest) -> HTTPRequest {
-        let state = stateFor(request)
+    func httpRequest(for request: SABRSegmentRequest, state: RequestState) -> HTTPRequest {
         var headers = [HTTPHeader.contentType: "application/x-protobuf"]
         headers[HTTPHeader.userAgent] = identity.client.userAgent
         return HTTPRequest(
             method: .post,
-            // The streaming URL always carries a query, so appending is safe.
-            url: URL(string: "\(url.absoluteString)&rn=\(state.number)") ?? url,
+            url: SABRRedirect.numberedURL(state.url, number: state.number),
             headers: headers,
             body: SABRRequest.segment(
                 ustreamerConfig: ustreamerConfig,

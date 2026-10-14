@@ -30,10 +30,12 @@ final class TestSource: VideoSource {
     let currentQuality: VideoQuality? = nil
     var callbacks: [(Result<PreparedPlayback, Error>) -> Void] = []
     var releases = 0
+    var tokens: [CancellationToken?] = []
     init(_ name: String) { self.name = name }
     func loadPlayback(videoId: String, cancellation: CancellationToken?,
                       completion: @escaping (Result<PreparedPlayback, Error>) -> Void) {
         callbacks.append(completion)
+        tokens.append(cancellation)
     }
     func selectQuality(_ quality: VideoQuality, resumeAt: Double?,
                        completion: @escaping (Result<PreparedPlayback, Error>) -> Void) {}
@@ -230,6 +232,8 @@ final class TestSource: VideoSource {
         chain.loadPlayback(videoId: videoID, cancellation: nil) { _ in results += 1 }
         pump(0.1)
         try expect(second.callbacks.count == 1 && first.releases == 1, "Timeout advances and releases once")
+        try expect(first.tokens[0]?.isCancelled == true && second.tokens[0]?.isCancelled == false,
+                   "Timeout cancels only the expired step's network work")
         first.success()
         first.callbacks[0](.failure(WebPlaybackError.unavailable))
         second.success()
@@ -244,6 +248,7 @@ final class TestSource: VideoSource {
         let token = CancellationToken()
         chain.loadPlayback(videoId: videoID, cancellation: token) { _ in results += 1 }
         token.cancel()
+        try expect(first.tokens[2]?.isCancelled == true, "Parent cancellation reaches active step")
         first.success(2)
         pump(0.1)
         try expect(results == 1 && second.callbacks.count == 1, "Cancellation cannot advance or deliver success")

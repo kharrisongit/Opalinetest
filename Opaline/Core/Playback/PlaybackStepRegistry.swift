@@ -10,7 +10,8 @@ struct PlaybackStepRegistry {
         PlaybackStep(
             id: "visionos.range",
             title: "visionOS · byte ranges",
-            requiresSignIn: false
+            requiresSignIn: false,
+            timeout: 30
         ) { apiClient in
             innertube(
                 apiClient: apiClient,
@@ -22,7 +23,8 @@ struct PlaybackStepRegistry {
         PlaybackStep(
             id: "tv.sabr",
             title: "TV · SABR",
-            requiresSignIn: true
+            requiresSignIn: true,
+            timeout: 45
         ) { apiClient in
             innertube(
                 apiClient: apiClient,
@@ -34,7 +36,8 @@ struct PlaybackStepRegistry {
         PlaybackStep(
             id: "visionos.sabr",
             title: "visionOS · SABR",
-            requiresSignIn: false
+            requiresSignIn: false,
+            timeout: 30
         ) { apiClient in
             innertube(
                 apiClient: apiClient,
@@ -46,7 +49,8 @@ struct PlaybackStepRegistry {
         PlaybackStep(
             id: "progressive",
             title: "Progressive 360p",
-            requiresSignIn: false
+            requiresSignIn: false,
+            timeout: 20
         ) { apiClient in
             ProgressiveSource(apiClient: apiClient)
         },

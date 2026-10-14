@@ -29,21 +29,21 @@ extension SABRDelivery {
     static func solvingThrottle(
         _ url: URL,
         resolver: HLSStreamResolver = .shared,
-        completion: @escaping (URL) -> Void
+        completion: @escaping (Result<URL, Error>) -> Void
     ) {
         guard let unsolved = StreamURLParams.nValue(of: url) else {
-            completion(url)
+            completion(.success(url))
             return
         }
         SignatureTimestampService.shared.tvPlayerPath { jsPath in
             resolver.solveN(unsolved: unsolved, jsPath: jsPath) { solved in
                 guard let solved else {
-                    AppLog.player("sabr: n solve failed, sending the URL as-is")
-                    completion(url)
+                    AppLog.player("sabr: n solve failed, leaving this source for fallback")
+                    completion(.failure(SABRError.server("streaming signature solve failed")))
                     return
                 }
                 AppLog.player("sabr: n solved")
-                completion(StreamURLParams.replacingN(in: url, solved: solved))
+                completion(.success(StreamURLParams.replacingN(in: url, solved: solved)))
             }
         }
     }

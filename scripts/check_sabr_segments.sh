@@ -11,5 +11,15 @@ swiftc Opaline/Core/API/Models/DirectPlaybackInfo.swift \
   Opaline/Core/Playback/SABR/SABRSegmentRequest.swift \
   Opaline/Core/Playback/SABR/SABRBufferedRange.swift \
   Opaline/Core/Playback/SABR/SABRSegmentCollector.swift \
+  Opaline/Core/Playback/SABR/SABRRedirect.swift \
+  Opaline/Core/Playback/SABR/SABRFetcher.swift \
+  Opaline/Core/Playback/SABR/SABRRequest.swift \
+  Opaline/Core/Playback/SABR/SABRDelivery+NSolve.swift \
+  Opaline/Core/Playback/SABR/StreamURLParams.swift \
+  Opaline/Core/API/Clients/PlaybackClient.swift \
+  Opaline/Core/Config/HTTPConstants.swift \
+  Opaline/Core/Transport/HTTPTransport.swift \
+  Opaline/Core/Common/CancellationToken.swift \
+  scripts/sabr_redirect_checks.swift \
   scripts/sabr_segment_checks.swift -o "$SABR_CHECK_DIR/checks"
 "$SABR_CHECK_DIR/checks"

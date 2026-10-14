@@ -71,7 +71,7 @@ final class HLSStreamResolver {
         ]
         transport.send(
             HTTPRequest(
-                method: .get, url: url, headers: headers, isPlayback: true
+                method: .get, url: url, headers: headers, timeout: 10, isPlayback: true
             ),
             cancellationToken: nil
         ) { result in

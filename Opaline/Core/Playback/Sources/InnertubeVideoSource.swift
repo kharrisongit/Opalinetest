@@ -88,6 +88,9 @@ final class InnertubeVideoSource: VideoSource {
         completion: @escaping (Result<PreparedPlayback, Error>) -> Void
     ) {
         fetchInfo(videoId: videoId, cancellation: cancellation) { [weak self] result in
+            guard cancellation?.isCancelled != true else {
+                return
+            }
             switch result {
             case .failure(let error):
                 completion(.failure(error))
@@ -110,7 +113,7 @@ final class InnertubeVideoSource: VideoSource {
             return
         }
         mintingTokenIfNeeded { [weak self] poToken in
-            guard let self else {
+            guard let self, cancellation?.isCancelled != true else {
                 return
             }
             apiClient.fetchDirectPlayback(

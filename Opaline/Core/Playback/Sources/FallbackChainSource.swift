@@ -20,6 +20,7 @@ final class FallbackChainSource: VideoSource {
     private var built: [String: VideoSource] = [:]
     private var attemptState = PlaybackAttemptState()
     private var deadline: DispatchWorkItem?
+    private var stepCancellation: CancellationToken?
     /// The step answering playback and quality questions right now.
     private(set) var active: VideoSource?
     private(set) var activeIndex = 0
@@ -114,6 +115,8 @@ final class FallbackChainSource: VideoSource {
     }
 
     func releaseResources() {
+        stepCancellation?.cancel()
+        stepCancellation = nil
         attemptState.invalidate()
         deadline?.cancel()
         deadline = nil
@@ -149,6 +152,7 @@ final class FallbackChainSource: VideoSource {
             return
         }
         let step = steps[index]
+        let stepToken = beginStep(parent: cancellation)
         let source = source(for: step)
         active = source
         activeIndex = index
@@ -167,9 +171,17 @@ final class FallbackChainSource: VideoSource {
                 completion: completion
             )
         }
-        source.loadPlayback(videoId: videoId, cancellation: cancellation) { result in
+        source.loadPlayback(videoId: videoId, cancellation: stepToken) { result in
             DispatchQueue.main.async { finish(result) }
         }
+    }
+
+    private func beginStep(parent: CancellationToken?) -> CancellationToken {
+        stepCancellation?.cancel()
+        let token = CancellationToken()
+        stepCancellation = token
+        parent?.register(token)
+        return token
     }
 
     private func guardedCompletion(
@@ -210,6 +222,7 @@ final class FallbackChainSource: VideoSource {
             return
         }
         AppLog.player("chain: \(step.id) failed (\(error.localizedDescription))")
+        stepCancellation?.cancel()
         active?.releaseResources()
         let expected = attemptState.generation
         DispatchQueue.main.async { [weak self] in

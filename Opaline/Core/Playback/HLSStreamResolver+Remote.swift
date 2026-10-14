@@ -9,7 +9,7 @@ extension HLSStreamResolver {
               as? [String: Any],
               let solved = json["solved"] as? [String: Any],
               let value = solved[unsolved] as? String,
-              !value.isEmpty else {
+              !value.isEmpty, value != unsolved, !value.hasPrefix("ERR:") else {
             return nil
         }
         return value
@@ -78,7 +78,8 @@ extension HLSStreamResolver {
         // start-up cost — the log is what tells the two apart.
         let t0 = Date()
         transport.send(request, cancellationToken: nil) { result in
-            let data = try? result.get().data
+            let response = try? result.get()
+            let data = response.flatMap { (200...299).contains($0.status) ? $0.data : nil }
             let solved = Self.parseRemoteSolved(data: data, unsolved: unsolved)
             Self.logRemoteOutcome(kind: kind, solved: solved, data: data, since: t0)
             completion(solved)
