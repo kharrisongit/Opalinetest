@@ -104,9 +104,13 @@ extension RemotePoTokenService {
             return
         }
         let request = HTTPRequest(
-            method: .post, url: endpoint,
+            method: .post,
+            url: endpoint,
             headers: [HTTPHeader.contentType: HTTPHeaderValue.contentTypeJSON],
-            body: body, timeout: 15, sendsCookies: false, isPlayback: true
+            body: body,
+            timeout: 15,
+            sendsCookies: false,
+            isPlayback: true
         )
         AppLog.poToken("requesting token for \(client), refresh=\(bypass)")
         transport.send(request, cancellationToken: pending.cancellation) { [weak self] result in

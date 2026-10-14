@@ -10,7 +10,6 @@ import Foundation
 // not store raw strings or inline context dictionaries.
 
 final class InnertubeSession {
-
     // MARK: - Endpoints
 
     let baseURL: String = AppURLs.YouTube.innertube

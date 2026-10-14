@@ -203,6 +203,9 @@ final class WebPlaybackLoader {
         }
     }
 
+}
+
+extension WebPlaybackLoader {
     private func parse(_ json: [String: Any], videoID: String) throws -> DirectPlaybackInfo {
         if PlaybackFailure.isBotCheck(json) { throw PlaybackFailure.botCheck }
         _ = try WebPlaybackProfile.streamingData(json, videoID: videoID)

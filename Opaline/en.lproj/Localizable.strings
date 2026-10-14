@@ -711,3 +711,4 @@
 "verification.noSession" = "A visitor session is not ready yet. Open a video on YouTube, complete any checks, then try again.";
 "verification.loadFailed" = "YouTube could not load. Check your connection and try opening verification again.";
 "player.error.cooldown" = "YouTube asked us to slow down. Please wait at least 30 seconds before trying again.";
+"verification.shortsHelp" = "YouTube refused playback. Open Settings > Playback > Verify with YouTube, then retry this Short.";

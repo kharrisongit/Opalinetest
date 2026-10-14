@@ -25,6 +25,12 @@ extension ShortsPlayerView: PlaybackContext {
         alpha = 1
     }
 
+    func offerYouTubeVerification(videoId: String, retry: @escaping () -> Void) {
+        // A scrolling feed must not open repeated modal dialogs. The same
+        // verification screen is always available in the playback settings.
+        showPlaybackError("verification.shortsHelp".localized)
+    }
+
     func startObservingPlayerItem(_ item: AVPlayerItem) {}
 
     func stopObservingPlayerItem(_ item: AVPlayerItem) {}

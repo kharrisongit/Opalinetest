@@ -32,7 +32,8 @@ extension PlaybackFacade {
                       return
                   }
             start(
-                videoId: attempt.videoId, apiClient: attempt.apiClient,
+                videoId: attempt.videoId,
+                apiClient: attempt.apiClient,
                 cancellationToken: attempt.parentCancellation
             )
         }

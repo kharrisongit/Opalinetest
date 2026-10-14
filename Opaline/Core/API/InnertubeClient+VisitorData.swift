@@ -130,8 +130,12 @@ extension InnertubeClient {
             return
         }
         let request = HTTPRequest(
-            method: .get, url: parts.url, headers: parts.headers,
-            timeout: 12, sendsCookies: false, isPlayback: true
+            method: .get,
+            url: parts.url,
+            headers: parts.headers,
+            timeout: 12,
+            sendsCookies: false,
+            isPlayback: true
         )
         VisitorIdentityStore.shared.fetch(request) { value in
             guard cancellationToken?.isCancelled != true else {
@@ -162,5 +166,4 @@ extension InnertubeClient {
         ]
         return (url, headers)
     }
-
 }

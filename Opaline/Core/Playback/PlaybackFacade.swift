@@ -189,10 +189,7 @@ extension PlaybackFacade {
               let apiClient = currentApiClient else {
             return false
         }
-        loadCancellation = cancellationToken
-        if tokenRejected {
-            (activeChain?.active as? InnertubeVideoSource)?.invalidatePlaybackToken()
-        }
+        prepareRecovery(cancellation: cancellationToken, tokenRejected: tokenRejected)
         if let last = lastRecoveryAt,
            Date().timeIntervalSince(last) > Self.recoveryStreakWindow {
             recoveryAttempts = 0
@@ -218,6 +215,13 @@ extension PlaybackFacade {
         context?.updateStatusLabel("player.status.refreshing".localized)
         advanceChain(chain, videoId: videoId, cancellationToken: cancellationToken)
         return true
+    }
+
+    private func prepareRecovery(cancellation: CancellationToken, tokenRejected: Bool) {
+        loadCancellation = cancellation
+        if tokenRejected {
+            (activeChain?.active as? InnertubeVideoSource)?.invalidatePlaybackToken()
+        }
     }
 
     private func advanceChain(

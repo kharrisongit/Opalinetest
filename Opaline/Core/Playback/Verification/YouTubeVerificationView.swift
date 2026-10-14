@@ -37,8 +37,10 @@ final class YouTubeVerificationView: UIViewController {
             title: "common.cancel".localized, style: .plain, target: self, action: #selector(close)
         )
         navigationItem.rightBarButtonItem = UIBarButtonItem(
-            title: "verification.retry".localized, style: .done,
-            target: self, action: #selector(useSession)
+            title: "verification.retry".localized,
+            style: .done,
+            target: self,
+            action: #selector(useSession)
         )
         navigationItem.rightBarButtonItem?.isEnabled = false
         setupLayout()
@@ -105,7 +107,8 @@ final class YouTubeVerificationView: UIViewController {
     }
 
     private func capture(visitor: String, expected: Int) {
-        webView.configuration.websiteDataStore.httpCookieStore.getAllCookies { [weak self] cookies in
+        let store = webView.configuration.websiteDataStore.httpCookieStore
+        store.getAllCookies { [weak self] cookies in
             guard let self, view.window != nil, navigationGeneration == expected,
                   !webView.isLoading, VerificationURLPolicy.isYouTube(webView.url) else {
                       return

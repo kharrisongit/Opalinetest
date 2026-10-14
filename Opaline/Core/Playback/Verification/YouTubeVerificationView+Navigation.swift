@@ -14,20 +14,20 @@ extension YouTubeVerificationView: WKNavigationDelegate, WKUIDelegate {
         decisionHandler(allowed ? .allow : .cancel)
     }
 
-    func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!) {
+    func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation?) {
         navigationGeneration += 1
         busy = false
         navigationItem.rightBarButtonItem?.isEnabled = false
     }
 
-    func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
+    func webView(_ webView: WKWebView, didFinish navigation: WKNavigation?) {
         navigationItem.rightBarButtonItem?.isEnabled = VerificationURLPolicy.isYouTube(webView.url)
         status.text = "verification.help".localized
     }
 
     func webView(
         _ webView: WKWebView,
-        didFailProvisionalNavigation navigation: WKNavigation!,
+        didFailProvisionalNavigation navigation: WKNavigation?,
         withError error: Error
     ) {
         status.text = "verification.loadFailed".localized
