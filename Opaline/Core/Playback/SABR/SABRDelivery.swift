@@ -161,7 +161,9 @@ final class SABRDelivery: StreamDelivery {
             client.directURL(baseURL: url, poToken: nil), cpn: nonce
         )
         Self.solvingThrottle(signed) { [weak self] result in
-            self?.openSolvedSession(result, request: request, config: config, completion: completion)
+            self?.openSolvedSession(
+                result, request: request, config: config, completion: completion
+            )
         }
     }
 

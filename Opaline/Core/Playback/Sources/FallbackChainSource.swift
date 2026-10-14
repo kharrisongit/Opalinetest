@@ -137,7 +137,9 @@ final class FallbackChainSource: VideoSource {
         }
         return nil
     }
+}
 
+extension FallbackChainSource {
     private func attempt(
         from index: Int,
         videoId: String,

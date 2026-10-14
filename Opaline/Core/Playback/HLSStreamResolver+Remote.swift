@@ -78,11 +78,17 @@ extension HLSStreamResolver {
         // start-up cost — the log is what tells the two apart.
         let t0 = Date()
         transport.send(request, cancellationToken: nil) { result in
-            let response = try? result.get()
-            let data = response.flatMap { (200...299).contains($0.status) ? $0.data : nil }
+            let data = Self.successfulData(result)
             let solved = Self.parseRemoteSolved(data: data, unsolved: unsolved)
             Self.logRemoteOutcome(kind: kind, solved: solved, data: data, since: t0)
             completion(solved)
         }
+    }
+
+    private static func successfulData(_ result: Result<HTTPResponse, Error>) -> Data? {
+        guard case .success(let response) = result, (200...299).contains(response.status) else {
+            return nil
+        }
+        return response.data
     }
 }

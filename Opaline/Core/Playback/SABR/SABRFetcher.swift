@@ -213,7 +213,6 @@ final class SABRFetcher {
         }
         lock.unlock()
     }
-
 }
 
 extension SABRFetcher {

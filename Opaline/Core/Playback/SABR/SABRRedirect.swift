@@ -24,8 +24,10 @@ enum SABRRedirect {
         guard var parts = URLComponents(url: url, resolvingAgainstBaseURL: false) else {
             return url
         }
-        var query = (parts.percentEncodedQuery ?? "").split(separator: "&")
-            .map(String.init).filter { !$0.hasPrefix("rn=") }
+        var query = (parts.percentEncodedQuery ?? "")
+            .split(separator: "&")
+            .map(String.init)
+            .filter { !$0.hasPrefix("rn=") }
         query.append("rn=\(number)")
         parts.percentEncodedQuery = query.joined(separator: "&")
         return parts.url ?? url
