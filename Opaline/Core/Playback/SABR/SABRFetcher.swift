@@ -216,8 +216,8 @@ final class SABRFetcher {
 
 }
 
-private extension SABRFetcher {
-    func stateFor(_ request: SABRSegmentRequest) -> RequestState {
+extension SABRFetcher {
+    private func stateFor(_ request: SABRSegmentRequest) -> RequestState {
         lock.lock()
         defer { lock.unlock() }
         requestNumber += 1
@@ -237,7 +237,7 @@ private extension SABRFetcher {
         )
     }
 
-    func httpRequest(for request: SABRSegmentRequest, state: RequestState) -> HTTPRequest {
+    private func httpRequest(for request: SABRSegmentRequest, state: RequestState) -> HTTPRequest {
         var headers = [HTTPHeader.contentType: "application/x-protobuf"]
         headers[HTTPHeader.userAgent] = identity.client.userAgent
         return HTTPRequest(
