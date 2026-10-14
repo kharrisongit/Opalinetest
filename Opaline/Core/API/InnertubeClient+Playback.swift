@@ -171,7 +171,9 @@ extension InnertubeClient {
             // A bot check is worth telling the user about — "playback failed"
             // sends them hunting for a problem in the app.
             if case .failure = result, hitBotCheck {
-                completion(.failure(APIError.botCheck))
+                completion(.failure(PlaybackFailure.botCheck))
+            } else if case .failure(APIError.rateLimited) = result {
+                completion(.failure(PlaybackFailure.rateLimited))
             } else {
                 completion(result)
             }

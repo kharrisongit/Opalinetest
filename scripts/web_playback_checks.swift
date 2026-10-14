@@ -1,3 +1,4 @@
+extension String { var localized: String { self } }
 import AVFoundation
 import Foundation
 
@@ -67,6 +68,7 @@ final class TestSource: VideoSource {
         try settings()
         try streamURLs()
         try chainRaces()
+        try recoveryFailures()
         print("Passed \(count) experimental playback checks")
     }
     static func configuration() throws {
@@ -221,6 +223,28 @@ final class TestSource: VideoSource {
         try expect(WebStreamURL.manifestChallenge(in: url) == "abc", "HLS query challenge fallback")
         try expect(WebStreamURL.manifestChallenge(in: URL(string: "https://manifest.googlevideo.com/master.m3u8")!) == nil, "Unchallenged HLS needs no solver")
         try expect(WebStreamURL.replacingManifestN(with: "", in: manifest) == nil, "Reject empty manifest solve")
+    }
+    static func recoveryFailures() throws {
+        for failure in [PlaybackFailure.botCheck, .rateLimited, .tokenRejected] {
+            let first = TestSource("first"), second = TestSource("second")
+            let chain = FallbackChainSource(steps: [
+                PlaybackStep(id: "first", title: "first", requiresSignIn: false, make: { _ in first }),
+                PlaybackStep(id: "second", title: "second", requiresSignIn: false, make: { _ in second })
+            ], apiClient: TestWatchService())
+            var received: Error?
+            chain.loadPlayback(videoId: videoID, cancellation: nil) { result in
+                if case .failure(let error) = result { received = error }
+            }
+            first.callbacks[0](.failure(failure)); pump()
+            if failure == .rateLimited {
+                try expect(second.callbacks.isEmpty, "429 stops the chain instead of bursting other clients")
+            } else {
+                second.callbacks[0](.failure(WebPlaybackError.unavailable)); pump()
+            }
+            try expect(received as? PlaybackFailure == failure, "Preserve recovery reason through chain exhaustion")
+            try expect(first.tokens[0]?.isCancelled == true, "Failed requests cancelled before next action")
+            chain.releaseResources()
+        }
     }
     static func chainRaces() throws {
         let first = TestSource("first"), second = TestSource("second")

@@ -89,14 +89,18 @@ extension InnertubeClient {
         cancellation: CancellationToken? = nil,
         completion: @escaping (Result<DirectPlaybackInfo, Error>) -> Void
     ) {
+        let requestToken = VisitorIdentityStore.shared.childToken(parent: cancellation)
         let dispatch: (String?) -> Void = { [weak self] visitorData in
+            guard !requestToken.isCancelled else {
+                return
+            }
             self?.executeDirectPlayback(
                 videoId: videoId,
                 client: playbackClient,
                 token: "",
                 poToken: poToken,
                 visitorData: visitorData,
-                cancellationToken: cancellation,
+                cancellationToken: requestToken,
                 completion: completion
             )
         }
@@ -107,13 +111,10 @@ extension InnertubeClient {
         }
         fetchVisitorData(
             videoId: videoId,
-            cancellationToken: cancellation
-        ) { [weak self] visitorData in
-            guard cancellation?.isCancelled != true else {
+            cancellationToken: requestToken
+        ) { visitorData in
+            guard !requestToken.isCancelled else {
                 return
-            }
-            if let visitorData {
-                self?.session.visitorData = visitorData
             }
             dispatch(visitorData)
         }
@@ -128,28 +129,15 @@ extension InnertubeClient {
             completion(nil)
             return
         }
-        setInitialCookies()
-        api.get(
-            url: parts.url,
-            headers: parts.headers,
-            cancellationToken: cancellationToken
-        ) { result in
-            switch result {
-            case .failure(let error):
-                if (error as NSError).code != NSURLErrorCancelled {
-                    AppLog.innertube(
-                        "visitor data fetch failed: \(error.localizedDescription)"
-                    )
-                }
-                completion(nil)
-            case .success(let data):
-                Self.logPreflightCookies()
-                let extracted = Self.extractVisitorData(from: data)
-                if extracted == nil {
-                    Self.logVisitorCookies()
-                }
-                completion(extracted)
+        let request = HTTPRequest(
+            method: .get, url: parts.url, headers: parts.headers,
+            timeout: 12, sendsCookies: false, isPlayback: true
+        )
+        VisitorIdentityStore.shared.fetch(request) { value in
+            guard cancellationToken?.isCancelled != true else {
+                return
             }
+            completion(value)
         }
     }
 
@@ -169,27 +157,10 @@ extension InnertubeClient {
             HTTPHeader.userAgent: UserAgent.chromeDesktopPlayback,
             HTTPHeader.accept:
                 "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
-            HTTPHeader.acceptLanguage: "en-us,en;q=0.5"
+            HTTPHeader.acceptLanguage: "en-us,en;q=0.5",
+            "Cookie": "PREF=hl=en&tz=UTC; SOCS=CAI"
         ]
         return (url, headers)
     }
 
-    func setInitialCookies() {
-        // hl=en here is part of the same stable minting profile — do NOT
-        // switch it to the content-language setting.
-        let pref: [HTTPCookiePropertyKey: Any] = [
-            .name: "PREF", .value: "hl=en&tz=UTC",
-            .domain: ".youtube.com", .path: "/"
-        ]
-        let socs: [HTTPCookiePropertyKey: Any] = [
-            .name: "SOCS", .value: "CAI",
-            .domain: ".youtube.com", .path: "/"
-        ]
-        if let cookie = HTTPCookie(properties: pref) {
-            HTTPCookieStorage.shared.setCookie(cookie)
-        }
-        if let cookie = HTTPCookie(properties: socs) {
-            HTTPCookieStorage.shared.setCookie(cookie)
-        }
-    }
 }

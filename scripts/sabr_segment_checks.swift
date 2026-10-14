@@ -1,3 +1,4 @@
+extension String { var localized: String { self } }
 import Foundation
 
 // Only logging is replaced; the collector, UMP reader and protobuf parser are production code.
@@ -48,6 +49,10 @@ enum CheckError: Error { case failed(String) }
     static func main() throws {
         try redirects()
         try throttleFailures()
+        let protection = collector(1)
+        protection.append(part(58, Protobuf.int(1, 3)))
+        try expect(protection.failure as? PlaybackFailure == .tokenRejected && protection.isDone,
+                   "Attestation rejection requests a fresh token rather than an empty-media retry")
         // The reported adjacent-segment failure: segment 26 arrives before 27.
         let ordered = collector(27)
         ordered.append(segment(26, bytes: "previous-segment"))

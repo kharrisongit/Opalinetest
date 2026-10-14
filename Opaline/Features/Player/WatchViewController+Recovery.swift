@@ -15,7 +15,7 @@ extension WatchViewController {
         itemStartsAt = nil
     }
 
-    func recoverPlayback() {
+    func recoverPlayback(tokenRejected: Bool = false) {
         if prepareAirPlayPlayback() {
             return
         }
@@ -28,11 +28,12 @@ extension WatchViewController {
             "recoverPlayback: resumeAt=\(lastPlaybackPosition)s"
         )
         let token = CancellationToken()
+        pageLoadToken.cancel()
         pageLoadToken = token
         isRecoveringPlayback = true
         hasSeenPlaybackError = false
         pendingRecoverySeek = true
-        guard playbackFacade.recover(cancellationToken: token) else {
+        guard playbackFacade.recover(cancellationToken: token, tokenRejected: tokenRejected) else {
             isRecoveringPlayback = false
             pendingRecoverySeek = false
             showPlaybackError("player.error.playback".localized)

@@ -41,7 +41,8 @@ jobs:
 
       - name: Check experimental playback and fallback races
         run: |
-          swiftc Opaline/Core/Playback/WebPlaybackProfile.swift \
+          swiftc Opaline/Core/Playback/PlaybackFailure.swift \
+            Opaline/Core/Playback/WebPlaybackProfile.swift \
             Opaline/Core/Playback/WebPlayerConfiguration.swift \
             Opaline/Core/Playback/WebPlaybackRequest.swift \
             Opaline/Core/Playback/WebPlaybackDelivery.swift \
@@ -55,6 +56,9 @@ jobs:
             Opaline/Core/API/Models/SubtitleTrack.swift \
             scripts/web_playback_checks.swift -o "$RUNNER_TEMP/web-playback-checks"
           "$RUNNER_TEMP/web-playback-checks"
+
+      - name: Check playback recovery and verification
+        run: bash scripts/check_playback_recovery.sh
 
       - name: Check native comments and AirPlay policies
         run: |

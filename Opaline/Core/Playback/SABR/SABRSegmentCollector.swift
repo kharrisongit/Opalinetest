@@ -98,16 +98,22 @@ final class SABRSegmentCollector {
     }
 
     /// The parts that say something about the session rather than the media.
+    private func noteProtection(_ payload: Data) {
+        // 1 = OK, 2 = pending, 3 = attestation required.
+        let status = Protobuf.parse(payload).number(1) ?? 0
+        if status >= 2 { AppLog.hls("sabr stream protection status: \(status)") }
+        if status >= 3 {
+            failure = PlaybackFailure.tokenRejected
+            isDone = true
+        }
+    }
+
     private func handleDirective(_ part: UMPPart) {
         switch UMPPartType(rawValue: part.type) {
         case .sabrRedirect:
             noteRedirect(part.payload)
         case .streamProtectionStatus:
-            // 1 = OK, 2 = attestation pending, 3 = attestation required.
-            let status = Protobuf.parse(part.payload).number(1) ?? 0
-            if status >= 2 {
-                AppLog.hls("sabr stream protection status: \(status)")
-            }
+            noteProtection(part.payload)
         case .sabrError:
             let fields = Protobuf.parse(part.payload)
             AppLog.hls("sabr error: fields=\(fields.keys.sorted())")

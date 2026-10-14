@@ -151,6 +151,12 @@ final class SABRFetcher {
             "sabr \(label): HTTP \(response.status)"
                 + (reason.isEmpty ? "" : " — \(reason)")
         )
+        if response.status == 403 {
+            return PlaybackFailure.tokenRejected
+        }
+        if response.status == 429 {
+            return PlaybackFailure.rateLimited
+        }
         return SABRError.server("HTTP \(response.status)")
     }
 

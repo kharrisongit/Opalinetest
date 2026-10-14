@@ -10,7 +10,6 @@ import Foundation
 // not store raw strings or inline context dictionaries.
 
 final class InnertubeSession {
-    private static let visitorDataTTL: TimeInterval = 24 * 60 * 60
 
     // MARK: - Endpoints
 
@@ -31,28 +30,7 @@ final class InnertubeSession {
     /// Persisted with a TTL so the first video of a session doesn't pay the
     /// ~1s watch-page preflight; the cookies it pairs with live in
     /// `HTTPCookieStorage`, which iOS persists across launches as well.
-    var visitorData: String? {
-        get {
-            let defaults = UserDefaults.standard
-            guard
-                let value = defaults.string(
-                    forKey: UserDefaultsKeys.Innertube.visitorData
-                ),
-                let stamp = defaults.object(
-                    forKey: UserDefaultsKeys.Innertube.visitorDataDate
-                ) as? Date,
-                Date().timeIntervalSince(stamp) < Self.visitorDataTTL
-            else {
-                return nil
-            }
-            return value
-        }
-        set {
-            let defaults = UserDefaults.standard
-            defaults.set(newValue, forKey: UserDefaultsKeys.Innertube.visitorData)
-            defaults.set(Date(), forKey: UserDefaultsKeys.Innertube.visitorDataDate)
-        }
-    }
+    var visitorData: String? { VisitorIdentityStore.shared.visitorData }
 
     /// Player signature timestamp — required for signed stream URLs.
     /// Extracted from the player JS or `/player` response.
@@ -101,27 +79,10 @@ final class InnertubeSession {
 // MARK: - Visitor identity
 
 extension InnertubeSession {
-    /// Bumped every time the visitor identity is dropped. Callers that kicked
-    /// off work under the old identity compare this before and after to tell a
-    /// "the identity was replaced, try again" failure from a real one.
-    private(set) static var identityGeneration = 0
+    static var identityGeneration: Int { VisitorIdentityStore.shared.generation }
 
-    /// Drops the persisted visitor identity and its paired visitor cookies so
-    /// the next request mints a fresh one. Called when /player answers the bot
-    /// check, and when googlevideo throttles the identity — either way it would
-    /// otherwise stay cached for the full TTL and keep every source failing.
-    /// Account cookies are left untouched: minting is fully anonymous.
-    static func invalidateVisitorIdentity(reason: String = "bot check") {
-        identityGeneration += 1
-        let defaults = UserDefaults.standard
-        defaults.removeObject(forKey: UserDefaultsKeys.Innertube.visitorData)
-        defaults.removeObject(forKey: UserDefaultsKeys.Innertube.visitorDataDate)
-        guard let base = URL(string: AppURLs.YouTube.base) else {
-            return
-        }
-        HTTPCookieStorage.shared.cookies(for: base)?
-            .filter { $0.name.hasPrefix("VISITOR_") }
-            .forEach(HTTPCookieStorage.shared.deleteCookie)
+    static func invalidateVisitorIdentity(reason: String = "manual reset", notify: Bool = true) {
+        VisitorIdentityStore.shared.reset(notify: notify)
         AppLog.innertube("visitor identity invalidated after \(reason)")
     }
 }

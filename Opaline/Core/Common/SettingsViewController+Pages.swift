@@ -128,7 +128,7 @@ extension SettingsViewController {
             Section(
                 header: "settings.section.videoQuality".localized,
                 footer: nil,
-                rows: [.quality, .qualityCellular, .playerControls]
+                rows: [.quality, .qualityCellular, .playerControls, .verifyYouTube]
             ),
             Section(
                 header: nil,
@@ -198,7 +198,7 @@ extension SettingsViewController {
     private var debugSections: [Section] {
         var rows: [Row] = [.playbackChain]
         rows.append(contentsOf: [
-            .resetIdentity, .solverEndpoint, .mainThreadWatchdog, .shareLog
+            .resetIdentity, .verifyYouTube, .solverEndpoint, .mainThreadWatchdog, .shareLog
         ])
         return [
             Section(

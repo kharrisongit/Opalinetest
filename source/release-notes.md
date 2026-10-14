@@ -1,9 +1,9 @@
-uTube by kharrison, based on Opaline by verback2308.
+Playback recovery and YouTube verification
 
-- Fixed playback stops and videos failing to start when YouTube redirects a SABR stream to another media server. uTube now follows the redirect and retries the exact requested audio/video segment without resetting playback.
-- Redirect handling preserves signed URLs and session state, supports simultaneous audio/video requests, and stops invalid redirects and redirect loops.
-- Failed signature solves now move on to the next playback method instead of sending an unsolved URL and waiting for a 403 error.
-- Added overall startup deadlines to the original four playback methods and cancellation of expired requests, so a stalled method cannot hold up fallback indefinitely while the app is running.
-- Added regression checks for startup and mid-video redirects, concurrent requests, loops, invalid destinations, solver failures and fallback cancellation.
+- Stop old playback attempts before refreshing a rejected visitor session. Late responses can no longer restore the discarded identity.
+- Retry a confirmed bot check once with a fresh identity, with a shared cooldown instead of repeated identity changes.
+- Preserve the reason playback methods failed. Account restrictions, unavailable videos and transport failures no longer count as bot checks; HTTP 429 pauses further requests.
+- Refresh rejected proof-of-origin tokens using the correct client and binding, including bypassing the provider cache. Ignore late invalidated mints and reject failed provider responses.
+- Add a visible Verify with YouTube screen after refused playback and in Settings > Playback and Debug. Complete any check yourself, then choose Retry playback to import the anonymous visitor session. Google account and commenting credentials remain untouched.
 
-Includes the previous AirPlay format-selection, segment-identity and playback-position fixes. The shared kharrison Apps source and other app listings are unchanged by this release.
+Browser verification is experimental: a successful browser session may still be refused by native playback or AirPlay.

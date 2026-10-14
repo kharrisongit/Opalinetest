@@ -22,7 +22,7 @@ final class SettingsViewController: UIViewController {
         case clearCache, rydEnabled
         case sponsorBlockEnabled, sponsorBlockSettings
         case playbackChain
-        case resetIdentity
+        case resetIdentity, verifyYouTube
         case solverEndpoint
         case mainThreadWatchdog
         case shareLog
@@ -381,6 +381,8 @@ extension SettingsViewController: UITableViewDataSource, UITableViewDelegate {
                 "settings.row.playbackChain".localized,
                 value: "\(PlaybackChainSettings.activeSteps().count)"
             )
+        case .verifyYouTube:
+            return makeDisclosureCell("verification.open".localized)
         case .resetIdentity:
             return makeDisclosureCell("settings.row.resetIdentity".localized)
         case .solverEndpoint:
@@ -468,6 +470,13 @@ extension SettingsViewController: UITableViewDataSource, UITableViewDelegate {
             navigationController?.pushViewController(CommentAccountViewController(), animated: true)
         case .playbackChain, .solverEndpoint:
             showDebugPicker(for: row)
+        case .verifyYouTube:
+            let screen = YouTubeVerificationView(videoID: nil) {
+                NotificationCenter.default.post(name: VisitorIdentityStore.didReset, object: nil)
+            }
+            let navigation = UINavigationController(rootViewController: screen)
+            navigation.modalPresentationStyle = .fullScreen
+            present(navigation, animated: true)
         case .resetIdentity:
             // A spent identity is behind most "it plays on one device but not
             // the other" reports: mweb, the range path and the TV watchtime

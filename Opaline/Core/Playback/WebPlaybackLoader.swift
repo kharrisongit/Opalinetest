@@ -191,6 +191,9 @@ final class WebPlaybackLoader {
                     return
                 }
                 completion(result.flatMap { response in
+                    if response.status == 429 {
+                        return .failure(PlaybackFailure.rateLimited)
+                    }
                     guard response.status == 200, response.data.count <= 12_000_000 else {
                         return .failure(WebPlaybackError.unavailable)
                     }
@@ -201,6 +204,7 @@ final class WebPlaybackLoader {
     }
 
     private func parse(_ json: [String: Any], videoID: String) throws -> DirectPlaybackInfo {
+        if PlaybackFailure.isBotCheck(json) { throw PlaybackFailure.botCheck }
         _ = try WebPlaybackProfile.streamingData(json, videoID: videoID)
         var clean = InnertubeClient.unwrappingSignatureCiphers(json)
         clean["streamingData"] = try delivery.streamingData(

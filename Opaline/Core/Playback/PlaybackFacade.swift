@@ -41,11 +41,10 @@ final class PlaybackFacade {
     /// Recoveries closer together than this are one failing streak; a lone
     /// one hours later (URL expiry) starts the ladder over.
     private static let recoveryStreakWindow: TimeInterval = 60
-    /// Bound on visitor identities burned per video: churning them is itself a
-    /// bot signal, and the clean one that lands is cached for every later video.
-    static let maxIdentityRedraws = 5
-    /// Breathing room between draws, so a run of them is not a burst.
-    static let identityRedrawDelay: TimeInterval = 0.4
+    var resolveGeneration = 0
+    var resolveToken = CancellationToken()
+    var loadCancellation: CancellationToken?
+    private var identityObserver: NSObjectProtocol?
 
     weak var context: PlaybackContext?
     /// The active source — owns stream resolution and quality selection.
@@ -56,8 +55,6 @@ final class PlaybackFacade {
     let watchtimeTracker = WatchtimeTracker()
     var currentVideoId: String?
     weak var currentApiClient: WatchService?
-    /// Video that already burned its one silent bot-check retry.
-    var botCheckRetriedVideoId: String?
     /// Consecutive mid-playback recoveries, for the escalation ladder.
     var recoveryAttempts = 0
     /// When the last recovery started — an isolated one (URL expiry hours
@@ -66,6 +63,17 @@ final class PlaybackFacade {
     /// Visitor identities burned on the current video because googlevideo
     /// throttled them.
     var identityRedraws = 0
+
+    init() {
+        identityObserver = NotificationCenter.default.addObserver(
+            forName: VisitorIdentityStore.didReset, object: nil, queue: .main
+        ) { [weak self] _ in self?.restartAfterManualReset() }
+    }
+
+    deinit {
+        if let identityObserver { NotificationCenter.default.removeObserver(identityObserver) }
+        resolveToken.cancel()
+    }
 }
 
 // MARK: - Public API
@@ -77,11 +85,11 @@ extension PlaybackFacade {
         cancellationToken: CancellationToken,
         statusKey: String = "player.status.resolving"
     ) {
-        if videoId != currentVideoId {
-            identityRedraws = 0
+        prepareResolve(videoId: videoId, apiClient: apiClient, cancellation: cancellationToken)
+        guard DownloadStore.isDownloaded(videoId) || PlaybackRecoveryGate.shared.delay() == 0 else {
+            context?.showPlaybackError("player.error.cooldown".localized)
+            return
         }
-        currentVideoId = videoId
-        currentApiClient = apiClient
         let source = buildChain(apiClient: apiClient, videoId: videoId)
         context?.updateStatusLabel(statusKey.localized)
         PlaybackProgress.report = { [weak self] text in
@@ -90,18 +98,35 @@ extension PlaybackFacade {
         let attempt = ResolveAttempt(
             videoId: videoId,
             apiClient: apiClient,
-            cancellationToken: cancellationToken,
+            cancellationToken: resolveToken,
+            parentCancellation: cancellationToken,
             startedAt: Date(),
-            identityGeneration: InnertubeSession.identityGeneration
+            generation: resolveGeneration
         )
         source.loadPlayback(
             videoId: videoId,
-            cancellation: cancellationToken
+            cancellation: resolveToken
         ) { [weak self] result in
             DispatchQueue.main.async {
                 self?.finishResolve(result, attempt: attempt)
             }
         }
+    }
+
+    private func prepareResolve(
+        videoId: String, apiClient: WatchService, cancellation: CancellationToken
+    ) {
+        if videoId != currentVideoId {
+            identityRedraws = 0
+        }
+        resolveToken.cancel()
+        activeVideoSource?.releaseResources()
+        resolveGeneration += 1
+        resolveToken = CancellationToken()
+        cancellation.register(resolveToken)
+        loadCancellation = cancellation
+        currentVideoId = videoId
+        currentApiClient = apiClient
     }
 
     /// The user's chain, wrapped so a preferred dub can start on the step
@@ -144,14 +169,13 @@ extension PlaybackFacade {
         AppLog.player(
             "resolve \(verdict) on \(activeVideoSource?.name ?? "chain") in \(ms)ms"
         )
-        guard !attempt.cancellationToken.isCancelled else {
+        guard !attempt.cancellationToken.isCancelled, attempt.generation == resolveGeneration else {
             return
         }
         if retryOnFreshIdentity(result, attempt: attempt) {
             return
         }
-        identityRedraws = 0
-        handlePrepared(result, cancellation: attempt.cancellationToken)
+        handlePrepared(result, cancellation: attempt.parentCancellation)
     }
 
     /// Restarts playback after a mid-playback failure (segment 403, fatal
@@ -160,10 +184,14 @@ extension PlaybackFacade {
     /// fixes genuine URL expiry), then move to the next step, then stop.
     /// Returns false when the budget is spent, and the shell shows the error
     /// rather than hammering the API forever.
-    func recover(cancellationToken: CancellationToken) -> Bool {
+    func recover(cancellationToken: CancellationToken, tokenRejected: Bool = false) -> Bool {
         guard let videoId = currentVideoId,
               let apiClient = currentApiClient else {
             return false
+        }
+        loadCancellation = cancellationToken
+        if tokenRejected {
+            (activeChain?.active as? InnertubeVideoSource)?.invalidatePlaybackToken()
         }
         if let last = lastRecoveryAt,
            Date().timeIntervalSince(last) > Self.recoveryStreakWindow {
@@ -199,6 +227,9 @@ extension PlaybackFacade {
     ) {
         chain.advance(videoId: videoId, cancellation: cancellationToken) { [weak self] result in
             DispatchQueue.main.async {
+                guard !cancellationToken.isCancelled else {
+                    return
+                }
                 self?.handlePrepared(result, cancellation: cancellationToken)
             }
         }
@@ -224,55 +255,27 @@ extension PlaybackFacade {
                 context?.showPlaybackError("player.error.noSources".localized)
                 return
             }
-            guard isBotCheck(error) else {
+            guard let failure = error as? PlaybackFailure else {
                 context?.showPlaybackError("player.error.playback".localized)
                 return
             }
-            if !retryAfterBotCheck(cancellation: cancellation) {
-                context?.showPlaybackError("player.error.botCheck".localized)
+            context?.showPlaybackError(failure.localizedDescription)
+            if failure == .botCheck || failure == .tokenRejected {
+                offerVerification(cancellation: cancellation)
             }
         }
     }
 
-    private func isBotCheck(_ error: Error) -> Bool {
-        guard let apiError = error as? APIError,
-              case .botCheck = apiError else {
-            return false
-        }
-        return true
-    }
-
-    /// Parsing the bot check already dropped the flagged visitor identity, so
-    /// one silent reload — fresh identity, whole source chain again — usually
-    /// just plays. Only ever retried once per video; then the user sees why.
-    private func retryAfterBotCheck(
-        cancellation: CancellationToken
-    ) -> Bool {
-        guard let videoId = currentVideoId,
-              let apiClient = currentApiClient,
-              botCheckRetriedVideoId != videoId,
-              !cancellation.isCancelled else {
-            return false
-        }
-        botCheckRetriedVideoId = videoId
-        AppLog.player("bot check — retrying with a fresh visitor identity")
-        // The label stays up for the whole retry — `start` would immediately
-        // overwrite anything set here with its own status.
-        start(
-            videoId: videoId,
-            apiClient: apiClient,
-            cancellationToken: cancellation,
-            statusKey: "player.status.botCheckRetry"
-        )
-        return true
-    }
-
     func reset() {
+        resolveGeneration += 1
+        resolveToken.cancel()
+        loadCancellation = nil
+        activeVideoSource?.releaseResources()
         activeVideoSource = nil
+        activeChain = nil
         watchtimeTracker.stop()
         currentVideoId = nil
         currentApiClient = nil
-        botCheckRetriedVideoId = nil
         recoveryAttempts = 0
         lastRecoveryAt = nil
         identityRedraws = 0

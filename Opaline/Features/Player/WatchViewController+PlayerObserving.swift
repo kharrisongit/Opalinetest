@@ -220,7 +220,7 @@ extension WatchViewController {
                 AppLog.player(
                     "403 detected — scheduling recovery"
                 )
-                recoverPlayback()
+                recoverPlayback(tokenRejected: true)
             }
         }
     }

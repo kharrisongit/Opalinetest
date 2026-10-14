@@ -33,19 +33,14 @@ extension HLSPlaybackBuilder {
             headers: input.headers
         )
         headStatus(of: probe) { code in
-            // Only an outright 403 means "this identity is throttled". A
+            // A 403 rejects this stream; it does not identify the cause. A
             // transport error reports 0 — unknown, not guilty: burning an
             // identity over flaky wifi would churn for nothing.
             let healthy = code != 403
             AppLog.hls(
-                "identity probe: \(healthy ? "ok" : "throttled")"
+                "stream probe: \(healthy ? "ok" : "refused")"
                     + " (HTTP \(code))"
             )
-            if !healthy, input.invalidatesVisitorOnFailure {
-                InnertubeSession.invalidateVisitorIdentity(
-                    reason: "googlevideo throttle"
-                )
-            }
             completion(healthy)
         }
     }

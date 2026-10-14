@@ -15,11 +15,7 @@ extension InnertubeClient {
                 videoId: videoId,
                 client: client
             )
-            // `LOGIN_REQUIRED` here is YouTube's bot check, not a real
-            // sign-in problem — the flagged visitor identity is cached for
-            // 24h, so drop it or every source keeps failing until it expires.
             if isBotCheck(json) {
-                InnertubeSession.invalidateVisitorIdentity()
                 onBotCheck()
             }
             return nil
@@ -35,9 +31,7 @@ extension InnertubeClient {
     }
 
     static func isBotCheck(_ json: [String: Any]) -> Bool {
-        let status = (json["playabilityStatus"]
-            as? [String: Any])?["status"] as? String
-        return status == "LOGIN_REQUIRED"
+        PlaybackFailure.isBotCheck(json)
     }
 
     static func logDirectPlaybackError(

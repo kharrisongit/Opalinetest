@@ -11,6 +11,7 @@ protocol PlaybackContext: AnyObject {
     func attachPrepared(_ prepared: PreparedPlayback, resumeAt: CMTime?)
     func updateStatusLabel(_ text: String)
     func showPlaybackError(_ message: String)
+    func offerYouTubeVerification(videoId: String, retry: @escaping () -> Void)
     func startObservingPlayerItem(_ item: AVPlayerItem)
     func stopObservingPlayerItem(_ item: AVPlayerItem)
     func setCaptionTracks(_ tracks: [SubtitleTrack])

@@ -701,3 +701,13 @@
 "settings.playbackChain.embeddedHLS" = "Experimental · Auto quality. Tries anonymous HLS for embeddable videos. Availability depends on the video and session.";
 "settings.playbackChain.tvCompatibility" = "Experimental · Uses your connected YouTube commenting account to request compatible TV video/audio streams. Some videos and sessions are unsupported.";
 "settings.playbackChain.websiteSignInNeeded" = "Connect your YouTube account in Comments or Notifications to use this method.";
+
+/* Playback recovery and user-driven verification */
+"verification.title" = "YouTube verification";
+"verification.open" = "Verify with YouTube";
+"verification.retry" = "Retry playback";
+"verification.help" = "Complete any check YouTube shows, then tap Retry playback. You can also try playing the video here. Native playback and AirPlay may still be unavailable.";
+"verification.offer" = "YouTube is still refusing playback. Open YouTube here to complete any checks, then retry with a fresh visitor session.";
+"verification.noSession" = "A visitor session is not ready yet. Open a video on YouTube, complete any checks, then try again.";
+"verification.loadFailed" = "YouTube could not load. Check your connection and try opening verification again.";
+"player.error.cooldown" = "YouTube asked us to slow down. Please wait at least 30 seconds before trying again.";

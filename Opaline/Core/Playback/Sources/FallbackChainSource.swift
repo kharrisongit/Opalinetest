@@ -21,6 +21,7 @@ final class FallbackChainSource: VideoSource {
     private var attemptState = PlaybackAttemptState()
     private var deadline: DispatchWorkItem?
     private var stepCancellation: CancellationToken?
+    private var recoveryFailure: PlaybackFailure?
     /// The step answering playback and quality questions right now.
     private(set) var active: VideoSource?
     private(set) var activeIndex = 0
@@ -45,6 +46,7 @@ final class FallbackChainSource: VideoSource {
         cancellation: CancellationToken?,
         completion: @escaping (Result<PreparedPlayback, Error>) -> Void
     ) {
+        recoveryFailure = nil
         attempt(
             from: 0, videoId: videoId, cancellation: cancellation, completion: completion
         )
@@ -147,7 +149,7 @@ extension FallbackChainSource {
         completion: @escaping (Result<PreparedPlayback, Error>) -> Void
     ) {
         guard index < steps.count else {
-            completion(.failure(Self.exhaustedError))
+            completion(.failure(recoveryFailure.map { $0 as Error } ?? Self.exhaustedError))
             return
         }
         guard cancellation?.isCancelled != true else {
@@ -226,6 +228,10 @@ extension FallbackChainSource {
         AppLog.player("chain: \(step.id) failed (\(error.localizedDescription))")
         stepCancellation?.cancel()
         active?.releaseResources()
+        if recordFailure(error) {
+            completion(.failure(error))
+            return
+        }
         let expected = attemptState.generation
         DispatchQueue.main.async { [weak self] in
             guard self?.attemptState.generation == expected else {
@@ -238,6 +244,18 @@ extension FallbackChainSource {
                 completion: completion
             )
         }
+    }
+
+    private func recordFailure(_ error: Error) -> Bool {
+        guard let failure = error as? PlaybackFailure else {
+            return false
+        }
+        if failure == .rateLimited {
+            PlaybackRecoveryGate.shared.rateLimited()
+            return true
+        }
+        if recoveryFailure == nil || failure == .botCheck { recoveryFailure = failure }
+        return false
     }
 
     private func source(for step: PlaybackStep) -> VideoSource {

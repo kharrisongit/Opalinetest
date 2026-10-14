@@ -87,17 +87,7 @@ final class InnertubeVideoSource: VideoSource {
         cancellation: CancellationToken?,
         completion: @escaping (Result<PreparedPlayback, Error>) -> Void
     ) {
-        fetchInfo(videoId: videoId, cancellation: cancellation) { [weak self] result in
-            guard cancellation?.isCancelled != true else {
-                return
-            }
-            switch result {
-            case .failure(let error):
-                completion(.failure(error))
-            case .success(let info):
-                self?.handleInfo(info, videoId: videoId, completion: completion)
-            }
-        }
+        loadWithTokenRecovery(videoId: videoId, cancellation: cancellation, completion: completion)
     }
 
     /// One `/player` fetch for this source's client, minting whatever token it
@@ -112,9 +102,17 @@ final class InnertubeVideoSource: VideoSource {
             customLoader(videoId, cancellation, completion)
             return
         }
-        mintingTokenIfNeeded { [weak self] poToken in
+        mintingTokenIfNeeded { [weak self] result in
             guard let self, cancellation?.isCancelled != true else {
                 return
+            }
+            let poToken: String?
+            switch result {
+            case .failure(let error):
+                completion(.failure(error))
+                return
+            case .success(let value):
+                poToken = value
             }
             apiClient.fetchDirectPlayback(
                 videoId: videoId,
@@ -159,7 +157,7 @@ final class InnertubeVideoSource: VideoSource {
 
     // MARK: - Private
 
-    private func handleInfo(
+    func handleInfo(
         _ info: DirectPlaybackInfo,
         videoId: String,
         completion: @escaping (Result<PreparedPlayback, Error>) -> Void

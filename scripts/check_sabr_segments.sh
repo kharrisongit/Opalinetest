@@ -3,7 +3,8 @@ set -euo pipefail
 cd "$(dirname "$0")/.."
 SABR_CHECK_DIR=$(mktemp -d)
 trap 'rm -rf "$SABR_CHECK_DIR"' EXIT
-swiftc Opaline/Core/API/Models/DirectPlaybackInfo.swift \
+swiftc Opaline/Core/Playback/PlaybackFailure.swift \
+  Opaline/Core/API/Models/DirectPlaybackInfo.swift \
   Opaline/Core/API/Models/SubtitleTrack.swift \
   Opaline/Core/Playback/SABR/Protobuf.swift \
   Opaline/Core/Playback/SABR/UMPReader.swift \
