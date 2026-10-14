@@ -40,6 +40,13 @@ extension HLSStreamResolver {
         AppLog.player("hlsResolve: solver said \(reply.prefix(200))")
     }
 
+    private static func successfulData(_ result: Result<HTTPResponse, Error>) -> Data? {
+        guard case .success(let response) = result, (200...299).contains(response.status) else {
+            return nil
+        }
+        return response.data
+    }
+
     func solveRemote(
         kind: ChallengeKind,
         unsolved: String,
@@ -83,12 +90,5 @@ extension HLSStreamResolver {
             Self.logRemoteOutcome(kind: kind, solved: solved, data: data, since: t0)
             completion(solved)
         }
-    }
-
-    private static func successfulData(_ result: Result<HTTPResponse, Error>) -> Data? {
-        guard case .success(let response) = result, (200...299).contains(response.status) else {
-            return nil
-        }
-        return response.data
     }
 }
