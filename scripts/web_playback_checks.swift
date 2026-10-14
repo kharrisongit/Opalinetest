@@ -60,6 +60,13 @@ final class TestSource: VideoSource {
     static func pump(_ seconds: TimeInterval = 0.04) {
         RunLoop.main.run(until: Date().addingTimeInterval(seconds))
     }
+    static func waitFor(_ condition: () -> Bool) throws {
+        let deadline = Date().addingTimeInterval(3)
+        while !condition(), Date() < deadline {
+            RunLoop.main.run(until: Date().addingTimeInterval(0.01))
+        }
+        try expect(condition(), "Asynchronous operation completes within its deadline")
+    }
     static func main() throws {
         try configuration()
         try requests()
@@ -235,11 +242,13 @@ final class TestSource: VideoSource {
             chain.loadPlayback(videoId: videoID, cancellation: nil) { result in
                 if case .failure(let error) = result { received = error }
             }
-            first.callbacks[0](.failure(failure)); pump()
+            first.callbacks[0](.failure(failure))
+            try waitFor { !second.callbacks.isEmpty || received != nil }
             if failure == .rateLimited {
                 try expect(second.callbacks.isEmpty, "429 stops the chain instead of bursting other clients")
             } else {
-                second.callbacks[0](.failure(WebPlaybackError.unavailable)); pump()
+                second.callbacks[0](.failure(WebPlaybackError.unavailable))
+                try waitFor { received != nil }
             }
             try expect(received as? PlaybackFailure == failure, "Preserve recovery reason through chain exhaustion")
             try expect(first.tokens[0]?.isCancelled == true, "Failed requests cancelled before next action")
@@ -250,11 +259,11 @@ final class TestSource: VideoSource {
         let first = TestSource("first"), second = TestSource("second")
         let chain = FallbackChainSource(steps: [
             PlaybackStep(id: "first", title: "first", requiresSignIn: false, timeout: 0.02, make: { _ in first }),
-            PlaybackStep(id: "second", title: "second", requiresSignIn: false, timeout: 1, make: { _ in second })
+            PlaybackStep(id: "second", title: "second", requiresSignIn: false, timeout: 5, make: { _ in second })
         ], apiClient: TestWatchService())
         var results = 0
         chain.loadPlayback(videoId: videoID, cancellation: nil) { _ in results += 1 }
-        pump(0.1)
+        try waitFor { second.callbacks.count == 1 }
         try expect(second.callbacks.count == 1 && first.releases == 1, "Timeout advances and releases once")
         try expect(first.tokens[0]?.isCancelled == true && second.tokens[0]?.isCancelled == false,
                    "Timeout cancels only the expired step's network work")
@@ -262,6 +271,7 @@ final class TestSource: VideoSource {
         first.callbacks[0](.failure(WebPlaybackError.unavailable))
         second.success()
         second.success()
+        try waitFor { results > 0 }
         pump()
         try expect(results == 1 && chain.name == "second", "Late/duplicate callbacks cannot replace winning source")
         chain.loadPlayback(videoId: videoID, cancellation: nil) { _ in results += 1 }
