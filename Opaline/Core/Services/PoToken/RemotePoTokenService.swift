@@ -80,8 +80,18 @@ final class RemotePoTokenService: PoTokenProvider {
     }
 }
 
-private extension RemotePoTokenService {
-    func request(identifier: String, client: String, bypass: Bool, pending: PendingMint) {
+extension RemotePoTokenService {
+    private static func parse(_ response: HTTPResponse) -> Result<String, Error> {
+        guard (200 ... 299).contains(response.status),
+              let json = try? JSONSerialization.jsonObject(with: response.data) as? [String: Any],
+              let token = (json["poToken"] ?? json["po_token"]) as? String,
+              !token.isEmpty, !token.hasPrefix("ERR:") else {
+            return .failure(ProviderError.badResponse)
+        }
+        return .success(token)
+    }
+
+    private func request(identifier: String, client: String, bypass: Bool, pending: PendingMint) {
         let key = "\(client)|\(identifier)"
         guard let endpoint = AppURLs.PoTokenProvider.endpoint else {
             finish(key: key, id: pending.id, result: .failure(ProviderError.notConfigured))
@@ -104,17 +114,7 @@ private extension RemotePoTokenService {
         }
     }
 
-    static func parse(_ response: HTTPResponse) -> Result<String, Error> {
-        guard (200 ... 299).contains(response.status),
-              let json = try? JSONSerialization.jsonObject(with: response.data) as? [String: Any],
-              let token = (json["poToken"] ?? json["po_token"]) as? String,
-              !token.isEmpty, !token.hasPrefix("ERR:") else {
-            return .failure(ProviderError.badResponse)
-        }
-        return .success(token)
-    }
-
-    func finish(key: String, id: UUID, result: Result<String, Error>) {
+    private func finish(key: String, id: UUID, result: Result<String, Error>) {
         lock.lock()
         guard let pending = inFlight[key], pending.id == id else {
             lock.unlock()

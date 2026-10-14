@@ -41,6 +41,14 @@ final class VisitorIdentityStore {
         self.transport = transport
     }
 
+    static func isVisitorCookie(_ cookie: HTTPCookie) -> Bool {
+        let domain = cookie.domain.lowercased()
+            .trimmingCharacters(in: CharacterSet(charactersIn: "."))
+        return ["youtube.com", "www.youtube.com", "m.youtube.com"].contains(domain)
+            && cookie.name.hasPrefix("VISITOR_")
+            && (cookie.expiresDate.map { $0 > Date() } ?? true)
+    }
+
     func childToken(parent: CancellationToken?) -> CancellationToken {
         lock.lock()
         defer { lock.unlock() }
@@ -99,14 +107,6 @@ final class VisitorIdentityStore {
         save(visitor: visitor, received: browserCookies)
         lock.unlock()
         return true
-    }
-
-    static func isVisitorCookie(_ cookie: HTTPCookie) -> Bool {
-        let domain = cookie.domain.lowercased()
-            .trimmingCharacters(in: CharacterSet(charactersIn: "."))
-        return ["youtube.com", "www.youtube.com", "m.youtube.com"].contains(domain)
-            && cookie.name.hasPrefix("VISITOR_")
-            && (cookie.expiresDate.map { $0 > Date() } ?? true)
     }
 
     private func finish(_ result: Result<HTTPResponse, Error>, url: URL, expected: Int) {
