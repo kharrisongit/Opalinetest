@@ -27,6 +27,15 @@
       },
       "versions": [
         {
+          "version": "1.12.15",
+          "date": "2026-10-14T02:02:11Z",
+          "localizedDescription": "Playback recovery and YouTube verification\n\n- Stop old playback attempts before refreshing a rejected visitor session. Late responses can no longer restore the discarded identity.\n- Retry a confirmed bot check once with a fresh identity, with a shared cooldown instead of repeated identity changes.\n- Preserve the reason playback methods failed. Account restrictions, unavailable videos and transport failures no longer count as bot checks; HTTP 429 pauses further requests.\n- Refresh rejected proof-of-origin tokens using the correct client and binding, including bypassing the provider cache. Ignore late invalidated mints and reject failed provider responses.\n- Add a visible Verify with YouTube screen after refused playback and in Settings > Playback and Debug. Complete any check yourself, then choose Retry playback to import the anonymous visitor session. Google account and commenting credentials remain untouched.\n\nBrowser verification is experimental: a successful browser session may still be refused by native playback or AirPlay.",
+          "downloadURL": "https://github.com/kharrisongit/utube/releases/download/1.12.15/uTube_1.12.15.ipa",
+          "size": 11131411,
+          "minOSVersion": "12.0",
+          "buildVersion": "670"
+        },
+        {
           "version": "1.12.14",
           "date": "2026-10-14T01:27:08Z",
           "localizedDescription": "uTube by kharrison, based on Opaline by verback2308.\n\n- Fixed playback stops and videos failing to start when YouTube redirects a SABR stream to another media server. uTube now follows the redirect and retries the exact requested audio/video segment without resetting playback.\n- Redirect handling preserves signed URLs and session state, supports simultaneous audio/video requests, and stops invalid redirects and redirect loops.\n- Failed signature solves now move on to the next playback method instead of sending an unsolved URL and waiting for a 403 error.\n- Added overall startup deadlines to the original four playback methods and cancellation of expired requests, so a stalled method cannot hold up fallback indefinitely while the app is running.\n- Added regression checks for startup and mid-video redirects, concurrent requests, loops, invalid destinations, solver failures and fallback cancellation.\n\nIncludes the previous AirPlay format-selection, segment-identity and playback-position fixes. The shared kharrison Apps source and other app listings are unchanged by this release.",
@@ -90,11 +99,11 @@
           "buildVersion": "630"
         }
       ],
-      "version": "1.12.14",
-      "versionDate": "2026-10-14T01:27:08Z",
-      "versionDescription": "uTube by kharrison, based on Opaline by verback2308.\n\n- Fixed playback stops and videos failing to start when YouTube redirects a SABR stream to another media server. uTube now follows the redirect and retries the exact requested audio/video segment without resetting playback.\n- Redirect handling preserves signed URLs and session state, supports simultaneous audio/video requests, and stops invalid redirects and redirect loops.\n- Failed signature solves now move on to the next playback method instead of sending an unsolved URL and waiting for a 403 error.\n- Added overall startup deadlines to the original four playback methods and cancellation of expired requests, so a stalled method cannot hold up fallback indefinitely while the app is running.\n- Added regression checks for startup and mid-video redirects, concurrent requests, loops, invalid destinations, solver failures and fallback cancellation.\n\nIncludes the previous AirPlay format-selection, segment-identity and playback-position fixes. The shared kharrison Apps source and other app listings are unchanged by this release.",
-      "downloadURL": "https://github.com/kharrisongit/utube/releases/download/1.12.14/uTube_1.12.14.ipa",
-      "size": 11105613
+      "version": "1.12.15",
+      "versionDate": "2026-10-14T02:02:11Z",
+      "versionDescription": "Playback recovery and YouTube verification\n\n- Stop old playback attempts before refreshing a rejected visitor session. Late responses can no longer restore the discarded identity.\n- Retry a confirmed bot check once with a fresh identity, with a shared cooldown instead of repeated identity changes.\n- Preserve the reason playback methods failed. Account restrictions, unavailable videos and transport failures no longer count as bot checks; HTTP 429 pauses further requests.\n- Refresh rejected proof-of-origin tokens using the correct client and binding, including bypassing the provider cache. Ignore late invalidated mints and reject failed provider responses.\n- Add a visible Verify with YouTube screen after refused playback and in Settings > Playback and Debug. Complete any check yourself, then choose Retry playback to import the anonymous visitor session. Google account and commenting credentials remain untouched.\n\nBrowser verification is experimental: a successful browser session may still be refused by native playback or AirPlay.",
+      "downloadURL": "https://github.com/kharrisongit/utube/releases/download/1.12.15/uTube_1.12.15.ipa",
+      "size": 11131411
     },
     {
       "name": "The Last Dragonrider",
@@ -278,6 +287,15 @@
     }
   ],
   "news": [
+    {
+      "title": "uTube 1.12.15 — kharrison",
+      "identifier": "com.kharrison.utube.release-1.12.15",
+      "caption": "Stop old playback attempts before refreshing a rejected visitor session. Late responses can no longer restore the dis…",
+      "date": "2026-10-14T02:02:11Z",
+      "tintColor": "FF0000",
+      "appID": "com.kharrison.utube",
+      "url": "https://github.com/kharrisongit/utube/releases/tag/1.12.15"
+    },
     {
       "title": "uTube 1.12.14 — kharrison",
       "identifier": "com.kharrison.utube.release-1.12.14",
